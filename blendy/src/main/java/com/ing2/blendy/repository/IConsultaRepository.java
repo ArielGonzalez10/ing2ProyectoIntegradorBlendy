@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
  * @author ariel
  */
 @Repository
-public interface IProductoRepository extends JpaRepository{
+public interface IConsultaRepository extends JpaRepository{
     
 }

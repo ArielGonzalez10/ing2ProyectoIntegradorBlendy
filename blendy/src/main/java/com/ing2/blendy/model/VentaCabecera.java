@@ -7,7 +7,9 @@ package com.ing2.blendy.model;
 import jakarta.persistence.Entity;
 import java.time.LocalDate;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -16,6 +18,8 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class VentaCabecera {
     private int idVentaCabecera;

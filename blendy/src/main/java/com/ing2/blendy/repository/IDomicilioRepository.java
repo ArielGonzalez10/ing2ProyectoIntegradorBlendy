@@ -4,10 +4,14 @@
  */
 package com.ing2.blendy.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 /**
  *
  * @author ariel
  */
-public interface IDomicilioRepository {
+@Repository
+public interface IDomicilioRepository extends JpaRepository{
     
 }
