@@ -4,10 +4,40 @@
  */
 package com.ing2.blendy.service;
 
+import com.ing2.blendy.model.Domicilio;
+import com.ing2.blendy.repository.IDomicilioRepository;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 /**
  *
  * @author ariel
  */
-public class DomicilioService {
+@Service
+public class DomicilioService implements IDomicilioService{
+    
+    @Autowired
+    private IDomicilioRepository consultaRepo;
+
+    @Override
+    public void crearDomicilio(Domicilio p_domicilio) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public Domicilio buscarDomicilio(int p_id_domicilio) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void eliminarDomicilio(int p_id_domicilio) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Domicilio> listarDomicilios() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 }

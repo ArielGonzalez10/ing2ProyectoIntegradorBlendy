@@ -4,10 +4,48 @@
  */
 package com.ing2.blendy.controller;
 
+import com.ing2.blendy.model.Usuario;
+import com.ing2.blendy.service.IUsuarioService;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
 /**
  *
  * @author ariel
  */
+@RequestMapping("/usuarios")
+@RestController
 public class UsuarioController {
+    @Autowired
+    private IUsuarioService usuarioServ;
     
+    @GetMapping("/buscar/{p_id_usuario}")
+    @ResponseBody
+    public Usuario buscarUsuario(@PathVariable int p_id_usuario){
+        return usuarioServ.buscarUsuario(p_id_usuario);
+    }
+    
+    @PostMapping("/crear")
+    public void crearUsuario(@RequestBody Usuario p_usuario){
+        usuarioServ.crearUsuario(p_usuario);
+    }
+    
+    @DeleteMapping("/eliminar/{p?id_usuario}")
+    public void eliminarUsuario(@PathVariable int p_id_usuario){
+        usuarioServ.eliminarUsuario(p_id_usuario);
+    }
+    
+    @GetMapping("/listar")
+    @ResponseBody
+    public List<Usuario> listarUsuarios(){
+        return usuarioServ.listarUsuarios();
+    }
 }

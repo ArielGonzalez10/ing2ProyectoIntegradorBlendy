@@ -5,7 +5,9 @@
 package com.ing2.blendy.service;
 
 import com.ing2.blendy.model.Usuario;
+import com.ing2.blendy.repository.IUsuarioRepository;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,6 +16,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UsuarioService implements IUsuarioService{
+    
+    @Autowired
+    private IUsuarioRepository usuarioRepo;
 
     @Override
     public void crearUsuario(Usuario p_usuario) {
