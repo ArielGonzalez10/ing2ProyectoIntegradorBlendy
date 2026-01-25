@@ -4,6 +4,7 @@
  */
 package com.ing2.blendy.repository;
 
+import com.ing2.blendy.model.Provincia;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,6 @@ import org.springframework.stereotype.Repository;
  * @author ariel
  */
 @Repository
-public interface IProvinciaRepository extends JpaRepository{
+public interface IProvinciaRepository extends JpaRepository<Provincia,Integer>{
     
 }

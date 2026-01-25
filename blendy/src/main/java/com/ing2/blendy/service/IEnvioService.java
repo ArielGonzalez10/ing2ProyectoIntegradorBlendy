@@ -4,10 +4,16 @@
  */
 package com.ing2.blendy.service;
 
+import com.ing2.blendy.model.Envio;
+import java.util.List;
+
 /**
  *
  * @author ariel
  */
 public interface IEnvioService {
-    
+    public void crearEnvio(Envio p_envio);
+    public Envio buscarEnvio(int p_id_usuario);
+    public void eliminarEnvio(int p_id_usuario);
+    public List<Envio> listarEnvios();
 }

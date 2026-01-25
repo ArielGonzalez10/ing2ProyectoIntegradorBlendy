@@ -5,6 +5,9 @@
 package com.ing2.blendy.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +24,8 @@ import lombok.Setter;
 @Entity
 public class Usuario {
     //Atributos
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idUsuario;
     private String nombre;
     private String apellido;
@@ -28,5 +33,5 @@ public class Usuario {
     private String contrasenia;
     private int estado;
     private Rol rol;
-    private Telefono telefono;
+    private String telefono;
 }

@@ -4,6 +4,7 @@
  */
 package com.ing2.blendy.repository;
 
+import com.ing2.blendy.model.Envio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,6 +13,6 @@ import org.springframework.stereotype.Repository;
  * @author ariel
  */
 @Repository
-public interface IEnvioRepository extends JpaRepository{
+public interface IEnvioRepository extends JpaRepository<Envio,Integer>{
     
 }

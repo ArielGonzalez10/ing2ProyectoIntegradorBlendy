@@ -5,6 +5,9 @@
 package com.ing2.blendy.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -22,6 +25,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class VentaCabecera {
+    //Atributos
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idVentaCabecera;
     private LocalDate fecha;
     private double totalVenta;

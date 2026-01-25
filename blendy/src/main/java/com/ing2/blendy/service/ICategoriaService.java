@@ -4,17 +4,16 @@
  */
 package com.ing2.blendy.service;
 
-import com.ing2.blendy.model.Usuario;
+import com.ing2.blendy.model.Categoria;
 import java.util.List;
 
 /**
  *
  * @author ariel
  */
-
-public interface IUsuarioService {
-    public void crearUsuario(Usuario p_usuario);
-    public Usuario buscarUsuario(int p_id_usuario);
-    public void eliminarUsuario(int p_id_usuario);
-    public List<Usuario> listarUsuarios();
+public interface ICategoriaService {
+    public void crearCategoria(Categoria p_categoria);
+    public Categoria buscarCategoria(int p_id_categoria);
+    public void eliminarCategoria(int p_id_categoria);
+    public List<Categoria> listarCategorias();
 }
