@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -31,7 +33,11 @@ public class VentaCabecera {
     private int idVentaCabecera;
     private LocalDate fecha;
     private double totalVenta;
+    @ManyToOne
     private Usuario usuario;
+    @ManyToOne
     private Domicilio domicilio;
+    // mappedBy elimina la tabla intermedia y busca la FK en VentaDetalle
+    @OneToMany(mappedBy = "ventaCabecera") 
     private List<VentaDetalle> listaVentaDetalle;
 }

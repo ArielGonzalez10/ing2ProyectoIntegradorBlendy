@@ -8,6 +8,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +32,10 @@ public class VentaDetalle {
     private int idVentaDetalle;
     private int cantidad;
     private double total;
+    @OneToOne
     private Producto producto;
+    // Cambiar a ManyToOne para que coincida con la lógica de BD
+    @ManyToOne 
+    @JoinColumn(name = "id_venta_cabecera") // Nombre de la columna en la BD
     private VentaCabecera ventaCabecera;
 }

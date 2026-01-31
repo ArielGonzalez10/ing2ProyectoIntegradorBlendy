@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface IRolService {
     public void crearUsuario(Rol p_rol);
-    public Rol buscarRol(int p_id_ro);
+    public Rol buscarRol(int p_id_rol);
     public void eliminarRol(int p_id_rol);
     public List<Rol> listarRoles();
 }

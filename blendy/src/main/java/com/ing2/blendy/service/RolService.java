@@ -21,22 +21,22 @@ public class RolService implements IRolService{
 
     @Override
     public void crearUsuario(Rol p_rol) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        rolRepo.save(p_rol);
     }
 
     @Override
-    public Rol buscarRol(int p_id_ro) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Rol buscarRol(int p_id_rol) {
+        return rolRepo.findById(p_id_rol).orElse(null);
     }
 
     @Override
     public void eliminarRol(int p_id_rol) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        rolRepo.deleteById(p_id_rol);
     }
 
     @Override
     public List<Rol> listarRoles() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return rolRepo.findAll();
     }
     
 }

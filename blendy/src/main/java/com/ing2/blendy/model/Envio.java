@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +32,8 @@ public class Envio {
     private int idEnvio;
     private LocalDate fechaDespacho;
     private LocalDate fechaRecepcion;
+    @ManyToOne
     private Usuario usuario;
+    @OneToOne
     private Domicilio domicilio;
 }

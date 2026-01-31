@@ -1,16 +1,14 @@
 import { useState } from 'react';
-import api from '../api/axios'; // El archivo de configuración que creamos antes
+import api from '../api/axios';
 
 const Register = () => {
-    // Definimos el estado inicial según tus atributos de Java
     const [usuario, setUsuario] = useState({
         nombre: '',
         apellido: '',
         correoElectronico: '',
         contrasenia: '',
         telefono: '',
-        estado: 1, // Valor por defecto
-        rol: 'USER' // Ajusta según cómo manejes el enum/clase Rol
+        estado: 1
     });
 
     const handleChange = (e) => {
@@ -21,17 +19,29 @@ const Register = () => {
     };
 
     const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        // Concatenamos '/crear' porque así está en tu @PostMapping de Java
-        const response = await api.post('/usuarios/crear', usuario); 
-        alert("¡Usuario creado exitosamente!");
-        console.log(response.data);
-    } catch (error) {
-        console.error("Error detallado:", error.response);
-        alert("Error al registrar. Revisa la consola.");
-    }
-};
+        e.preventDefault();
+        
+        // Estructura exacta que funcionó en tu prueba manual
+        const usuarioParaEnviar = {
+            idUsuario: 0, 
+            ...usuario,             
+            rol: { 
+                idRol: 2,           
+                nombreRol: "Cliente", 
+                estado: 1           
+            }
+        };
+
+        try {
+            // Asegúrate de que en axios.js la baseURL sea http://localhost:8080
+            const response = await api.post('/usuarios/crear', usuarioParaEnviar); 
+            alert("¡Registro exitoso como Cliente!");
+            console.log("Datos guardados en DB:", response.data);
+        } catch (error) {
+            console.error("Error al registrar:", error.response?.data || error.message);
+            alert("Hubo un problema con el registro. Revisa la consola (F12).");
+        }
+    };
 
     return (
         <div className="container mt-5">

@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,10 @@ public class Pago {
     //Atributos
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private int idPago;
+    @OneToOne
     private VentaCabecera ventaCabecera;
+    @OneToOne
     private MetodoPago metodoPago;
     private double montoPago;
 }

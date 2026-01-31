@@ -40,7 +40,7 @@ public class UsuarioController {
         usuarioServ.crearUsuario(p_usuario);
     }
     
-    @DeleteMapping("/eliminar/{p?id_usuario}")
+    @DeleteMapping("/eliminar/{p_id_usuario}")
     public void eliminarUsuario(@PathVariable int p_id_usuario){
         usuarioServ.eliminarUsuario(p_id_usuario);
     }

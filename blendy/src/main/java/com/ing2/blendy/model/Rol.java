@@ -26,7 +26,7 @@ public class Rol {
     //Atributos
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int idRol; // Cambiá int por Integer
+    private int idRol; 
     private String descripcion;
     private int estado;
 }
