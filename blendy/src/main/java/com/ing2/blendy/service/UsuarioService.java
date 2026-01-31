@@ -22,22 +22,22 @@ public class UsuarioService implements IUsuarioService{
 
     @Override
     public void crearUsuario(Usuario p_usuario) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        usuarioRepo.save(p_usuario);
     }
 
     @Override
     public Usuario buscarUsuario(int p_id_usuario) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return usuarioRepo.findById(p_id_usuario).orElse(null);
     }
 
     @Override
     public void eliminarUsuario(int p_id_usuario) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        usuarioRepo.deleteById(p_id_usuario);
     }
 
     @Override
     public List<Usuario> listarUsuarios() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return usuarioRepo.findAll();
     }
 
     
