@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface IEnvioService {
     public void crearEnvio(Envio p_envio);
-    public Envio buscarEnvio(int p_id_usuario);
-    public void eliminarEnvio(int p_id_usuario);
+    public Envio buscarEnvio(int p_id_envio);
+    public void eliminarEnvio(int p_id_envio);
     public List<Envio> listarEnvios();
 }

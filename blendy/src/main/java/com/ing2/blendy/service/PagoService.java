@@ -18,26 +18,26 @@ import org.springframework.stereotype.Service;
 public class PagoService implements IPagoService{
     
     @Autowired
-    private IPagoRepository pagooRepo;
+    private IPagoRepository pagoRepo;
 
     @Override
     public void crearPago(Pago p_pago) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        pagoRepo.save(p_pago);
     }
 
     @Override
     public Pago buscarPago(int p_id_pago) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return pagoRepo.findById(p_id_pago).orElse(null);
     }
 
     @Override
     public void eliminarPago(int p_id_pago) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        pagoRepo.deleteById(p_id_pago);
     }
 
     @Override
     public List<Pago> listarPagos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return pagoRepo.findAll();
     }
     
 }

@@ -22,22 +22,22 @@ public class EnvioService implements IEnvioService{
 
     @Override
     public void crearEnvio(Envio p_envio) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        envioRepo.save(p_envio);
     }
 
     @Override
-    public Envio buscarEnvio(int p_id_usuario) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Envio buscarEnvio(int p_id_envio) {
+        return envioRepo.findById(p_id_envio).orElse(null);
     }
 
     @Override
-    public void eliminarEnvio(int p_id_usuario) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void eliminarEnvio(int p_id_envio) {
+        envioRepo.deleteById(p_id_envio);
     }
 
     @Override
     public List<Envio> listarEnvios() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return envioRepo.findAll();
     }
     
 }

@@ -20,22 +20,22 @@ public class LocalidadService implements ILocalidadService{
 
     @Override
     public void crearLocalidad(Localidad p_localidad) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        localidadRepo.save(p_localidad);
     }
 
     @Override
     public Localidad buscarLocalidad(int p_id_localidad) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return localidadRepo.findById(p_id_localidad).orElse(null);
     }
 
     @Override
     public void eliminarLocalidad(int p_id_localidad) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        localidadRepo.deleteById(p_id_localidad);
     }
 
     @Override
     public List<Localidad> listarLocalidades() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return localidadRepo.findAll();
     }
     
 }

@@ -18,26 +18,26 @@ import org.springframework.stereotype.Service;
 public class DomicilioService implements IDomicilioService{
     
     @Autowired
-    private IDomicilioRepository consultaRepo;
+    private IDomicilioRepository domicilioRepo;
 
     @Override
-    public void crearDomicilio(Domicilio p_domicilio) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void crearDomicilio(Domicilio p_id_domicilio) {
+        domicilioRepo.save(p_id_domicilio);
     }
 
     @Override
     public Domicilio buscarDomicilio(int p_id_domicilio) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return domicilioRepo.findById(p_id_domicilio).orElse(null);
     }
 
     @Override
     public void eliminarDomicilio(int p_id_domicilio) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        domicilioRepo.deleteById(p_id_domicilio);
     }
 
     @Override
     public List<Domicilio> listarDomicilios() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return domicilioRepo.findAll();
     }
     
 }

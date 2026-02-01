@@ -22,22 +22,22 @@ public class ProvinciaService implements IProvinciaService{
 
     @Override
     public void crearProvincia(Provincia p_provincia) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        provinciaRepo.save(p_provincia);
     }
 
     @Override
     public Provincia buscarProvincia(int p_id_provincia) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return provinciaRepo.findById(p_id_provincia).orElse(null);
     }
 
     @Override
     public void eliminarProvincia(int p_id_provincia) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        provinciaRepo.deleteById(p_id_provincia);
     }
 
     @Override
     public List<Provincia> listarProvincias() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return provinciaRepo.findAll();
     }
     
 }

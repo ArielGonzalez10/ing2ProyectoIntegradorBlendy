@@ -18,26 +18,26 @@ import org.springframework.stereotype.Service;
 public class ConsultaService implements IConsultaService{
     
     @Autowired
-    private IConsultaRepository consultaRepository;
+    private IConsultaRepository consultaRepo;
     
     @Override
     public void crearConsulta(Consulta p_consulta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        consultaRepo.save(p_consulta);
     }
 
     @Override
     public Consulta buscarConsulta(int p_id_consulta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return consultaRepo.findById(p_id_consulta).orElse(null);
     }
 
     @Override
     public void eliminarConsulta(int p_id_consulta) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        consultaRepo.deleteById(p_id_consulta);
     }
 
     @Override
     public List<Consulta> listarConsultas() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return consultaRepo.findAll();
     }
     
 }

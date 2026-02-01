@@ -12,7 +12,7 @@ import java.util.List;
  * @author ariel
  */
 public interface IDomicilioService {
-    public void crearDomicilio(Domicilio p_domicilio);
+    public void crearDomicilio(Domicilio p_id_domicilio);
     public Domicilio buscarDomicilio(int p_id_domicilio);
     public void eliminarDomicilio(int p_id_domicilio);
     public List<Domicilio> listarDomicilios();

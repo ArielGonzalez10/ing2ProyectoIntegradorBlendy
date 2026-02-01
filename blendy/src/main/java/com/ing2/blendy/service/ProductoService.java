@@ -18,26 +18,26 @@ import org.springframework.stereotype.Service;
 public class ProductoService implements IProductoService{
     
     @Autowired
-    private IProductoRepository envioRepo;
+    private IProductoRepository productoRepo;
 
     @Override
     public void crearProducto(Producto p_producto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        productoRepo.save(p_producto);
     }
 
     @Override
     public Producto buscarProducto(int p_id_producto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return productoRepo.findById(p_id_producto).orElse(null);
     }
 
     @Override
     public void eliminarProducto(int p_id_producto) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        productoRepo.deleteById(p_id_producto);
     }
 
     @Override
     public List<Producto> listarProductos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return productoRepo.findAll();
     }
     
 }

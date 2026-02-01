@@ -18,26 +18,26 @@ import org.springframework.stereotype.Service;
 public class MetodoPagoService implements IMetodoPagoService{
     
     @Autowired
-    private IMetodoPagoRepository envioRepo;
+    private IMetodoPagoRepository metodoPagoRepo;
 
     @Override
     public void crearMetodoPago(MetodoPago p_metodoPago) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+        metodoPagoRepo.save(p_metodoPago)
+;    }
 
     @Override
     public MetodoPago buscarMetodoPago(int p_id_metodoPago) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return metodoPagoRepo.findById(p_id_metodoPago).orElse(null);
     }
 
     @Override
     public void eliminarMetodoPago(int p_id_metodoPago) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        metodoPagoRepo.deleteById(p_id_metodoPago);
     }
 
     @Override
     public List<MetodoPago> listarMetodoPagos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return metodoPagoRepo.findAll();
     }
     
 }

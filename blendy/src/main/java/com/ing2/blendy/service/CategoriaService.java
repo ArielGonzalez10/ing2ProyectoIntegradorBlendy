@@ -22,22 +22,22 @@ public class CategoriaService implements ICategoriaService{
 
     @Override
     public void crearCategoria(Categoria p_categoria) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        categoriaRepo.save(p_categoria);
     }
 
     @Override
     public Categoria buscarCategoria(int p_id_categoria) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return categoriaRepo.findById(p_id_categoria).orElse(null);
     }
 
     @Override
     public void eliminarCategoria(int p_id_categoria) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        categoriaRepo.deleteById(p_id_categoria);
     }
 
     @Override
     public List<Categoria> listarCategorias() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return categoriaRepo.findAll();
     }
     
 }
