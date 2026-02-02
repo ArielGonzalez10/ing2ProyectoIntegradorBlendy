@@ -27,7 +27,7 @@ public class CategoriaController {
     @Autowired
     private ICategoriaService categoriaServ;
     
-    @GetMapping("/bucar/{p_id_Categoria}")
+    @GetMapping("/bucar/{p_id_categoria}")
     public Categoria buscarCategoria(@PathVariable int p_id_categoria){
         return categoriaServ.buscarCategoria(p_id_categoria);
     }

@@ -4,10 +4,15 @@
  */
 package com.ing2.blendy.controller;
 
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 /**
  *
  * @author ariel
  */
+@RequestMapping("/envios")
+@RestController
 public class VentaDetalleController {
     
 }

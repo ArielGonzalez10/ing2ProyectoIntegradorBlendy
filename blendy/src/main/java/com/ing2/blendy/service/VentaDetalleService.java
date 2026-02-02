@@ -22,22 +22,22 @@ public class VentaDetalleService implements IVentaDetalleService{
 
     @Override
     public void crearVentaDetalle(VentaDetalle p_ventaDetalle) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ventaDetalleRepo.save(p_ventaDetalle);
     }
 
     @Override
     public VentaDetalle buscarVentaDetalle(int p_id_ventaDetalle) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return ventaDetalleRepo.findById(p_id_ventaDetalle).orElse(null);
     }
 
     @Override
     public void eliminarVentaDetalle(int p_id_ventaDetalle) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ventaDetalleRepo.deleteById(p_id_ventaDetalle);;
     }
 
     @Override
     public List<VentaDetalle> listarVentaDetalles() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return ventaDetalleRepo.findAll();
     }
     
 }
