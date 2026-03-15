@@ -32,6 +32,7 @@ public class Producto {
     private int stock;
     private double precioUnitario;
     private String imgProd;
+    private int estado;
     @ManyToOne
     private Categoria categoria;
 }

@@ -35,9 +35,7 @@ public class VentaCabecera {
     private double totalVenta;
     @ManyToOne
     private Usuario usuario;
-    @ManyToOne
-    private Domicilio domicilio;
     // mappedBy elimina la tabla intermedia y busca la FK en VentaDetalle
-    @OneToMany(mappedBy = "ventaCabecera") 
+    @OneToMany(mappedBy = "ventaCabecera")
     private List<VentaDetalle> listaVentaDetalle;
 }

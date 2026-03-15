@@ -29,6 +29,7 @@ public class Localidad {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idLocalidad;
     private String nombre;
+    private int estado;
     @OneToOne
     private Provincia provincia;
 }

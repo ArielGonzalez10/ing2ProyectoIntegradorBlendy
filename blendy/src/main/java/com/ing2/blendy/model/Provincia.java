@@ -29,4 +29,5 @@ public class Provincia {
     private int idProvincia;
     private String nombre;
     private int codigoPostal;
+    private int estado;
 }

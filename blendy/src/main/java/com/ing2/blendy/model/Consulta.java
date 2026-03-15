@@ -28,10 +28,10 @@ public class Consulta {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idConsulta;
+    private nombre;
+    private correoElectronico;
     private String descripcion;
     private String asunto;
     private String respuesta;
     private int estado;
-    @OneToOne
-    private Usuario usuario;
 }
