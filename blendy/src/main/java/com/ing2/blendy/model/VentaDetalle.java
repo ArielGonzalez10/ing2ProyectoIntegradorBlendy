@@ -32,9 +32,6 @@ public class VentaDetalle {
     private int idVentaDetalle;
     private int cantidad;
     private double total;
-    @OneToOne
-    private Producto producto;
-    // Cambiar a ManyToOne para que coincida con la lógica de BD
     @ManyToOne 
     @JoinColumn(name = "id_venta_cabecera") // Nombre de la columna en la BD
     private VentaCabecera ventaCabecera;

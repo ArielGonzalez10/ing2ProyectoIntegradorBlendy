@@ -30,6 +30,8 @@ public class Localidad {
     private int idLocalidad;
     private String nombre;
     private int estado;
+    @OneToOne(mappedBy = "localidad")
+    private Domicilio domicilio;
     @OneToOne
     private Provincia provincia;
 }

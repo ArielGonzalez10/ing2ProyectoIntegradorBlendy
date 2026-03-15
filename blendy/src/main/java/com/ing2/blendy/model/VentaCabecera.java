@@ -35,7 +35,7 @@ public class VentaCabecera {
     private double totalVenta;
     @ManyToOne
     private Usuario usuario;
-    // mappedBy elimina la tabla intermedia y busca la FK en VentaDetalle
+    //Indica que atributo es el dueño de la relación e indica que tabla va a tener la FK
     @OneToMany(mappedBy = "ventaCabecera")
     private List<VentaDetalle> listaVentaDetalle;
 }

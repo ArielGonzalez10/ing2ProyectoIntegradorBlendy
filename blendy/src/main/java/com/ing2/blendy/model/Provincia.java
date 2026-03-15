@@ -30,4 +30,5 @@ public class Provincia {
     private String nombre;
     private int codigoPostal;
     private int estado;
+
 }

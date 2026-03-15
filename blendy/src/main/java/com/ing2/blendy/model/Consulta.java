@@ -28,8 +28,8 @@ public class Consulta {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idConsulta;
-    private nombre;
-    private correoElectronico;
+    private String nombre;
+    private String correoElectronico;
     private String descripcion;
     private String asunto;
     private String respuesta;

@@ -4,11 +4,7 @@
  */
 package com.ing2.blendy.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,8 +28,6 @@ public class Domicilio {
     private int altura;
     @OneToOne
     private Localidad localidad;
-    @OneToOne(mappedBy = "domicilio")
-    private Envio envio;
-    @ManyToOne()
+    @ManyToOne
     private Usuario usuario;
 }

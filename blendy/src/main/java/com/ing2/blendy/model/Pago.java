@@ -28,9 +28,9 @@ public class Pago {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idPago;
+    private double montoPago;
     @OneToOne
     private VentaCabecera ventaCabecera;
     @OneToOne
     private MetodoPago metodoPago;
-    private double montoPago;
 }
