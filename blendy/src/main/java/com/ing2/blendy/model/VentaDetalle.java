@@ -35,4 +35,7 @@ public class VentaDetalle {
     @ManyToOne 
     @JoinColumn(name = "id_venta_cabecera") // Nombre de la columna en la BD
     private VentaCabecera ventaCabecera;
+    @ManyToOne
+    @JoinColumn(name = "id_producto") // Nombre de la columna en la BD
+    private Producto producto;
 }

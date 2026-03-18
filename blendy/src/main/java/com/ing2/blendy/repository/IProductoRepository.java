@@ -19,14 +19,14 @@ import java.util.List;
 @Repository
 public interface IProductoRepository extends JpaRepository<Producto,Integer>{
     //Busca un producto por el nombre
-    @Query("SELECT p FROM PRODUCTO p WHERE p.descripcion = :p_descripcion")
+    @Query("SELECT p FROM Producto p WHERE p.descripcion = :p_descripcion")
     Producto buscarProducto(@Param("p_descripcion") String p_descripcion);
 
     //Ordena alfabeticamente la lista de productos
-    @Query("SELECT p FROM PRODUCTO p ORDER BY p.descripcion ASC ")
+    @Query("SELECT p FROM Producto p ORDER BY p.descripcion ASC ")
     List<Producto> filtrarAlfabeticamenteAsc();
 
     //Ordena alfabeticamente la lista de productos
-    @Query("SELECT p FROM PRODUCTO p ORDER BY p.descripcion Desc ")
+    @Query("SELECT p FROM Producto p ORDER BY p.descripcion Desc ")
     List<Producto> filtrarAlfabeticamenteDesc();
 }
