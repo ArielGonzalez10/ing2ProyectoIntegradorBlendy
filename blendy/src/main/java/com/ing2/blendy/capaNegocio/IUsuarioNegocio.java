@@ -17,4 +17,6 @@ public interface IUsuarioNegocio {
     Usuario buscarUsuario(int p_id_usuario);
     void eliminarUsuario(int p_id_usuario);
     List<Usuario> listarUsuarios();
+    Usuario iniciarSesion(String p_correoElectronico, String p_contrasenia);
+    Usuario cerrarSesion();
 }
