@@ -28,8 +28,8 @@ public class DomicilioController {
     private IDomicilioNegocio domicilioNego;
     
     @GetMapping("/buscar/{p_id_domicilio}")
-    public Domicilio buscarDomicilio(@PathVariable int p_id_domicilio){
-        return domicilioNego.buscarDomicilio(p_id_domicilio);
+    public Domicilio buscarDomicilio(@PathVariable int p_id_usuario){
+        return domicilioNego.buscarDomicilioPorUsuario(p_id_usuario);
     }
     
     @PostMapping("/crear")

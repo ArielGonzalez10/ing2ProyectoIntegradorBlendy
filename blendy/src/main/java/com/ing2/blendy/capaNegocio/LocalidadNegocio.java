@@ -8,11 +8,13 @@ import com.ing2.blendy.capaModelo.Localidad;
 import com.ing2.blendy.capaDatos.ILocalidadDatos;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author ariel
  */
+@Service
 public class LocalidadNegocio implements ILocalidadNegocio {
     
     @Autowired

@@ -4,8 +4,12 @@
  */
 package com.ing2.blendy.capaControlador;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ing2.blendy.capaModelo.Localidad;
+import com.ing2.blendy.capaNegocio.ILocalidadNegocio;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  *
@@ -14,5 +18,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/localidades")
 @RestController
 public class LocalidadController {
-    
+    @Autowired
+    private ILocalidadNegocio localidadNego;
+
+    @GetMapping("/buscar/{p_id_localidad}")
+    @ResponseBody
+    public Localidad buscarLocalidad(@PathVariable int p_id_localidad){
+        return localidadNego.buscarLocalidad(p_id_localidad);
+    }
+
+    @GetMapping("/listar")
+    @ResponseBody
+    public List<Localidad> listarLocalidad(){
+        return localidadNego.listarLocalidades();
+    }
 }

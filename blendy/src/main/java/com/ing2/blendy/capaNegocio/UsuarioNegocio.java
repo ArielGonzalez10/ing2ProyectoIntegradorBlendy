@@ -16,7 +16,16 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UsuarioNegocio implements IUsuarioNegocio {
-    
+    @Override
+    public Usuario iniciarSesion(String p_correoElectronico, String p_contrasenia) {
+        return null;
+    }
+
+    @Override
+    public Usuario cerrarSesion() {
+        return null;
+    }
+
     @Autowired
     private IUsuarioDatos usuarioRepo;
 
