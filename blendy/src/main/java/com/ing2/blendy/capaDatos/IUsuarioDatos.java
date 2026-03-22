@@ -6,6 +6,8 @@ package com.ing2.blendy.capaDatos;
 
 import com.ing2.blendy.capaModelo.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -14,5 +16,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IUsuarioDatos extends JpaRepository<Usuario,Integer>{
-    
+    @Query("SELECT u FROM Usuario u WHERE u.correoElectronico = :p_correoElectronico")
+    Usuario buscarPorEmail(@Param("p_correoElectronico") String p_correoElectronico);
 }

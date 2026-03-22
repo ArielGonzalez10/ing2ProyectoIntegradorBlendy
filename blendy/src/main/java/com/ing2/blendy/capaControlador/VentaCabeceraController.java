@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author ariel
  */
-@RequestMapping("/envios")
+@RequestMapping("/ventas")
 @RestController
 public class VentaCabeceraController {
     

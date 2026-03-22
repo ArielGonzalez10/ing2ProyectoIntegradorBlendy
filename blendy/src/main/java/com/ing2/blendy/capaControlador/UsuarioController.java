@@ -7,7 +7,10 @@ package com.ing2.blendy.capaControlador;
 import com.ing2.blendy.capaModelo.Usuario;
 import com.ing2.blendy.capaNegocio.IUsuarioNegocio;
 import java.util.List;
+
+import com.ing2.blendy.dto.SesionDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +31,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsuarioController {
     @Autowired
     private IUsuarioNegocio usuarioNego;
-    
+
+    @PostMapping("/iniciarSesion")
+    public ResponseEntity<?> iniciarSesion(@RequestBody SesionDTO p_sesion){
+
+    }
+
     @GetMapping("/buscar/{p_id_usuario}")
     @ResponseBody
     public Usuario buscarUsuario(@PathVariable int p_id_usuario){ return usuarioNego.buscarUsuario(p_id_usuario);
