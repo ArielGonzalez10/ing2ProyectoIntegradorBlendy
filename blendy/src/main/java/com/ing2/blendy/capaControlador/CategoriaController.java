@@ -8,14 +8,7 @@ import com.ing2.blendy.capaModelo.Categoria;
 import com.ing2.blendy.capaNegocio.ICategoriaNegocio;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *
@@ -28,9 +21,7 @@ public class CategoriaController {
     private ICategoriaNegocio categoriaNego;
     
     @GetMapping("/bucar/{p_id_categoria}")
-    public Categoria buscarCategoria(@PathVariable int p_id_categoria){
-        return categoriaNego.buscarCategoria(p_id_categoria);
-    }
+    public Categoria buscarCategoria(@PathVariable int p_id_categoria){return categoriaNego.buscarCategoria(p_id_categoria);}
     
     @GetMapping("/listar")
     @ResponseBody
@@ -47,4 +38,7 @@ public class CategoriaController {
     public void eliminarCategoria(@PathVariable int p_id_categoria){
         categoriaNego.eliminarCategoria(p_id_categoria);
     }
+
+    @PutMapping("/modificar/{p_id_categoria}")
+    public void modificarCategoria(@PathVariable int p_id_categoria, @RequestParam String p_descripcion, @RequestParam int p_estado){categoriaNego.modificarCategoria(p_id_categoria, p_descripcion, p_estado);}
 }

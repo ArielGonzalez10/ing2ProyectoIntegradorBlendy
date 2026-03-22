@@ -15,6 +15,6 @@ public interface ICategoriaNegocio {
     void crearCategoria(Categoria p_categoria);
     Categoria buscarCategoria(int p_id_categoria);
     void eliminarCategoria(int p_id_categoria);
-    void modificarCategoria(int p_id_categoria, String p_descripcion);
+    void modificarCategoria(int p_id_categoria, String p_descripcion, int p_estado);
     List<Categoria> listarCategorias();
 }

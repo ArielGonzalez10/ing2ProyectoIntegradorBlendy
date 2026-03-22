@@ -15,5 +15,6 @@ public interface IPagoNegocio {
     void crearPago(Pago p_pago);
     Pago buscarPago(int p_id_pago);
     void eliminarPago(int p_id_pago);
+    void modificarPago(Pago p_pago);
     List<Pago> listarPagos();
 }

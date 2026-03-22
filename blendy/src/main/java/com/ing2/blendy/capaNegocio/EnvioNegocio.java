@@ -18,26 +18,26 @@ import org.springframework.stereotype.Service;
 public class EnvioNegocio implements IEnvioNegocio {
     
     @Autowired
-    private IEnvioDatos envioRepo;
+    private IEnvioDatos envioDatos;
 
     @Override
     public void crearEnvio(Envio p_envio) {
-        envioRepo.save(p_envio);
+        envioDatos.save(p_envio);
     }
 
     @Override
     public Envio buscarEnvio(int p_id_envio) {
-        return envioRepo.findById(p_id_envio).orElse(null);
+        return envioDatos.findById(p_id_envio).orElse(null);
     }
 
     @Override
     public void eliminarEnvio(int p_id_envio) {
-        envioRepo.deleteById(p_id_envio);
+        envioDatos.deleteById(p_id_envio);
     }
 
     @Override
     public List<Envio> listarEnvios() {
-        return envioRepo.findAll();
+        return envioDatos.findAll();
     }
     
 }

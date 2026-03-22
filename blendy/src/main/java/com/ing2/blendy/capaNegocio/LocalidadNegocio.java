@@ -18,26 +18,26 @@ import org.springframework.stereotype.Service;
 public class LocalidadNegocio implements ILocalidadNegocio {
     
     @Autowired
-    private ILocalidadDatos localidadRepo;
+    private ILocalidadDatos localidadDatos;
 
     @Override
     public void crearLocalidad(Localidad p_localidad) {
-        localidadRepo.save(p_localidad);
+        localidadDatos.save(p_localidad);
     }
 
     @Override
     public Localidad buscarLocalidad(int p_id_localidad) {
-        return localidadRepo.findById(p_id_localidad).orElse(null);
+        return localidadDatos.findById(p_id_localidad).orElse(null);
     }
 
     @Override
     public void eliminarLocalidad(int p_id_localidad) {
-        localidadRepo.deleteById(p_id_localidad);
+        localidadDatos.deleteById(p_id_localidad);
     }
 
     @Override
     public List<Localidad> listarLocalidades() {
-        return localidadRepo.findAll();
+        return localidadDatos.findAll();
     }
     
 }

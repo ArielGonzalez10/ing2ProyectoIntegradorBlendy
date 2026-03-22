@@ -34,9 +34,7 @@ public class ConsultaController {
     }
     
     @GetMapping("/buscar/{p_id_consulta}")
-    public Consulta buscarConsulta(@PathVariable int p_id_consulta){
-        return consultaNego.buscarConsulta(p_id_consulta);
-    }
+    public Consulta buscarConsulta(@PathVariable int p_id_consulta){return consultaNego.buscarConsulta(p_id_consulta);}
     
     @DeleteMapping("/eliminar/{p_id_consulta}")
     public void eliminarConsulta(@PathVariable int p_id_consulta){

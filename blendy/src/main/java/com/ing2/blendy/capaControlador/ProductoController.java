@@ -4,18 +4,12 @@
  */
 package com.ing2.blendy.capaControlador;
 
+import com.ing2.blendy.capaModelo.Categoria;
 import com.ing2.blendy.capaModelo.Producto;
 import com.ing2.blendy.capaNegocio.IProductoNegocio;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *
@@ -28,9 +22,7 @@ public class ProductoController {
     private IProductoNegocio productoNego;
     
     @GetMapping("/buscar/{p_descripcion}")
-    public Producto buscarProducto(@PathVariable String p_descripcion){
-       return productoNego.buscarProducto(p_descripcion);
-    }
+    public Producto buscarProducto(@PathVariable String p_descripcion){return productoNego.buscarProducto(p_descripcion);}
     
     @PostMapping("/crear")
     public void crearProducto(@RequestBody Producto p_producto){
@@ -41,10 +33,29 @@ public class ProductoController {
     public void eliminarProducto(@PathVariable int p_id_producto){
         productoNego.eliminarProducto(p_id_producto);
     }
-    
+
+    @PutMapping("/modificar/{p_id_producto}")
+    public void modificarProducto(@PathVariable int p_id_producto, @RequestParam String p_descripcion, @RequestParam int p_stock, @RequestParam int p_stockMin, @RequestParam double p_precioUnitario, @RequestParam Categoria p_categoria, @RequestParam int p_estado){productoNego.modificarProducto(p_id_producto,p_descripcion,p_stock,p_stockMin,p_precioUnitario,p_categoria,p_estado);}
+
     @GetMapping("/listar")
     @ResponseBody
     public List<Producto> listarProductos(){
         return productoNego.listarProductos();
     }
+
+    @GetMapping("/listar/asc")
+    @ResponseBody
+    public List<Producto> ordenarAlfabeticamenteAsc(){return productoNego.ordenarAlfabeticamenteAsc();}
+
+    @GetMapping("/listar/desc")
+    @ResponseBody
+    public List<Producto> ordenarAlfabeticamenteDesc(){return productoNego.ordenarAlfabeticamenteDesc();}
+
+    @GetMapping("/listar/precio/asc")
+    @ResponseBody
+    public List<Producto> ordenarPorPrecioAsc(){return productoNego.ordenarPorPrecioAsc();}
+
+    @GetMapping("/listar/precio/asc")
+    @ResponseBody
+    public List<Producto> ordenarPorPrecioDesc(){return productoNego.ordenarPorPrecioDesc();}
 }

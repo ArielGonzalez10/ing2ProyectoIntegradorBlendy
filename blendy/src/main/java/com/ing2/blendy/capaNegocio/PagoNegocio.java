@@ -16,28 +16,32 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PagoNegocio implements IPagoNegocio {
-    
+
     @Autowired
-    private IPagoDatos pagoRepo;
+    private IPagoDatos pagoDatos;
 
     @Override
     public void crearPago(Pago p_pago) {
-        pagoRepo.save(p_pago);
+        pagoDatos.save(p_pago);
     }
 
     @Override
     public Pago buscarPago(int p_id_pago) {
-        return pagoRepo.findById(p_id_pago).orElse(null);
+        return pagoDatos.findById(p_id_pago).orElse(null);
     }
 
     @Override
     public void eliminarPago(int p_id_pago) {
-        pagoRepo.deleteById(p_id_pago);
+        pagoDatos.deleteById(p_id_pago);
     }
 
     @Override
     public List<Pago> listarPagos() {
-        return pagoRepo.findAll();
+        return pagoDatos.findAll();
     }
-    
+
+    @Override
+    public void modificarPago(Pago p_pago) {
+        pagoDatos.save(p_pago);
+    }
 }

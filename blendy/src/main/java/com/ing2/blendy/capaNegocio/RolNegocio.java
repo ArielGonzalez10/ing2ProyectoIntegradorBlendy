@@ -16,27 +16,32 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class RolNegocio implements IRolNegocio {
+
     @Autowired
-    private IRolDatos rolRepo;
+    private IRolDatos rolDatos;
 
     @Override
-    public void crearUsuario(Rol p_rol) {
-        rolRepo.save(p_rol);
+    public void crearRol(Rol p_rol) {
+        rolDatos.save(p_rol);
     }
 
     @Override
     public Rol buscarRol(int p_id_rol) {
-        return rolRepo.findById(p_id_rol).orElse(null);
+        return rolDatos.findById(p_id_rol).orElse(null);
     }
 
     @Override
     public void eliminarRol(int p_id_rol) {
-        rolRepo.deleteById(p_id_rol);
+        rolDatos.deleteById(p_id_rol);
     }
 
     @Override
     public List<Rol> listarRoles() {
-        return rolRepo.findAll();
+        return rolDatos.findAll();
     }
-    
+
+    @Override
+    public void modificarRol(Rol p_rol) {
+        rolDatos.save(p_rol);
+    }
 }

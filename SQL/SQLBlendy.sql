@@ -72,6 +72,7 @@ CREATE TABLE producto (
     id_producto INT PRIMARY KEY IDENTITY(1,1),
     descripcion VARCHAR(255),
     stock INT,
+	stockMin INT,
     precio_unitario FLOAT, -- double en Java mapea mejor a FLOAT o DECIMAL
     estado INT NOT NULL,
     categoria_id_categoria INT,

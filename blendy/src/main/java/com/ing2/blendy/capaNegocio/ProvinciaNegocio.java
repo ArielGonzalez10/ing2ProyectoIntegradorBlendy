@@ -16,28 +16,32 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ProvinciaNegocio implements IProvinciaNegocio {
-    
+
     @Autowired
-    private IProvinciaDatos provinciaRepo;
+    private IProvinciaDatos provinciaDatos;
 
     @Override
     public void crearProvincia(Provincia p_provincia) {
-        provinciaRepo.save(p_provincia);
+        provinciaDatos.save(p_provincia);
     }
 
     @Override
     public Provincia buscarProvincia(int p_id_provincia) {
-        return provinciaRepo.findById(p_id_provincia).orElse(null);
+        return provinciaDatos.findById(p_id_provincia).orElse(null);
     }
 
     @Override
     public void eliminarProvincia(int p_id_provincia) {
-        provinciaRepo.deleteById(p_id_provincia);
+        provinciaDatos.deleteById(p_id_provincia);
     }
 
     @Override
     public List<Provincia> listarProvincias() {
-        return provinciaRepo.findAll();
+        return provinciaDatos.findAll();
     }
-    
+
+    @Override
+    public void modificarProvincia(Provincia p_provincia) {
+        provinciaDatos.save(p_provincia);
+    }
 }

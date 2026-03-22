@@ -18,26 +18,26 @@ import org.springframework.stereotype.Service;
 public class ConsultaNegocio implements IConsultaNegocio {
     
     @Autowired
-    private IConsultaDatos consultaRepo;
+    private IConsultaDatos consultaDatos;
     
     @Override
     public void crearConsulta(Consulta p_consulta) {
-        consultaRepo.save(p_consulta);
+        consultaDatos.save(p_consulta);
     }
 
     @Override
     public Consulta buscarConsulta(int p_id_consulta) {
-        return consultaRepo.findById(p_id_consulta).orElse(null);
+        return consultaDatos.findById(p_id_consulta).orElse(null);
     }
 
     @Override
     public void eliminarConsulta(int p_id_consulta) {
-        consultaRepo.deleteById(p_id_consulta);
+        consultaDatos.deleteById(p_id_consulta);
     }
 
     @Override
     public List<Consulta> listarConsultas() {
-        return consultaRepo.findAll();
+        return consultaDatos.findAll();
     }
     
 }

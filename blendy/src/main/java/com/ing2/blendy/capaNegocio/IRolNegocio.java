@@ -12,8 +12,9 @@ import java.util.List;
  * @author ariel
  */
 public interface IRolNegocio {
-    void crearUsuario(Rol p_rol);
+    void crearRol(Rol p_rol);
     Rol buscarRol(int p_id_rol);
+    void modificarRol(Rol p_rol);
     void eliminarRol(int p_id_rol);
     List<Rol> listarRoles();
 }

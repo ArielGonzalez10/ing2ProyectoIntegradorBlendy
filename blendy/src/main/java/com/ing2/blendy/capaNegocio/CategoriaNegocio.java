@@ -18,31 +18,30 @@ import org.springframework.stereotype.Service;
 public class CategoriaNegocio implements ICategoriaNegocio {
     
     @Autowired
-    private ICategoriaDatos categoriaRepo;
+    private ICategoriaDatos categoriaDatos;
 
     @Override
     public void crearCategoria(Categoria p_categoria) {
-        categoriaRepo.save(p_categoria);
+        categoriaDatos.save(p_categoria);
     }
 
     @Override
-    public Categoria buscarCategoria(int p_id_categoria) {
-        return categoriaRepo.findById(p_id_categoria).orElse(null);
-    }
+    public Categoria buscarCategoria(int p_id_categoria) {return categoriaDatos.findById(p_id_categoria).orElse(null);}
 
     @Override
     public void eliminarCategoria(int p_id_categoria) {
-        categoriaRepo.deleteById(p_id_categoria);
+        categoriaDatos.deleteById(p_id_categoria);
     }
 
     @Override
-    public void modificarCategoria(int p_id_categoria, String p_descripcion) {
-
+    public void modificarCategoria(int p_id_categoria, String p_descripcion, int p_estado) {
+        Categoria categoBusc = this.buscarCategoria(p_id_categoria);
+        categoBusc.setDescripcion(p_descripcion);
+        categoBusc.setEstado(p_estado);
+        categoriaDatos.save(categoBusc);
     }
 
     @Override
-    public List<Categoria> listarCategorias() {
-        return categoriaRepo.findAll();
-    }
+    public List<Categoria> listarCategorias() {return categoriaDatos.findAll();}
     
 }

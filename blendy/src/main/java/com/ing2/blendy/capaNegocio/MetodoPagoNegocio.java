@@ -18,26 +18,26 @@ import org.springframework.stereotype.Service;
 public class MetodoPagoNegocio implements IMetodoPagoNegocio {
     
     @Autowired
-    private IMetodoPagoDatos metodoPagoRepo;
+    private IMetodoPagoDatos metodoPagoDatos;
 
     @Override
     public void crearMetodoPago(MetodoPago p_metodoPago) {
-        metodoPagoRepo.save(p_metodoPago)
+        metodoPagoDatos.save(p_metodoPago)
 ;    }
 
     @Override
     public MetodoPago buscarMetodoPago(int p_id_metodoPago) {
-        return metodoPagoRepo.findById(p_id_metodoPago).orElse(null);
+        return metodoPagoDatos.findById(p_id_metodoPago).orElse(null);
     }
 
     @Override
     public void eliminarMetodoPago(int p_id_metodoPago) {
-        metodoPagoRepo.deleteById(p_id_metodoPago);
+        metodoPagoDatos.deleteById(p_id_metodoPago);
     }
 
     @Override
     public List<MetodoPago> listarMetodoPagos() {
-        return metodoPagoRepo.findAll();
+        return metodoPagoDatos.findAll();
     }
     
 }
