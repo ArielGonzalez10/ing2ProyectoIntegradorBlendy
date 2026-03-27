@@ -4,10 +4,7 @@
  */
 package com.ing2.blendy.capaModelo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +23,7 @@ public class Rol {
     //Atributos
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "id_rol")
     private int idRol; 
     private String descripcion;
     private int estado;

@@ -124,6 +124,9 @@ CREATE TABLE envio (
     CONSTRAINT FK_envio_domicilio FOREIGN KEY (domicilio_id_domicilio) REFERENCES domicilio(id_domicilio)
 );
 
+INSERT INTO rol (descripcion,estado) VALUES ('Administrador',1);
+INSERT INTO rol (descripcion,estado) VALUES ('Cliente',1);
+
 INSERT INTO provincia (nombre, codigo_postal, estado) VALUES
 ('Buenos Aires', 1900, 1),
 ('Ciudad Autónoma de Buenos Aires', 1000, 1),
@@ -202,5 +205,5 @@ INSERT INTO localidad (nombre, estado, provincia_id_provincia) VALUES
 
 SELECT * FROM localidad;
 SELECT * FROM provincia;
-DELETE FROM localidad;
-DELETE FROM provincia;
+SELECT * FROM rol;
+select * from usuario;

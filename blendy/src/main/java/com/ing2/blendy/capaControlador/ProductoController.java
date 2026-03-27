@@ -55,7 +55,7 @@ public class ProductoController {
     @ResponseBody
     public List<Producto> ordenarPorPrecioAsc(){return productoNego.ordenarPorPrecioAsc();}
 
-    @GetMapping("/listar/precio/asc")
+    @GetMapping("/listar/precio/desc")
     @ResponseBody
     public List<Producto> ordenarPorPrecioDesc(){return productoNego.ordenarPorPrecioDesc();}
 }

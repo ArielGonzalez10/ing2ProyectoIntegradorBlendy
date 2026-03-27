@@ -31,10 +31,8 @@ public class VentaDetalle {
     private int idVentaDetalle;
     private int cantidad;
     private double total;
-    @ManyToOne 
-    @JoinColumn(name = "id_venta_cabecera") // Nombre de la columna en la BD
+    @ManyToOne
     private VentaCabecera ventaCabecera;
     @ManyToOne
-    @JoinColumn(name = "id_producto") // Nombre de la columna en la BD
     private Producto producto;
 }

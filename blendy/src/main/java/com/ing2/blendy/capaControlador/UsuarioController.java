@@ -9,7 +9,9 @@ import com.ing2.blendy.capaNegocio.IUsuarioNegocio;
 import java.util.List;
 
 import com.ing2.blendy.dto.SesionDTO;
+import com.ing2.blendy.dto.TokenResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,7 +36,8 @@ public class UsuarioController {
 
     @PostMapping("/iniciarSesion")
     public ResponseEntity<?> iniciarSesion(@RequestBody SesionDTO p_sesion){
-
+        String token = usuarioNego.iniciarSesion(p_sesion.getCorreo(),p_sesion.getContrasenia());
+        return ResponseEntity.ok(new TokenResponse(token));
     }
 
     @GetMapping("/buscar/{p_id_usuario}")
@@ -43,8 +46,9 @@ public class UsuarioController {
     }
     
     @PostMapping("/crear")
-    public void crearUsuario(@RequestBody Usuario p_usuario){
+    public ResponseEntity<?> crearUsuario(@RequestBody Usuario p_usuario){
         usuarioNego.crearUsuario(p_usuario);
+        return new ResponseEntity<>("Usuario creado con éxito", HttpStatus.CREATED);
     }
     
     @DeleteMapping("/eliminar/{p_id_usuario}")

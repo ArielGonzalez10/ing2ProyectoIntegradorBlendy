@@ -16,6 +16,9 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IUsuarioDatos extends JpaRepository<Usuario,Integer>{
+    @Query("SELECT COUNT(u) > 0 FROM Usuario u WHERE u.correoElectronico = :p_correoElectronico")
+    boolean existeCorreo(@Param("p_correoElectronico") String p_correoElectronico);
+
     @Query("SELECT u FROM Usuario u WHERE u.correoElectronico = :p_correoElectronico")
-    Usuario buscarPorEmail(@Param("p_correoElectronico") String p_correoElectronico);
+    Usuario buscarPorCorreo(@Param("p_correoElectronico") String p_correoElectronico);
 }

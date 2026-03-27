@@ -26,6 +26,9 @@ public class UsuarioNegocio implements IUsuarioNegocio {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtService jwtService;
+
     @Override
     public void modificarUsuario(int p_id_usuario, String p_nombre, String p_apellido, String p_correoElectronico, String p_contrasenia, String p_telefono, int p_estado) {
         Usuario usuarioBusc = this.buscarUsuario(p_id_usuario);
@@ -38,12 +41,13 @@ public class UsuarioNegocio implements IUsuarioNegocio {
         usuarioDatos.save(usuarioBusc);
     }
 
-
-
     @Override
     public String iniciarSesion(String p_correoElectronico, String p_contrasenia) {
-        Usuario usuarioBusc = usuarioDatos.buscarPorEmail(p_correoElectronico);
-        return null;
+        Usuario usuarioBusc = usuarioDatos.buscarPorCorreo(p_correoElectronico);
+        if(!passwordEncoder.matches(p_contrasenia, usuarioBusc.getContrasenia())){
+            throw new RuntimeException("Credenciales invalidas");
+        }
+        return jwtService.generarToken(usuarioBusc);
     }
 
     @Override
@@ -53,8 +57,8 @@ public class UsuarioNegocio implements IUsuarioNegocio {
 
     @Override
     public void crearUsuario(Usuario p_usuario) {
-        if(usuarioDatos.buscarPorEmail(p_usuario.getCorreoElectronico())){
-        if(usuarioDatos.buscarPorEmail(p_usuario.getCorreoElectronico())){
+
+        if(usuarioDatos.existeCorreo(p_usuario.getCorreoElectronico())){
             throw new RuntimeException("Usuario registrado previamente");
         }
         p_usuario.setContrasenia(passwordEncoder.encode(p_usuario.getContrasenia()));
