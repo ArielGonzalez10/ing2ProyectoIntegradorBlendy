@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.ing2.blendy.dto.SesionDTO;
 import com.ing2.blendy.dto.TokenResponse;
+import com.ing2.blendy.dto.UsuarioDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,8 @@ public class UsuarioController {
 
     @GetMapping("/buscar/{p_id_usuario}")
     @ResponseBody
-    public Usuario buscarUsuario(@PathVariable int p_id_usuario){ return usuarioNego.buscarUsuario(p_id_usuario);
+    public UsuarioDTO buscarUsuario(@PathVariable int p_id_usuario){
+        return usuarioNego.buscarUsuario(p_id_usuario);
     }
     
     @PostMapping("/crear")

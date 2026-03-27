@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
  *
  * @author ariel
@@ -30,6 +32,9 @@ public class Usuario {
     private String contrasenia;
     private int estado;
     private String telefono;
+    //Mapped by indica que la relación ya fue mapeado por domicilios y cascade crea el domicilio
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Domicilio> domicilios;
     @ManyToOne
     private Rol rol;
 }

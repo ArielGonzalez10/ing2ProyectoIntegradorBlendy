@@ -1,127 +1,150 @@
 CREATE DATABASE blendy;
 USE blendy;
-
--- TABLAS INDEPENDIENTES
-CREATE TABLE provincia (
-    id_provincia INT PRIMARY KEY IDENTITY(1,1),
-    nombre VARCHAR(255),
-    codigo_postal INT, -- Cambiado a INT por tu clase Java
-    estado INT NOT NULL
+CREATE TABLE Categoria
+(
+  idCategoria INT NOT NULL,
+  descripcion VARCHAR(30) NOT NULL,
+  estado INT NOT NULL,
+  PRIMARY KEY (idCategoria)
 );
 
-CREATE TABLE rol (
-    id_rol INT PRIMARY KEY IDENTITY(1,1),
-    descripcion VARCHAR(255),
-    estado INT NOT NULL
+CREATE TABLE Producto
+(
+  idProducto INT NOT NULL,
+  descripcion VARCHAR(100) NOT NULL,
+  stock INT NOT NULL,
+  precioUnitario FLOAT NOT NULL,
+  estado INT NOT NULL,
+  idCategoria INT NOT NULL,
+  PRIMARY KEY (idProducto),
+  FOREIGN KEY (idCategoria) REFERENCES Categoria(idCategoria)
 );
 
-CREATE TABLE categoria (
-    id_categoria INT PRIMARY KEY IDENTITY(1,1),
-    descripcion VARCHAR(255),
-    estado INT NOT NULL
+CREATE TABLE Rol
+(
+  idRol INT NOT NULL,
+  descripcion VARCHAR(30) NOT NULL,
+  estado INT NOT NULL,
+  PRIMARY KEY (idRol)
 );
 
-CREATE TABLE metodo_pago (
-    id_metodo_pago INT PRIMARY KEY IDENTITY(1,1),
-    descripcion VARCHAR(255),
-    estado INT NOT NULL
+CREATE TABLE Usuario
+(
+  idUsuario INT NOT NULL,
+  nombre VARCHAR(100) NOT NULL,
+  apellido VARCHAR(100) NOT NULL,
+  correoElectronico VARCHAR(100) NOT NULL,
+  contrasenia VARCHAR(100) NOT NULL,
+  estado INT NOT NULL,
+  idRol INT NOT NULL,
+  PRIMARY KEY (idUsuario),
+  FOREIGN KEY (idRol) REFERENCES Rol(idRol)
 );
 
-CREATE TABLE consulta (
-    id_consulta INT PRIMARY KEY IDENTITY(1,1),
-    nombre VARCHAR(255),
-    correo_electronico VARCHAR(255),
-    descripcion VARCHAR(MAX),
-    asunto VARCHAR(255),
-    respuesta VARCHAR(MAX),
-    estado INT NOT NULL
+CREATE TABLE Provincia
+(
+  idProvincia INT NOT NULL,
+  nombre VARCHAR(100) NOT NULL,
+  codigoPostal INT NOT NULL,
+  estado INT NOT NULL,
+  PRIMARY KEY (idProvincia)
 );
 
--- TABLAS CON RELACIONES
-CREATE TABLE localidad (
-    id_localidad INT PRIMARY KEY IDENTITY(1,1),
-    nombre VARCHAR(255),
-    estado INT NOT NULL,
-    provincia_id_provincia INT, -- Hibernate buscará este nombre por defecto para 'Provincia provincia'
-    CONSTRAINT FK_localidad_provincia FOREIGN KEY (provincia_id_provincia) REFERENCES provincia(id_provincia)
+CREATE TABLE Localidad
+(
+  idLocalidad INT NOT NULL,
+  nombre VARCHAR(30) NOT NULL,
+  estado INT NOT NULL,
+  idProvincia INT NOT NULL,
+  PRIMARY KEY (idLocalidad),
+  FOREIGN KEY (idProvincia) REFERENCES Provincia(idProvincia)
 );
 
-CREATE TABLE usuario (
-    id_usuario INT PRIMARY KEY IDENTITY(1,1),
-    nombre VARCHAR(255),
-    apellido VARCHAR(255),
-    correo_electronico VARCHAR(255),
-    contrasenia VARCHAR(255),
-    telefono VARCHAR(50),
-    estado INT NOT NULL,
-    rol_id_rol INT,
-    CONSTRAINT FK_usuario_rol FOREIGN KEY (rol_id_rol) REFERENCES rol(id_rol)
+CREATE TABLE Domicilio
+(
+  idDomicilio INT NOT NULL,
+  calle INT NOT NULL,
+  altura INT NOT NULL,
+  idLocalidad INT NOT NULL,
+  idUsuario INT NOT NULL,
+  PRIMARY KEY (idDomicilio),
+  FOREIGN KEY (idLocalidad) REFERENCES Localidad(idLocalidad),
+  FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario)
 );
 
-CREATE TABLE domicilio (
-    id_domicilio INT PRIMARY KEY IDENTITY(1,1),
-    calle VARCHAR(255),
-    altura INT, -- Cambiado a INT por tu clase Java
-    localidad_id_localidad INT,
-    usuario_id_usuario INT,
-    CONSTRAINT FK_domicilio_localidad FOREIGN KEY (localidad_id_localidad) REFERENCES localidad(id_localidad),
-    CONSTRAINT FK_domicilio_usuario FOREIGN KEY (usuario_id_usuario) REFERENCES usuario(id_usuario)
+CREATE TABLE VentaCabecera
+(
+  idVentaCabecera INT NOT NULL,
+  fecha DATE NOT NULL,
+  totalVenta INT NOT NULL,
+  idUsuario INT NOT NULL,
+  idDomicilio INT NOT NULL,
+  PRIMARY KEY (idVentaCabecera),
+  FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario),
+  FOREIGN KEY (idDomicilio) REFERENCES Domicilio(idDomicilio)
 );
 
-CREATE TABLE producto (
-    id_producto INT PRIMARY KEY IDENTITY(1,1),
-    descripcion VARCHAR(255),
-    stock INT,
-	stockMin INT,
-    precio_unitario FLOAT, -- double en Java mapea mejor a FLOAT o DECIMAL
-    estado INT NOT NULL,
-    categoria_id_categoria INT,
-    CONSTRAINT FK_producto_categoria FOREIGN KEY (categoria_id_categoria) REFERENCES categoria(id_categoria)
+CREATE TABLE VentaDetalle
+(
+  idVentaDetalle INT NOT NULL,
+  cantidad INT NOT NULL,
+  total INT NOT NULL,
+  idProducto INT NOT NULL,
+  idVentaCabecera INT NOT NULL,
+  FOREIGN KEY (idProducto) REFERENCES Producto(idProducto),
+  FOREIGN KEY (idVentaCabecera) REFERENCES VentaCabecera(idVentaCabecera)
 );
 
-CREATE TABLE imagen (
-    id_imagen INT PRIMARY KEY IDENTITY(1,1),
-    descripcion VARCHAR(255),
-    estado INT NOT NULL,
-    producto_id_producto INT,
-    CONSTRAINT FK_imagen_producto FOREIGN KEY (producto_id_producto) REFERENCES producto(id_producto)
+CREATE TABLE MetodoPago
+(
+  idMetodoPago INT NOT NULL,
+  descripcion VARCHAR(30) NOT NULL,
+  estado INT NOT NULL,
+  PRIMARY KEY (idMetodoPago)
 );
 
-CREATE TABLE venta_cabecera (
-    id_venta_cabecera INT PRIMARY KEY IDENTITY(1,1),
-    fecha DATE, -- LocalDate mapea a DATE
-    total_venta FLOAT,
-    usuario_id_usuario INT,
-    CONSTRAINT FK_cabecera_usuario FOREIGN KEY (usuario_id_usuario) REFERENCES usuario(id_usuario)
+CREATE TABLE Pago
+(
+  montoPago INT NOT NULL,
+  idVentaCabecera INT NOT NULL,
+  idMetodoPago INT NOT NULL,
+  PRIMARY KEY (idVentaCabecera, idMetodoPago),
+  FOREIGN KEY (idVentaCabecera) REFERENCES VentaCabecera(idVentaCabecera),
+  FOREIGN KEY (idMetodoPago) REFERENCES MetodoPago(idMetodoPago)
 );
 
-CREATE TABLE venta_detalle (
-    id_venta_detalle INT PRIMARY KEY IDENTITY(1,1),
-    cantidad INT,
-    total FLOAT,
-    id_producto INT,
-    id_venta_cabecera INT,
-    CONSTRAINT FK_detalle_producto FOREIGN KEY (id_producto) REFERENCES producto(id_producto),
-    CONSTRAINT FK_detalle_cabecera FOREIGN KEY (id_venta_cabecera) REFERENCES venta_cabecera(id_venta_cabecera)
+CREATE TABLE Consulta
+(
+  idConsulta INT NOT NULL,
+  descripcion VARCHAR(100) NOT NULL,
+  asunto VARCHAR(100) NOT NULL,
+  respuesta VARCHAR(100) NOT NULL,
+  nombre VARCHAR(100) NOT NULL,
+  correoElectronico VARCHAR(100) NOT NULL,
+  estado INT NOT NULL,
+  PRIMARY KEY (idConsulta)
 );
 
-CREATE TABLE pago (
-    id_pago INT PRIMARY KEY IDENTITY(1,1),
-    monto_pago FLOAT,
-    venta_cabecera_id_venta_cabecera INT,
-    metodo_pago_id_metodo_pago INT,
-    CONSTRAINT FK_pago_cabecera FOREIGN KEY (venta_cabecera_id_venta_cabecera) REFERENCES venta_cabecera(id_venta_cabecera),
-    CONSTRAINT FK_pago_metodo FOREIGN KEY (metodo_pago_id_metodo_pago) REFERENCES metodo_pago(id_metodo_pago)
+CREATE TABLE Envio
+(
+  idEnvio INT NOT NULL,
+  fechaDespacho DATE NOT NULL,
+  fechaRecepcion DATE NOT NULL,
+  idUsuario INT NOT NULL,
+  idDomicilio INT NOT NULL,
+  PRIMARY KEY (idEnvio),
+  FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario),
+  FOREIGN KEY (idDomicilio) REFERENCES Domicilio(idDomicilio)
 );
 
-CREATE TABLE envio (
-    id_envio INT PRIMARY KEY IDENTITY(1,1),
-    fecha_despacho DATE,
-    fecha_recepcion DATE,
-    usuario_id_usuario INT,
-    domicilio_id_domicilio INT,
-    CONSTRAINT FK_envio_usuario FOREIGN KEY (usuario_id_usuario) REFERENCES usuario(id_usuario),
-    CONSTRAINT FK_envio_domicilio FOREIGN KEY (domicilio_id_domicilio) REFERENCES domicilio(id_domicilio)
+CREATE TABLE Imagen
+(
+  idImagen INT NOT NULL,
+  descripcion INT NOT NULL,
+  estado INT NOT NULL,
+  idProducto INT NOT NULL,
+  PRIMARY KEY (idImagen),
+  FOREIGN KEY (idProducto) REFERENCES Producto(idProducto)
 );
 
 INSERT INTO rol (descripcion,estado) VALUES ('Administrador',1);
@@ -207,3 +230,4 @@ SELECT * FROM localidad;
 SELECT * FROM provincia;
 SELECT * FROM rol;
 select * from usuario;
+select * from domicilio;
