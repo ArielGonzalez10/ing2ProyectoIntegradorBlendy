@@ -40,10 +40,6 @@ public interface IProductoDatos extends JpaRepository<Producto,Integer>{
     @Query("SELECT p FROM Producto p ORDER BY p.precioUnitario Desc ")
     List<Producto> ordenarPorPrecioDesc();
 
-    //Ordena alfabeticamente la lista de productos
-    @Query("SELECT p FROM Producto p WHERE p.estado = 1 ")
-    List<Producto> listarProductos();
-
     @Modifying
     @Transactional
     @Query("UPDATE Producto p SET p.estado = 0 WHERE p.idProducto = :p_id_producto")

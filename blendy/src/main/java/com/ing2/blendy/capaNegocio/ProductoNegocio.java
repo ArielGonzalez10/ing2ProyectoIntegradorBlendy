@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ProductoNegocio implements IProductoNegocio {
+
     @Autowired
     private IProductoDatos productoDatos;
 
@@ -62,7 +63,7 @@ public class ProductoNegocio implements IProductoNegocio {
 
     @Override
     public List<Producto> listarProductos() {
-        return productoDatos.listarProductos();
+        return productoDatos.findAll();
     }
 
     
