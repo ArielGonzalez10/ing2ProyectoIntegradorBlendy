@@ -229,5 +229,37 @@ INSERT INTO localidad (nombre, estado, provincia_id_provincia) VALUES
 SELECT * FROM localidad;
 SELECT * FROM provincia;
 SELECT * FROM rol;
-select * from usuario;
-select * from domicilio;
+SELECT * FROM usuario;
+SELECT * FROM domicilio;
+SELECT * FROM categoria;
+SELECT * FROM producto;
+
+INSERT INTO categoria (descripcion, estado) VALUES ('Gaseosas', 1);
+INSERT INTO categoria (descripcion, estado) VALUES ('Cervezas', 1);
+INSERT INTO categoria (descripcion, estado) VALUES ('Vinos', 1);
+INSERT INTO categoria (descripcion, estado) VALUES ('Jugos y Aguas', 1);
+
+-- Gaseosas (id_categoria: 1)
+INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
+VALUES ('Coca Cola 2.25L', 1, 2500.00, 50, 10, 1);
+
+INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
+VALUES ('Sprite Zero 1.5L', 1, 1800.00, 30, 5, 1);
+
+-- Cervezas (id_categoria: 2)
+INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
+VALUES ('Cerveza Quilmes Clásica 1L', 1, 2200.00, 100, 20, 2);
+
+INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
+VALUES ('Cerveza IPA Artesanal 500ml', 1, 3500.00, 15, 5, 2);
+
+-- Vinos (id_categoria: 3)
+INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
+VALUES ('Vino Malbec Reserva', 1, 8500.00, 12, 3, 3);
+
+-- Jugos y Aguas (id_categoria: 4)
+INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
+VALUES ('Agua Mineral 500ml', 1, 900.00, 80, 15, 4);
+
+INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
+VALUES ('Jugo de Naranja 1L', 1, 1200.00, 25, 10, 4);

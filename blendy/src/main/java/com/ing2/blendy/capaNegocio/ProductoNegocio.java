@@ -22,25 +22,23 @@ public class ProductoNegocio implements IProductoNegocio {
 
     @Override
     public List<Producto> ordenarAlfabeticamenteAsc() {
-        return List.of();
+        return productoDatos.ordenarAlfabeticamenteAsc();
     }
 
     @Override
     public List<Producto> ordenarAlfabeticamenteDesc() {
-        return List.of();
+        return productoDatos.ordenarAlfabeticamenteDesc();
     }
 
     @Override
     public List<Producto> ordenarPorPrecioAsc() {
-        return List.of();
+        return productoDatos.ordenarPorPrecioAsc();
     }
 
     @Override
     public List<Producto> ordenarPorPrecioDesc() {
-        return List.of();
+        return productoDatos.ordenarPorPrecioDesc();
     }
-
-
 
     @Override
     public void crearProducto(Producto p_producto) {
@@ -54,7 +52,7 @@ public class ProductoNegocio implements IProductoNegocio {
 
     @Override
     public void eliminarProducto(int p_id_producto) {
-        productoDatos.deleteById(p_id_producto);
+        productoDatos.eliminarProducto(p_id_producto);
     }
 
     @Override
@@ -64,7 +62,7 @@ public class ProductoNegocio implements IProductoNegocio {
 
     @Override
     public List<Producto> listarProductos() {
-        return productoDatos.findAll();
+        return productoDatos.listarProductos();
     }
 
     
