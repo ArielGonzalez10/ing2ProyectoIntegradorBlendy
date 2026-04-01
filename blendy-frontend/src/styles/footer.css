@@ -1,0 +1,86 @@
+.footer-blendy {
+    background-color: var(--color-fondo);
+    padding: 0 5%;
+    border-top: 1px solid var(--color-gris-medio); /* Línea superior */
+}
+
+.footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 0;
+}
+
+.footer-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.footer-logo-container img {
+    height: 35px;
+}
+
+.footer-brand {
+    font-family: 'Gazpacho', serif;
+    font-size: 1.5rem;
+    color: var(--color-texto);
+}
+
+.footer-contact {
+    text-align: center;
+    font-family: 'Onest', sans-serif;
+    color: var(--color-texto);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.footer-contact p {
+    margin: 0;
+}
+
+.footer-socials {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-fondo);
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.social-icon:hover {
+    transform: translateY(-3px);
+}
+
+/* redes sociales */
+.bg-facebook { background-color: #1877F2; }
+.bg-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+.bg-youtube { background-color: #FF0000; }
+.bg-x { background-color: #1A1A1A; border: 1px solid #464746; color: #FFFFFF; }
+.bg-linkedin { background-color: #0A66C2; }
+.bg-tiktok { background-color: #000000; border: 1px solid #464746; color: #FFFFFF; }
+
+.footer-bottom {
+    border-top: 1px solid var(--color-gris-medio);
+    padding: 25px 0;
+    text-align: center;
+    font-family: 'Onest', sans-serif;
+    color: var(--color-texto);
+    font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .footer-top {
+        flex-direction: column;
+        gap: 30px;
+        text-align: center;
+    }
+}

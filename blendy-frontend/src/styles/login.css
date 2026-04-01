@@ -1,0 +1,116 @@
+/* Contenedor principal de la pantalla */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 130px;
+    padding-bottom: 50px;
+}
+
+/* TEXTOS DE ENCABEZADO */
+.login-header {
+    text-align: center;
+    margin-bottom: 40px;
+    max-width: 650px;
+    padding: 0 20px;
+}
+
+.login-portal {
+    color: var(--color-subtitulos);
+    font-family: var(--font-cuerpo);
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.login-header h1 {
+    font-size: 4rem;
+    margin-bottom: 15px;
+    line-height: 1.1;
+}
+
+.login-header p {
+    color: var(--color-subtitulos);
+    font-family: var(--font-cuerpo);
+    font-size: 1rem;
+}
+
+/* TARJETA EXTERIOR*/
+.login-card-outer {
+    background-color: #1A1A1A; 
+    border-radius: 24px;
+    padding: 25px 25px 35px 25px; 
+    width: 100%;
+    max-width: 450px;
+}
+
+/* TARJETA INTERIOR */
+.login-form-inner {
+    background-color: var(--color-fondo);
+    border-radius: 16px;
+    padding: 35px 30px;
+    margin-bottom: 20px;
+}
+
+.login-form-logo {
+    font-family: var(--font-titulos); 
+    font-size: 1.6rem;
+    color: var(--color-texto);
+    margin-bottom: 30px;
+}
+
+/* INPUTS Y ETIQUETAS */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-family: var(--font-cuerpo);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--color-texto);
+}
+
+.form-group input {
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid var(--color-gris-medio);
+    color: var(--color-texto);
+    padding: 12px 15px;
+    border-radius: 6px;
+    font-family: var(--font-cuerpo);
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease;
+}
+
+/* Cambio de color al hacer clic en el input */
+.form-group input:focus {
+    outline: none;
+    border-color: var(--color-celeste);
+}
+
+/* ENLACES INFERIORES */
+.login-footer-links {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+}
+
+.login-footer-links a {
+    font-family: var(--font-cuerpo);
+    font-size: 0.85rem;
+    color: var(--color-texto);
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.login-footer-links a:hover {
+    color: var(--color-celeste);
+}

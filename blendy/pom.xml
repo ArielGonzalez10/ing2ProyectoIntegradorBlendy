@@ -9,7 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ing2</groupId>
-	<artifactId>blendy</artifactId>
+	<artifactId>ble
+		ndy</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>blendy</name>
 	<description>Proyecto integrador de Ingenieria de software 2</description>

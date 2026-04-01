@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import api from '../api/axios';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
     const [usuario, setUsuario] = useState({
@@ -21,22 +22,21 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        // Estructura exacta que funcionó en tu prueba manual
         const usuarioParaEnviar = {
             idUsuario: 0, 
-            ...usuario,             
+            ...usuario,            
             rol: { 
-                idRol: 2,           
+                idRol: 2,          
                 nombreRol: "Cliente", 
-                estado: 1           
+                estado: 1          
             }
         };
 
         try {
-            // Asegúrate de que en axios.js la baseURL sea http://localhost:8080
             const response = await api.post('/usuarios/crear', usuarioParaEnviar); 
-            alert("¡Registro exitoso como Cliente!");
+            alert("¡Registro exitoso en Blendly!");
             console.log("Datos guardados en DB:", response.data);
+            // redirección al login
         } catch (error) {
             console.error("Error al registrar:", error.response?.data || error.message);
             alert("Hubo un problema con el registro. Revisa la consola (F12).");
@@ -44,41 +44,95 @@ const Register = () => {
     };
 
     return (
-        <div className="container mt-5">
-            <div className="row justify-content-center">
-                <div className="col-md-6">
-                    <form onSubmit={handleSubmit} className="card p-4 shadow-sm">
-                        <h2 className="text-center mb-4">Registro Blendy</h2>
+        <div className="login-page">
+            
+            <div className="login-header">
+                <span className="login-portal">NUEVO USUARIO</span>
+                <h1>Únete a Blendly</h1>
+                <p>Crea tu cuenta para acceder a selecciones exclusivas y gestionar tus pedidos.</p>
+            </div>
+
+            <div className="login-card-outer">
+                <div className="login-form-inner">
+                    <h2 className="login-form-logo">Blendly</h2>
+                    
+                    {/* función onSubmit */}
+                    <form onSubmit={handleSubmit}>
                         
-                        <div className="row">
-                            <div className="col-md-6 mb-3">
-                                <label className="form-label">Nombre</label>
-                                <input type="text" name="nombre" className="form-control" onChange={handleChange} required />
+                        {/* Fila para Nombre y Apellido (Flexbox para que queden uno al lado del otro) */}
+                        <div style={{ display: 'flex', gap: '15px' }}>
+                            <div className="form-group" style={{ flex: 1 }}>
+                                <label>Nombre *</label>
+                                <input 
+                                    type="text" 
+                                    name="nombre"
+                                    placeholder="Ej: Fátima" 
+                                    value={usuario.nombre}
+                                    onChange={handleChange}
+                                    required 
+                                />
                             </div>
-                            <div className="col-md-6 mb-3">
-                                <label className="form-label">Apellido</label>
-                                <input type="text" name="apellido" className="form-control" onChange={handleChange} required />
+                            <div className="form-group" style={{ flex: 1 }}>
+                                <label>Apellido *</label>
+                                <input 
+                                    type="text" 
+                                    name="apellido"
+                                    placeholder="Ej: Pérez" 
+                                    value={usuario.apellido}
+                                    onChange={handleChange}
+                                    required 
+                                />
                             </div>
                         </div>
 
-                        <div className="mb-3">
-                            <label className="form-label">Correo Electrónico</label>
-                            <input type="email" name="correoElectronico" className="form-control" onChange={handleChange} required />
+                        <div className="form-group">
+                            <label>Correo Electrónico *</label>
+                            <input 
+                                type="email" 
+                                name="correoElectronico"
+                                placeholder="nombre@ejemplo.com" 
+                                value={usuario.correoElectronico}
+                                onChange={handleChange}
+                                required 
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label>Contraseña *</label>
+                            <input 
+                                type="password" 
+                                name="contrasenia"
+                                placeholder="Crea una contraseña segura" 
+                                value={usuario.contrasenia}
+                                onChange={handleChange}
+                                required 
+                            />
                         </div>
 
-                        <div className="mb-3">
-                            <label className="form-label">Contraseña</label>
-                            <input type="password" name="contrasenia" className="form-control" onChange={handleChange} required />
+                        <div className="form-group">
+                            <label>Teléfono</label>
+                            <input 
+                                type="text" 
+                                name="telefono"
+                                placeholder="Ej: 3794123456" 
+                                value={usuario.telefono}
+                                onChange={handleChange}
+                            />
                         </div>
 
-                        <div className="mb-3">
-                            <label className="form-label">Teléfono</label>
-                            <input type="text" name="telefono" className="form-control" onChange={handleChange} />
-                        </div>
-
-                        <button type="submit" className="btn btn-primary w-100 py-2">Crear Cuenta</button>
+                        <button type="submit" className="btn-blendy btn-enfasis btn-pill w-100">
+                            Crear cuenta
+                        </button>
                     </form>
                 </div>
+
+                <div className="login-footer-links" style={{ justifyContent: 'center' }}>
+                    <span style={{ color: 'var(--color-texto)', fontFamily: 'var(--font-cuerpo)', fontSize: '0.85rem', marginRight: '5px' }}>
+                        ¿Ya tienes una cuenta?
+                    </span>
+                    <Link to="/login">Inicia sesión aquí</Link>
+                </div>
+
             </div>
         </div>
     );

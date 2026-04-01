@@ -1,0 +1,66 @@
+* {
+    box-sizing: border-box;
+}
+
+/* VARIABLES: paleta de colores */
+:root {
+    /* Colores base */
+    --color-fondo: #0F0F0F;      /* fondo */
+    --color-texto: #FFFFFF;      /* cuerpo */
+    --color-subtitulos: #ABABAB; /* jerarquias menores */
+    
+    /* enfasis */
+    --color-celeste: #D6F7FF;    /* interactivo */
+    --color-verde: #2E382E;      /* banners/fondos */
+    --color-gris-medio: #464746; /* divisores */
+    --color-gris-acento: #ABABAB;/* iconos o detalles */
+    
+    /* Tipografias */
+    --font-titulos: 'Gazpacho', serif;
+    --font-cuerpo: 'Onest', sans-serif;
+}
+
+/* Body: Fondo y Texto Base */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: var(--font-cuerpo);
+    -webkit-font-smoothing: antialiased; /* Mejora la legibilidad de la letra blanca */
+}
+
+/* ENCABEZADOS: Fuente Gazpacho */
+h1, h2, h3, .font-gazpacho {
+    font-family: var(--font-titulos);
+    font-weight: normal;
+    color: var(--color-texto);
+}
+
+/* SUBTITULOS */
+h4, h5, .subtitulo-cuerpo {
+    font-family: var(--font-cuerpo);
+    color: var(--color-subtitulos);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ENLACES */
+a {
+    text-decoration: none;
+    color: var(--color-texto);
+    font-family: var(--font-cuerpo);
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+/* Efecto al pasar el mouse por los enlaces */
+a:hover {
+    color: var(--color-celeste);
+}
+
+/* Estilo para textos descriptivos del cuerpo */
+p {
+    font-family: var(--font-cuerpo);
+    line-height: 1.6;
+}

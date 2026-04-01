@@ -1,0 +1,96 @@
+/* BOTONES */
+.btn-blendy {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+}
+
+/* BOTON PRIMARIO */
+.btn-primario {
+    background-color: #ABABAB;
+    border: 2px solid #ABABAB;
+    color: #0F0F0F;
+    font-family: 'Onest', sans-serif;
+    font-weight: 600;
+}
+
+/* Primario: Al pasar el mouse */
+.btn-primario:hover {
+    background-color: #0F0F0F;
+    border-color: #FFFFFF;
+    transform: translateY(-2px);
+}
+
+/* BOTON SECUNDARIO */
+.btn-secundario {
+    background-color: #0F0F0F;
+    border: 2px solid #ABABAB;
+    color: #FFFFFF;
+    font-family: 'Gazpacho', serif;
+    font-weight: normal;
+}
+
+/* Secundario: Al pasar el mouse */
+.btn-secundario:hover {
+    background-color: #ABABAB;
+    color: #0F0F0F;
+    border-color: #D6F7FF;
+    transform: translateY(-2px);
+}
+
+/* BOTONES DESHABILITADOS (Sin stock) */
+.btn-blendy:disabled {
+    background-color: #464746;
+    border-color: #464746;
+    color: #A8A8A8;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Forma de píldora para los botones del Hero */
+.btn-pill {
+    border-radius: 50px;
+    padding: 12px 35px;
+}
+
+/* Botón secundario en el Hero */
+.btn-secundario.btn-pill {
+    background-color: transparent;
+    border: 1px solid #ABABAB;
+    font-family: 'Onest', sans-serif;
+}
+
+.btn-secundario.btn-pill:hover {
+    background-color: #1A1A1A;
+    color: #FFFFFF;
+}
+
+/* ÉNFASIS */
+.btn-enfasis {
+    background-color: var(--color-celeste);
+    color: var(--color-fondo); 
+    font-family: 'Onest', sans-serif;
+    font-weight: bold;
+    border: 2px solid var(--color-celeste);
+}
+
+.btn-enfasis:hover {
+    background-color: #B5E8F7;
+    border-color: #B5E8F7;
+    transform: translateY(-2px);
+}
+
+.btn-sm {
+    padding: 8px 24px;
+    font-size: 0.9rem;
+}
+
+.w-100 {
+    width: 100%;
+}

@@ -1,0 +1,538 @@
+/* HERO */
+.home-hero {
+    min-height: 85vh; 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    background-color: var(--color-fondo);
+    margin-top: 80px; 
+    border-bottom: 1px solid #2E382E;
+}
+
+/* Izquierda */
+.hero-content {
+    flex: 1;
+    padding-right: 50px;
+}
+
+.hero-subtitle {
+    font-family: var(--font-cuerpo);
+    color: var(--color-gris-medio);
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.hero-content h1 {
+    font-family: 'Gazpacho', serif;
+    font-size: 5.5rem;
+    line-height: 1;
+    margin-bottom: 40px;
+}
+
+.hero-botones {
+    display: flex;
+    gap: 20px;
+}
+
+/* Derecha Imagen */
+.hero-image-container {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    height: 70vh;
+}
+
+.hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* CONTENEDOR DE PRODUCTOS */
+.productos-section {
+    padding: 60px 8%;
+}
+
+.productos-section h2 {
+    font-family: 'Gazpacho', serif;
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    border-left: 5px solid #D6F7FF;
+    padding-left: 20px;
+}
+
+.productos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+/* TARJETA DE PRODUCTO */
+.producto-card {
+    background-color: #0F0F0F;
+    border: 1px solid #464746;
+    padding: 20px;
+    border-radius: 8px;
+    transition: all 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Pasar el mouse por el producto */
+.producto-card:hover {
+    border-color: #D6F7FF;
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(214, 247, 255, 0.1);
+}
+
+.producto-imagen {
+    width: 100%;
+    height: 250px;
+    object-fit: contain;
+    margin-bottom: 20px;
+}
+
+.producto-nombre {
+    font-family: 'Gazpacho', serif;
+    font-size: 1.4rem;
+    color: #FFFFFF;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.producto-descripcion {
+    font-family: 'Onest', sans-serif;
+    color: #A8A8A8;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* SECCION DE BANNER / PAQUETES */
+.banner-promo {
+    background-color: #2E382E;
+    padding: 50px;
+    border-radius: 12px;
+    margin: 40px 0;
+    text-align: center;
+}
+
+/* CATEGORÍA */
+.categorias-section {
+    padding: 80px 5%;
+    background-color: var(--color-subtitulos); 
+}
+
+.categorias-section h2 {
+    font-family: 'Gazpacho', serif;
+    font-size: 3.5rem;
+    margin-bottom: 50px;
+    text-align: left;
+    color: var(--color-fondo); 
+}
+
+.categorias-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 30px;
+}
+
+.categoria-card {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.categoria-card:hover {
+    transform: translateY(-5px); 
+}
+
+.categoria-numero {
+    font-family: 'Onest', sans-serif;
+    color: var(--color-gris-medio); 
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.categoria-imagen {
+    width: 100%;
+    aspect-ratio: 4/5; 
+    object-fit: cover;
+    border-radius: 20px; 
+    margin-bottom: 20px;
+    border: 1px solid #EBEBEB;
+}
+
+.categoria-titulo {
+    font-family: 'Gazpacho', serif;
+    font-size: 1.8rem;
+    color: var(--color-fondo); 
+    margin-bottom: 10px;
+}
+
+.categoria-descripcion {
+    font-family: 'Onest', sans-serif;
+    color: var(--color-gris-medio); 
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* DESTACADAS */
+.destacados-section {
+    padding: 80px 5%;
+    background-color: #272727;
+    text-align: center;
+}
+
+.destacados-section h2 {
+    font-family: 'Gazpacho', serif;
+    font-size: 3.5rem;
+    color: var(--color-texto);
+    margin-bottom: 50px;
+    line-height: 1.1;
+}
+
+/* Contenedor del carrusel con scroll horizontal */
+.carousel-container {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto; 
+    padding-bottom: 20px;
+    scroll-behavior: smooth;
+    scrollbar-width: none; 
+}
+.carousel-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Tarjeta individual del producto destacado */
+.destacado-card {
+    min-width: 280px;
+    flex: 0 0 auto;
+    text-align: left;
+    cursor: pointer;
+}
+
+.destacado-imagen-wrapper {
+    background-color: #F5F5F5; 
+    padding: 20px;
+    margin-bottom: 15px;
+    border: 1px solid var(--color-gris-medio);
+    transition: transform 0.3s ease;
+}
+
+.destacado-card:hover .destacado-imagen-wrapper {
+    transform: translateY(-5px);
+    border-color: var(--color-celeste);
+}
+
+.destacado-imagen {
+    width: 100%;
+    height: 300px;
+    object-fit: contain;
+}
+
+/* Textos de la tarjeta */
+.destacado-info h3 {
+    font-family: 'Onest', sans-serif;
+    font-size: 1.1rem;
+    color: var(--color-texto);
+    margin: 0 0 5px 0;
+    font-weight: 500;
+}
+
+.destacado-info p {
+    font-family: 'Onest', sans-serif;
+    font-size: 1rem;
+    color: var(--color-subtitulos);
+    margin: 0 0 15px 0;
+}
+
+.destacados-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+}
+
+.destacados-header h2 {
+    margin-bottom: 0; 
+    text-align: left;
+}
+
+/* Contenedor de flechas */
+.carousel-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    background-color: transparent;
+    border: 1px solid var(--color-gris-medio);
+    color: var(--color-texto);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.control-btn:hover {
+    border-color: var(--color-celeste);
+    color: var(--color-celeste);
+    background-color: rgba(214, 247, 255, 0.05);
+}
+
+/* Guía */
+.carousel-guide-container {
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-gris-medio);
+    margin-top: 40px;
+    position: relative;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.carousel-guide-fill {
+    position: absolute;
+    height: 100%;
+    background-color: var(--color-celeste);
+    left: 0;
+    top: 0;
+    transition: width 0.2s ease-out;
+}
+
+.ofertas-section {
+    display: flex;
+    background-color: var(--color-fondo);
+    border-top: 1px solid #1A1A1A;
+    border-bottom: 1px solid #1A1A1A;
+}
+
+/* Columna Izquierda (Imagen) */
+.ofertas-image-container {
+    flex: 1;
+    display: flex; 
+}
+
+.ofertas-image {
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Columna Derecha (Textos) */
+.ofertas-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 80px 6%;
+}
+
+/* cinta de texto superior */
+.ofertas-ticker {
+    font-family: 'Onest', sans-serif;
+    color: var(--color-subtitulos);
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    white-space: nowrap; 
+}
+
+.ofertas-content h2 {
+    font-family: 'Gazpacho', serif;
+    font-size: 3.5rem;
+    color: var(--color-texto);
+    line-height: 1.05;
+    margin-bottom: 20px;
+}
+
+.ofertas-content p {
+    font-family: 'Onest', sans-serif;
+    color: var(--color-texto);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 40px;
+    max-width: 90%;
+}
+
+/* Botón Gris */
+.btn-paquetes {
+    background-color: #ABABAB;
+    color: var(--color-fondo);
+    font-family: 'Onest', sans-serif;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 35px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-paquetes:hover {
+    background-color: var(--color-texto);
+    transform: translateY(-2px);
+}
+
+/* VISIÓN / CITA */
+.vision-section {
+    padding: 100px 8%;
+    background-color: var(--color-fondo);
+    text-align: center;
+    border-top: 1px solid #1A1A1A; /* Separador sutil */
+}
+
+.vision-quote {
+    font-family: 'Gazpacho', serif;
+    font-size: 3rem;
+    color: var(--color-texto);
+    font-style: italic;
+    line-height: 1.2;
+    max-width: 900px;
+    margin: 0 auto 60px auto;
+}
+
+.vision-columns {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    text-align: left;
+}
+
+.vision-col {
+    flex: 1;
+}
+
+/* La columna del medio con bordes grises */
+.vision-col.center-col {
+    border-left: 1px solid var(--color-gris-medio);
+    border-right: 1px solid var(--color-gris-medio);
+    padding: 0 40px;
+}
+
+.vision-col p {
+    font-family: 'Onest', sans-serif;
+    color: var(--color-texto);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .home-hero {
+        flex-direction: column; 
+        text-align: center; 
+        padding-top: 40px;
+        min-height: auto;
+    }
+
+    .hero-content {
+        padding-right: 0;
+        margin-bottom: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-content h1 {
+        font-size: 3.2rem;       
+        margin-bottom: 25px;
+    }
+
+    .hero-botones {
+        flex-direction: column;
+        width: 100%;
+        gap: 15px;
+    }
+
+    .hero-botones .btn-blendy {
+        width: 100%;
+    }
+
+    .hero-image-container {
+        height: 40vh; 
+        width: 100%;
+        justify-content: center;
+    }
+
+    .productos-section {
+        padding: 40px 5%;
+    }
+
+    .productos-section h2 {
+        font-size: 2rem;
+    }
+
+    .categorias-section h2 {
+        font-size: 2.5rem;
+    }
+    .categorias-grid {
+        grid-template-columns: 1fr; 
+        gap: 40px;
+    }
+
+    .destacados-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .destacados-section h2 {
+        font-size: 2.5rem;
+    }
+
+    .destacado-card {
+        min-width: 80vw; 
+    }
+
+    .destacado-imagen {
+        height: 250px; 
+    }
+
+    .ofertas-section {
+        flex-direction: column;
+    }
+    
+    .ofertas-image {
+        min-height: 350px;
+    }
+
+    .ofertas-content {
+        padding: 50px 5%;
+    }
+
+    .ofertas-content h2 {
+        font-size: 2.5rem;
+    }
+    
+    .ofertas-ticker {
+        white-space: normal;
+        line-height: 1.5;
+    }
+
+    .vision-quote { font-size: 2rem; }
+    .vision-columns { flex-direction: column; gap: 30px; }
+    .vision-col.center-col { 
+        border: none; 
+        border-top: 1px solid var(--color-gris-medio); 
+        border-bottom: 1px solid var(--color-gris-medio); 
+        padding: 30px 0; 
+    }
+}
