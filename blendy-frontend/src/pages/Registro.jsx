@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import api from '../api/axios';
 import { Link } from 'react-router-dom';
+import { registro } from '../api/auth';
 
 const Register = () => {
     const [usuario, setUsuario] = useState({
@@ -11,6 +11,8 @@ const Register = () => {
         telefono: '',
         estado: 1
     });
+    
+    const [feedback, setFeedback] = useState({ texto: '', tipo: '' });//Declara la variable para manejar el response entity de el back
 
     const handleChange = (e) => {
         setUsuario({
@@ -22,7 +24,7 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        const usuarioParaEnviar = {
+        const data = {
             idUsuario: 0, 
             ...usuario,            
             rol: { 
@@ -33,19 +35,25 @@ const Register = () => {
         };
 
         try {
-            const response = await api.post('/usuarios/crear', usuarioParaEnviar); 
-            alert("¡Registro exitoso en Blendly!");
-            console.log("Datos guardados en DB:", response.data);
+            const response = await registro(data);
+            //Carga el mensaje del back
+            setFeedback({ 
+                texto: response.data, 
+                tipo: 'success' 
+            });
             // redirección al login
         } catch (error) {
-            console.error("Error al registrar:", error.response?.data || error.message);
-            alert("Hubo un problema con el registro. Revisa la consola (F12).");
+           const mensajeError = error.response?.data || "Error de conexión";
+            //Carga el mensaje del back
+            setFeedback({ 
+                texto: mensajeError, 
+                tipo: 'danger' 
+            });
         }
     };
 
     return (
         <div className="login-page">
-            
             <div className="login-header">
                 <span className="login-portal">NUEVO USUARIO</span>
                 <h1>Únete a Blendly</h1>
@@ -55,7 +63,21 @@ const Register = () => {
             <div className="login-card-outer">
                 <div className="login-form-inner">
                     <h2 className="login-form-logo">Blendly</h2>
-                    
+                    {/* Muestra el mensaje del back */}
+                    {feedback.texto && (
+                        <div style={{
+                            padding: '12px',
+                            marginBottom: '20px',
+                            borderRadius: '8px',
+                            fontSize: '0.9rem',
+                            textAlign: 'center',
+                            backgroundColor: feedback.tipo === 'success' ? '#d4edda' : '#f8d7da',
+                            color: feedback.tipo === 'success' ? '#155724' : '#721c24',
+                            border: `1px solid ${feedback.tipo === 'success' ? '#c3e6cb' : '#f5c6cb'}`
+                            }}>
+                            {feedback.texto}
+                        </div>
+                    )}
                     {/* función onSubmit */}
                     <form onSubmit={handleSubmit}>
                         

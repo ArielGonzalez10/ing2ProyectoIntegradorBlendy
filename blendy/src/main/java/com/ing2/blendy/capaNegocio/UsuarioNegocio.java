@@ -45,7 +45,9 @@ public class UsuarioNegocio implements IUsuarioNegocio {
 
     @Override
     public String iniciarSesion(String p_correoElectronico, String p_contrasenia) {
+        System.out.println(p_correoElectronico);
         Usuario usuarioBusc = usuarioDatos.buscarPorCorreo(p_correoElectronico);
+        System.out.println(usuarioBusc.getCorreoElectronico());
         if(!passwordEncoder.matches(p_contrasenia, usuarioBusc.getContrasenia())){
             throw new RuntimeException("Credenciales invalidas");
         }

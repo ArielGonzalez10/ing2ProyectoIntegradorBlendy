@@ -37,7 +37,7 @@ public class UsuarioController {
 
     @PostMapping("/iniciarSesion")
     public ResponseEntity<?> iniciarSesion(@RequestBody SesionDTO p_sesion){
-        String token = usuarioNego.iniciarSesion(p_sesion.getCorreo(),p_sesion.getContrasenia());
+        String token = usuarioNego.iniciarSesion(p_sesion.getCorreoElectronico(),p_sesion.getContrasenia());
         return ResponseEntity.ok(new TokenResponse(token));
     }
 
@@ -49,8 +49,12 @@ public class UsuarioController {
     
     @PostMapping("/crear")
     public ResponseEntity<?> crearUsuario(@RequestBody Usuario p_usuario){
-        usuarioNego.crearUsuario(p_usuario);
-        return new ResponseEntity<>("Usuario creado con éxito", HttpStatus.CREATED);
+        try{
+            usuarioNego.crearUsuario(p_usuario);
+            return new ResponseEntity<>("Usuario creado con éxito", HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
     
     @DeleteMapping("/eliminar/{p_id_usuario}")

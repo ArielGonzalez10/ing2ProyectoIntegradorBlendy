@@ -263,3 +263,4 @@ VALUES ('Agua Mineral 500ml', 1, 900.00, 80, 15, 4);
 
 INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
 VALUES ('Jugo de Naranja 1L', 1, 1200.00, 25, 10, 4);
+SELECT * FROM Usuario WHERE correo_electronico = 'arielgonzalezr10@gmail.com';

@@ -10,6 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SesionDTO {
-    private String correo;
+    private String correoElectronico;
     private String contrasenia;
 }
