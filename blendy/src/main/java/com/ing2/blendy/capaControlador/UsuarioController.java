@@ -6,7 +6,10 @@ package com.ing2.blendy.capaControlador;
 
 import com.ing2.blendy.capaModelo.Usuario;
 import com.ing2.blendy.capaNegocio.IUsuarioNegocio;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ing2.blendy.dto.SesionDTO;
 import com.ing2.blendy.dto.TokenResponse;
@@ -14,15 +17,7 @@ import com.ing2.blendy.dto.UsuarioDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *
@@ -36,15 +31,20 @@ public class UsuarioController {
     private IUsuarioNegocio usuarioNego;
 
     @PostMapping("/iniciarSesion")
-    public ResponseEntity<?> iniciarSesion(@RequestBody SesionDTO p_sesion){
-        String token = usuarioNego.iniciarSesion(p_sesion.getCorreoElectronico(),p_sesion.getContrasenia());
-        return ResponseEntity.ok(new TokenResponse(token));
+    public ResponseEntity<?> iniciarSesion(@RequestBody SesionDTO p_sesion) {
+        try {
+            TokenResponse token = usuarioNego.iniciarSesion(p_sesion.getCorreoElectronico(), p_sesion.getContrasenia());
+            return ResponseEntity.ok(token);
+        } catch (RuntimeException e) {
+            // IMPORTANTE: Si no devuelves un ResponseEntity, el navegador bloquea el mensaje
+            return ResponseEntity.status(401).body(e.getMessage());
+        }
     }
 
-    @GetMapping("/buscar/{p_id_usuario}")
+    @GetMapping("/buscar")
     @ResponseBody
-    public UsuarioDTO buscarUsuario(@PathVariable int p_id_usuario){
-        return usuarioNego.buscarUsuario(p_id_usuario);
+    public UsuarioDTO buscarUsuario(@RequestParam String p_correoElectronico){
+        return usuarioNego.buscarUsuario(p_correoElectronico);
     }
     
     @PostMapping("/crear")
@@ -66,5 +66,15 @@ public class UsuarioController {
     @ResponseBody
     public List<Usuario> listarUsuarios(){
         return usuarioNego.listarUsuarios();
+    }
+
+    @PutMapping("/modificar")
+    public ResponseEntity<?> modificarUsuario(@RequestBody UsuarioDTO p_usuario){
+        try{
+            usuarioNego.modificarUsuario(p_usuario);
+            return new ResponseEntity<>("¡Datos actualizados con éxito!",HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>("No se pudo actualizar los datos!",HttpStatus.BAD_REQUEST);
+        }
     }
 }

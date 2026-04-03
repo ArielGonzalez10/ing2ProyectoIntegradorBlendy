@@ -33,4 +33,10 @@ public interface IUsuarioDatos extends JpaRepository<Usuario,Integer>{
 
     @Query("SELECT u FROM Usuario u WHERE u.estado = 1")
     List<Usuario> listarUsuarios();
+
+    @Modifying
+    @Transactional // Importante: Los updates requieren una transacción activa
+    @Query("UPDATE Usuario u SET u.nombre = :p_nombre, u.apellido = :p_apellido, u.telefono = :p_telefono WHERE u.correoElectronico = :p_correo")
+    void modificarUsuario(@Param("p_nombre" )String p_nombre, @Param("p_apellido" )String p_apellido,@Param("p_telefono" )String p_telefono,@Param("p_correo" )String p_correo);
+
 }

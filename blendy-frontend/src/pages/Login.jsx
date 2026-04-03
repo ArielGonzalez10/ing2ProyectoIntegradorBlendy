@@ -21,22 +21,36 @@ const Login = () => {
 
     // 3. Manejador del envío (Conexión con el Back)
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
+    e.preventDefault();
+    setError('');
 
-        try {
-            const response = await login(credenciales);
-            const token = response.data.token || response.data; 
-            
-            localStorage.setItem('token', token);
-            console.log("Sesión iniciada en Blendly");
-            
-            navigate('/home'); 
-        } catch (err) {
-            console.error(err);
-            setError('Email o contraseña incorrectos');
+    try {
+        const response = await login(credenciales);
+        
+        // Si el login es exitoso, desestructuramos los datos de TokenResponse
+        const { token, rol, correoElectronico } = response.data; 
+        
+        localStorage.setItem('token', token);
+        localStorage.setItem('userRole', String(rol)); // Guardamos como string para evitar líos
+        localStorage.setItem('userEmail', correoElectronico);
+        
+        // Redirección por rol (1: Admin, 2: Cliente)
+        if (String(rol) === "1") {
+            navigate('/panel/productos');
+        } else {
+            navigate('/');
         }
-    };
+
+    } catch (err) {
+        // Si hay respuesta del servidor, el mensaje es el "body" directo
+        if (err.response) {
+            // Como enviamos solo e.getMessage(), Axios lo pone en err.response.data
+            setError(err.response.data); 
+        } else {
+            setError("Error de conexión con Blendly");
+        }
+    }
+};
 
     return (
         <div className="login-page">
@@ -49,13 +63,6 @@ const Login = () => {
             <div className="login-card-outer">
                 <div className="login-form-inner">
                     <h2 className="login-form-logo">Blendy</h2>
-                    
-                    {/* Mensaje de error visual */}
-                    {error && (
-                        <div style={{ color: '#721c24', backgroundColor: '#f8d7da', padding: '10px', borderRadius: '5px', marginBottom: '15px', textAlign: 'center', fontSize: '0.85rem' }}>
-                            {error}
-                        </div>
-                    )}
                     
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
@@ -87,7 +94,13 @@ const Login = () => {
                         </button>
                     </form>
                 </div>
-
+                {/* Mensaje de error visual */}
+                {error && (
+                    <div style={{ color: '#721c24', backgroundColor: '#f8d7da', padding: '10px', borderRadius: '5px', marginBottom: '15px', textAlign: 'center', fontSize: '0.85rem' }}>
+                        {error}
+                    </div>
+                )}
+                    
                 <div className="login-footer-links">
                     <Link to="/registro">Crear cuenta</Link>
                     <Link to="/recuperar">Olvidé mi contraseña</Link>

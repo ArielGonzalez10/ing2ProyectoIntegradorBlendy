@@ -234,33 +234,27 @@ SELECT * FROM domicilio;
 SELECT * FROM categoria;
 SELECT * FROM producto;
 
-INSERT INTO categoria (descripcion, estado) VALUES ('Gaseosas', 1);
-INSERT INTO categoria (descripcion, estado) VALUES ('Cervezas', 1);
-INSERT INTO categoria (descripcion, estado) VALUES ('Vinos', 1);
-INSERT INTO categoria (descripcion, estado) VALUES ('Jugos y Aguas', 1);
+-- Actualizar Gaseosas por Refrescos
+UPDATE usuario 
+SET rol_id_rol = 2
+WHERE correo_electronico = 'iarabongio@gmail.com';
 
--- Gaseosas (id_categoria: 1)
-INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
-VALUES ('Coca Cola 2.25L', 1, 2500.00, 50, 10, 1);
 
-INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
-VALUES ('Sprite Zero 1.5L', 1, 1800.00, 30, 5, 1);
+-- 1. REFRESCOS (id_categoria = 1)
+UPDATE producto SET descripcion = 'Pepsi Black 1.5L', estado = 1 WHERE id_producto = 1;
+UPDATE producto SET descripcion = 'Fanta Naranja Original 2L', estado = 1 WHERE id_producto = 2;
 
--- Cervezas (id_categoria: 2)
-INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
-VALUES ('Cerveza Quilmes Clásica 1L', 1, 2200.00, 100, 20, 2);
+-- 2. LICORES (id_categoria = 2) 
+-- (Cambiamos las cervezas por licores más fuertes)
+UPDATE producto SET descripcion = 'Fernet Branca 750ml' WHERE id_producto = 3;
+UPDATE producto SET descripcion = 'Vodka Absolut Blue 1L' WHERE id_producto = 4;
 
-INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
-VALUES ('Cerveza IPA Artesanal 500ml', 1, 3500.00, 15, 5, 2);
+-- 3. VINOS (id_categoria = 3)
+UPDATE producto SET descripcion = 'Vino Cabernet Sauvignon Premium' WHERE id_producto = 5;
 
--- Vinos (id_categoria: 3)
-INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
-VALUES ('Vino Malbec Reserva', 1, 8500.00, 12, 3, 3);
+-- 4. ENERGÉTICAS (id_categoria = 4)
+-- (Cambiamos el agua y jugo por bebidas energizantes)
+UPDATE producto SET descripcion = 'Monster Energy Original 473ml' WHERE id_producto = 6;
+UPDATE producto SET descripcion = 'Red Bull Sugar Free 250ml' WHERE id_producto = 7;
 
--- Jugos y Aguas (id_categoria: 4)
-INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
-VALUES ('Agua Mineral 500ml', 1, 900.00, 80, 15, 4);
-
-INSERT INTO producto (descripcion, estado, precio_unitario, stock, stock_min, categoria_id_categoria) 
-VALUES ('Jugo de Naranja 1L', 1, 1200.00, 25, 10, 4);
 SELECT * FROM Usuario WHERE correo_electronico = 'arielgonzalezr10@gmail.com';

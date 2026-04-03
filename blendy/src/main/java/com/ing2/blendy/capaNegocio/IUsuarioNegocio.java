@@ -5,6 +5,7 @@
 package com.ing2.blendy.capaNegocio;
 
 import com.ing2.blendy.capaModelo.Usuario;
+import com.ing2.blendy.dto.TokenResponse;
 import com.ing2.blendy.dto.UsuarioDTO;
 
 import java.util.List;
@@ -16,10 +17,9 @@ import java.util.List;
 
 public interface IUsuarioNegocio {
     void crearUsuario(Usuario p_usuario);
-    UsuarioDTO buscarUsuario(int p_id_usuario);
+    UsuarioDTO buscarUsuario(String p_correoElectronico);
     void eliminarUsuario(int p_id_usuario);
     List<Usuario> listarUsuarios();
-    String iniciarSesion(String p_correoElectronico, String p_contrasenia);
-    Usuario cerrarSesion();
-    void modificarUsuario(Usuario p_usuario);
+    TokenResponse iniciarSesion(String p_correoElectronico, String p_contrasenia);
+    void modificarUsuario(UsuarioDTO p_usuario);
 }

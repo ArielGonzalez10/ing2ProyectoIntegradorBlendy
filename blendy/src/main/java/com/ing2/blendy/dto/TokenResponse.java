@@ -11,4 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TokenResponse {
     private String token;
+    private String correoElectronico;
+    private int rol;
 }

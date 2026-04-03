@@ -1,23 +1,44 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Agregado useEffect
+import { buscarUsuario } from '../api/auth';
+import { modificarUsuario } from '../api/auth';
 import '../styles/perfil.css';
 
 const Perfil = () => {
     // Controlar qué pestaña está activa
     const [activeTab, setActiveTab] = useState('cuenta');
-
-    // Para controlar los formularios desplegables
     const [mostrandoFormularioDireccion, setMostrandoFormularioDireccion] = useState(false);
     const [mostrandoFormularioBilletera, setMostrandoFormularioBilletera] = useState(false);
 
-    // Estado temporal del usuario, simula lo que vendría de la API
+    // Estado inicial vacío para llenar con la API
     const [usuario, setUsuario] = useState({
-        nombre: 'Fátima',
-        apellido: 'Bret',
-        correoElectronico: 'fatimabret@outlook.com',
-        telefono: '3794123456',
+        nombre: '',
+        apellido: '',
+        correoElectronico: '',
+        telefono: '',
+        domicilio: '' // Coincide con tu UsuarioDTO
     });
 
-    // Función para manejar cambios en los inputs
+    // 1. CARGAR DATOS AL INICIAR
+    useEffect(() => {
+        const obtenerDatosUsuario = async () => {
+            try {
+                // Recuperas el email del usuario logueado (ej: de localStorage)
+                const emailLogueado = localStorage.getItem('userEmail');
+                
+                //llama al metodo de buscar
+                const response = await buscarUsuario(emailLogueado);
+
+                if (response.data) {
+                    setUsuario(response.data);
+                }
+            } catch (error) {
+                console.error("Error cargando datos de Blendly:", error);
+            }
+        };
+
+        obtenerDatosUsuario();
+    }, []);
+
     const handleChange = (e) => {
         setUsuario({
             ...usuario,
@@ -25,11 +46,19 @@ const Perfil = () => {
         });
     };
 
-    // Simulación de guardado
-    const handleGuardar = (e) => {
+    const handleGuardar = async (e) => {
         e.preventDefault();
-        alert("¡Datos actualizados con éxito!");
-        // api.put('/usuarios/actualizar', usuario)
+        try {
+            // Llamamos a la función del servicio
+            const response = await modificarUsuario(usuario);
+            
+            if (response.status === 200) {
+                alert("¡Datos actualizados con éxito!");
+            }
+        } catch (error) {
+            console.error("Error al actualizar:", error);
+            alert("No se pudo actualizar la información.");
+        }
     };
 
     const handleGuardarDireccion = (e) => {
@@ -103,9 +132,8 @@ const Perfil = () => {
                                     <div className="perfil-form-row">
                                         <div className="perfil-form-group">
                                             <label>Teléfono</label>
-                                            <input type="text" name="telefono" value={usuario.telefono} onChange={handleChange} />
+                                            <input type="text" name="telefono" value={usuario.telefono || ''} onChange={handleChange} />
                                         </div>
-                                        
                                         <div className="perfil-form-group"></div>
                                     </div>
                                 </div>
@@ -121,12 +149,10 @@ const Perfil = () => {
                                         </div>
                                         <div className="perfil-form-group">
                                             <label>Contraseña</label>
-                                            {/* Un input falso de contraseña solo para la UI, como en tu foto */}
                                             <input type="password" value="********" disabled />
                                         </div>
                                     </div>
-                                    {/* Link sutil por si quiere cambiar la clave */}
-                                    <span style={{ fontSize: '0.85rem', color: 'var(--color-celeste)', cursor: 'pointer', textDecoration: 'underline' }}>
+                                    <span style={{ fontSize: '0.85rem', color: '#00bcd4', cursor: 'pointer', textDecoration: 'underline' }}>
                                         Solicitar cambio de contraseña
                                     </span>
                                 </div>
@@ -147,7 +173,6 @@ const Perfil = () => {
                         {activeTab === 'direcciones' && (
                             <div className="perfil-seccion">
                                 {!mostrandoFormularioDireccion ? (
-                                    /* Lista vacía de direcciones */
                                     <>
                                         <h3>Mis Direcciones</h3>
                                         <p>Agrega y administra las direcciones que utilizas con frecuencia.</p>
@@ -163,12 +188,10 @@ const Perfil = () => {
                                         </div>
                                     </>
                                 ) : (
-                                    /* Dirección (Domicilio, Localidad, Provincia) */
                                     <form onSubmit={handleGuardarDireccion}>
                                         <h3>Agregar Nueva Dirección</h3>
                                         <p>Ingresa los datos exactos para garantizar la entrega de tu pedido.</p>
 
-                                        {/* Fila 1: Provincia y Localidad */}
                                         <div className="perfil-form-row">
                                             <div className="perfil-form-group">
                                                 <label>Provincia *</label>
@@ -190,7 +213,6 @@ const Perfil = () => {
                                             </div>
                                         </div>
 
-                                        {/* Calle y Número */}
                                         <div className="perfil-form-row">
                                             <div className="perfil-form-group" style={{ flex: 2 }}>
                                                 <label>Calle *</label>
@@ -202,7 +224,6 @@ const Perfil = () => {
                                             </div>
                                         </div>
 
-                                        {/* Piso, Depto y CP */}
                                         <div className="perfil-form-row">
                                             <div className="perfil-form-group">
                                                 <label>Piso</label>
@@ -239,7 +260,6 @@ const Perfil = () => {
                         {activeTab === 'billetera' && (
                             <div className="perfil-seccion">
                                 {!mostrandoFormularioBilletera ? (
-                                    /* Lista vacía */
                                     <>
                                         <h3>Billetera</h3>
                                         <p>Guarda tus detalles de pago para finalizar la compra de forma rápida y segura.</p>
@@ -255,7 +275,6 @@ const Perfil = () => {
                                         </div>
                                     </>
                                 ) : (
-                                    /* Tarjeta */
                                     <form onSubmit={handleGuardarTarjeta}>
                                         <h3>Agregar Tarjeta</h3>
                                         <p>Aceptamos todas las tarjetas de crédito y débito.</p>

@@ -63,21 +63,7 @@ const Register = () => {
             <div className="login-card-outer">
                 <div className="login-form-inner">
                     <h2 className="login-form-logo">Blendly</h2>
-                    {/* Muestra el mensaje del back */}
-                    {feedback.texto && (
-                        <div style={{
-                            padding: '12px',
-                            marginBottom: '20px',
-                            borderRadius: '8px',
-                            fontSize: '0.9rem',
-                            textAlign: 'center',
-                            backgroundColor: feedback.tipo === 'success' ? '#d4edda' : '#f8d7da',
-                            color: feedback.tipo === 'success' ? '#155724' : '#721c24',
-                            border: `1px solid ${feedback.tipo === 'success' ? '#c3e6cb' : '#f5c6cb'}`
-                            }}>
-                            {feedback.texto}
-                        </div>
-                    )}
+                    
                     {/* función onSubmit */}
                     <form onSubmit={handleSubmit}>
                         
@@ -145,6 +131,21 @@ const Register = () => {
                         <button type="submit" className="btn-blendy btn-enfasis btn-pill w-100">
                             Crear cuenta
                         </button>
+                        {/* Muestra el mensaje del back */}
+                        {feedback.texto && (
+                            <div style={{
+                                padding: '12px',
+                                marginBottom: '20px',
+                                borderRadius: '8px',
+                                fontSize: '0.9rem',
+                                textAlign: 'center',
+                                backgroundColor: feedback.tipo === 'success' ? '#d4edda' : '#f8d7da',
+                                color: feedback.tipo === 'success' ? '#155724' : '#721c24',
+                                border: `1px solid ${feedback.tipo === 'success' ? '#c3e6cb' : '#f5c6cb'}`
+                                }}>
+                                {feedback.texto}
+                            </div>
+                        )}
                     </form>
                 </div>
 

@@ -21,7 +21,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    // 2. MÉTODO PARA GENERAR EL TOKEN
+
     public String generarToken(Usuario usuario) {
         return Jwts.builder()
                 .setSubject(usuario.getCorreoElectronico()) // Identificador principal
