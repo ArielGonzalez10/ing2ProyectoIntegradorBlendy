@@ -81,8 +81,8 @@ const Register = () => {
                     {/* función onSubmit */}
                     <form onSubmit={handleSubmit}>
                         
-                        {/* Fila para Nombre y Apellido (Flexbox para que queden uno al lado del otro) */}
-                        <div style={{ display: 'flex', gap: '15px' }}>
+                        {/* Nombre y Apellido */}
+                        <div className="login-form-row">
                             <div className="form-group" style={{ flex: 1 }}>
                                 <label>Nombre *</label>
                                 <input 
@@ -148,8 +148,8 @@ const Register = () => {
                     </form>
                 </div>
 
-                <div className="login-footer-links" style={{ justifyContent: 'center' }}>
-                    <span style={{ color: 'var(--color-texto)', fontFamily: 'var(--font-cuerpo)', fontSize: '0.85rem', marginRight: '5px' }}>
+                <div className="login-footer-links registro-footer">
+                    <span className="texto-pregunta">
                         ¿Ya tienes una cuenta?
                     </span>
                     <Link to="/login">Inicia sesión aquí</Link>

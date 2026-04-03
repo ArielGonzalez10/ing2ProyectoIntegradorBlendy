@@ -1,0 +1,195 @@
+.perfil-page {
+    padding: 120px 5% 80px 5%;
+    min-height: 80vh;
+    background-color: var(--color-fondo);
+    display: flex;
+    justify-content: center;
+}
+
+.perfil-container {
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* Encabezado del Perfil */
+.perfil-header {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-gris-medio);
+}
+
+.perfil-header h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.perfil-header p {
+    color: var(--color-subtitulos);
+    font-size: 1rem;
+}
+
+/* Menú Izquierdo y Contenido Derecho */
+.perfil-layout {
+    display: flex;
+    gap: 50px;
+}
+
+/* MENÚ LATERAL */
+.perfil-sidebar {
+    flex: 0 0 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.perfil-tab {
+    background: transparent;
+    border: none;
+    text-align: left;
+    padding: 15px 20px;
+    font-family: 'Onest', sans-serif;
+    font-size: 1rem;
+    color: var(--color-subtitulos);
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.perfil-tab:hover {
+    color: var(--color-texto);
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.perfil-tab.active {
+    color: var(--color-fondo);
+    background-color: var(--color-texto); /* Tab activa en blanco */
+    font-weight: bold;
+}
+
+/* CONTENIDO PRINCIPAL */
+.perfil-content {
+    flex: 1;
+    background-color: #141414;
+    padding: 40px;
+    border-radius: 16px;
+    border: 1px solid #1F1F1F;
+}
+
+.perfil-seccion {
+    margin-bottom: 40px;
+}
+
+.perfil-seccion h3 {
+    font-family: 'Gazpacho', serif;
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    color: var(--color-texto);
+}
+
+.perfil-seccion p {
+    color: var(--color-subtitulos);
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+}
+
+/* FORMULARIOS DEL PERFIL */
+.perfil-form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.perfil-form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.perfil-form-group label {
+    font-family: 'Onest', sans-serif;
+    font-size: 0.85rem;
+    color: var(--color-texto);
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.perfil-form-group input,
+.perfil-form-group select {
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid var(--color-gris-medio);
+    padding: 12px 15px;
+    border-radius: 6px;
+    color: var(--color-texto);
+    font-family: 'Onest', sans-serif;
+    transition: border-color 0.3s ease;
+}
+
+.perfil-form-group input:focus,
+.perfil-form-group select:focus {
+    outline: none;
+    border-color: var(--color-celeste);
+}
+
+/* Opciones desplegables */
+.perfil-form-group select option {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+}
+
+/* Campo de solo lectura (como el email) */
+.perfil-form-group input:disabled {
+    color: #777;
+    background-color: rgba(255, 255, 255, 0.02);
+    cursor: not-allowed;
+    border-color: #2A2A2A;
+}
+
+/* Botonera de acciones */
+.perfil-acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid var(--color-gris-medio);
+}
+
+@media (max-width: 768px) {
+    .perfil-layout {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .perfil-sidebar {
+        flex: auto;
+        flex-direction: row;
+        overflow-x: auto; /* Scroll horizontal en celulares */
+        padding-bottom: 10px;
+    }
+
+    .perfil-tab {
+        white-space: nowrap;
+    }
+
+    .perfil-content {
+        padding: 25px;
+    }
+
+    .perfil-form-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .perfil-acciones {
+        flex-direction: column-reverse;
+        gap: 15px;
+        padding-top: 20px;
+    }
+
+    .perfil-acciones button {
+        width: 100%;
+        margin: 0;
+    }
+}

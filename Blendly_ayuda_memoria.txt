@@ -1,4 +1,5 @@
 levantar el servidor
+cd blendy-frontend
 npm run dev
 http://localhost:5173/
 

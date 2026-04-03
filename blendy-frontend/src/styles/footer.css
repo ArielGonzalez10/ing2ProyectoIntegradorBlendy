@@ -11,20 +11,22 @@
     padding: 40px 0;
 }
 
-.footer-logo-container {
+.footer-location-container {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
 }
 
-.footer-logo-container img {
-    height: 35px;
+.location-info {
+    display: flex;
+    flex-direction: column;
 }
 
-.footer-brand {
+.location-name {
     font-family: 'Gazpacho', serif;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: var(--color-texto);
+    line-height: 1;
 }
 
 .footer-contact {
@@ -82,5 +84,9 @@
         flex-direction: column;
         gap: 30px;
         text-align: center;
+    }
+
+    .footer-location-container {
+        justify-content: center;
     }
 }
