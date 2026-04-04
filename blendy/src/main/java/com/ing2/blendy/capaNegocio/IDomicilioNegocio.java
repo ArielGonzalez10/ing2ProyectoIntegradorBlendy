@@ -15,5 +15,5 @@ public interface IDomicilioNegocio {
     void crearDomicilio(Domicilio p_id_domicilio);
     Domicilio buscarDomicilioPorUsuario(int p_id_usuario);
     void eliminarDomicilio(int p_id_domicilio);
-    List<Domicilio> listarDomicilios();
+    List<Domicilio> listarDomicilios(String p_correoElectronico);
 }

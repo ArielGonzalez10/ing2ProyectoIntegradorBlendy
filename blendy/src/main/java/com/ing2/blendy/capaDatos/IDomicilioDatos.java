@@ -6,7 +6,11 @@ package com.ing2.blendy.capaDatos;
 
 import com.ing2.blendy.capaModelo.Domicilio;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  *
@@ -14,5 +18,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IDomicilioDatos extends JpaRepository<Domicilio,Integer>{
-    
+
+    @Query("SELECT d FROM Domicilio d INNER JOIN d.usuario u WHERE u.correoElectronico = :p_correoElectronico")
+    List<Domicilio> listarDomicilios(@Param("p_correoElectronico") String p_correoElectronico);
 }

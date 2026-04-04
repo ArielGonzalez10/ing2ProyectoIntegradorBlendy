@@ -52,8 +52,13 @@ public class ProductoNegocio implements IProductoNegocio {
     }
 
     @Override
-    public void eliminarProducto(int p_id_producto) {
-        productoDatos.eliminarProducto(p_id_producto);
+    public void eliminarProducto(int p_id_producto, int p_nuevoEstado) {
+        productoDatos.cambiarEstadoProducto(p_id_producto,p_nuevoEstado);
+    }
+
+    @Override
+    public void altaProducto(int p_id_producto, int p_nuevoEstado) {
+        productoDatos.cambiarEstadoProducto(p_id_producto,p_nuevoEstado);
     }
 
     @Override

@@ -1,23 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { listarProductos, eliminarProducto,altaProducto } from '../api/products';
 import '../styles/panel.css';
 
 const PanelProductos = () => {
-    // Simulacion
-    const [productos, setProductos] = useState([
-        { idProducto: 1, descripcion: "Vino Malbec Reserva Blendy", categoria: "Vinos", precioUnitario: 15500, stock: 42, estado: 1 },
-        { idProducto: 2, descripcion: "Gin Artesanal Premium", categoria: "Licores", precioUnitario: 22000, stock: 15, estado: 1 },
-        { idProducto: 3, descripcion: "Pack Cerveza IPA x6", categoria: "Cervezas", precioUnitario: 8900, stock: 120, estado: 1 },
-        { idProducto: 4, descripcion: "Whisky Single Malt 12 años", categoria: "Licores", precioUnitario: 45700, stock: 7, estado: 0 }, // Inactivo por falta de stock temporal
-        { idProducto: 5, descripcion: "Agua Tónica Premium", categoria: "Refrescos", precioUnitario: 2500, stock: 0, estado: 1 } // Sin stock pero activo en catálogo
-    ]);
-
     const [busqueda, setBusqueda] = useState('');
+    const [productos, setProductos] = useState([]); 
 
-    // Lógica para filtrar la tabla según lo que se escriba en el buscador
+    // Función para cargar productos desde la API
+    const cargarProductosDesdeAPI = async () => {
+        try {
+            const res = await listarProductos();
+            if (res.data) {
+                setProductos(res.data);
+            }
+        } catch (error) {
+            console.error("Error al cargar productos:", error);
+        }
+    };
+
+    // Se ejecuta al montar el componente
+    useEffect(() => {
+        cargarProductosDesdeAPI();
+    }, []);
+
+    // Ajustamos el filtro: ahora categoria es un OBJETO, usamos .descripcion
     const productosFiltrados = productos.filter(producto => 
         producto.descripcion.toLowerCase().includes(busqueda.toLowerCase()) ||
-        producto.categoria.toLowerCase().includes(busqueda.toLowerCase())
+        (producto.categoria?.descripcion || "").toLowerCase().includes(busqueda.toLowerCase())
     );
 
     // Funciones simuladas para los botones de acción
@@ -25,13 +35,33 @@ const PanelProductos = () => {
         alert(`Abriendo modal para modificar producto ID: ${id}`);
     };
 
-    const handleToggleEstado = (id, estadoActual) => {
-        const nuevoEstado = estadoActual === 1 ? 'Baja' : 'Alta';
-        if(window.confirm(`¿Seguro que deseas dar de ${nuevoEstado} este producto?`)) {
-            // api.put(`/productos/${id}/estado`)
-            setProductos(productos.map(p => 
-                p.idProducto === id ? { ...p, estado: p.estado === 1 ? 0 : 1 } : p
-            ));
+    const handleToggleEstado = async (id, estadoActual) => {
+        // Definimos el nuevo estado: si es 1 pasa a 0, si es 0 pasa a 1
+        const nuevoEstado = estadoActual === 1 ? 0 : 1;
+        const esAlta = nuevoEstado === 1;
+    
+        const mensaje = esAlta 
+            ? "¿Seguro que deseas dar de ALTA este producto?" 
+            : "¿Seguro que deseas dar de BAJA este producto?";
+
+        if (window.confirm(mensaje)) {
+            try {
+                // Bifurcación en el Front según el nuevo estado
+                if (esAlta) {
+                    // Llama al @PutMapping /alta/{id}/{1}
+                    await altaProducto(id, nuevoEstado);
+                } else {
+                    // Llama al @DeleteMapping /eliminar/{id}/{0}
+                    await eliminarProducto(id, nuevoEstado);
+                }
+            
+                // Recargamos la lista desde el servidor para actualizar la tabla
+                await cargarProductosDesdeAPI();
+            
+            } catch (error) {
+                console.error("Error al cambiar estado del producto:", error);
+                alert("No se pudo actualizar el estado. Revisá si el backend está corriendo.");
+            }
         }
     };
 
@@ -86,8 +116,8 @@ const PanelProductos = () => {
                                     <tr key={prod.idProducto}>
                                         <td>#{prod.idProducto}</td>
                                         <td className="td-nombre">{prod.descripcion}</td>
-                                        <td>{prod.categoria}</td>
-                                        <td className="td-precio">${prod.precioUnitario.toLocaleString('es-AR')}</td>
+                                        <td>{prod.categoria?.descripcion || "Sin categoría"}</td>
+                                        <td className="td-precio">${prod.precioUnitario ? prod.precioUnitario.toLocaleString('es-AR') : '0'}</td>
                                         <td style={{ color: prod.stock === 0 ? '#dc3545' : 'inherit' }}>
                                             {prod.stock} un.
                                         </td>

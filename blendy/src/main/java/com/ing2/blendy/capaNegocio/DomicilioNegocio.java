@@ -34,8 +34,8 @@ public class DomicilioNegocio implements IDomicilioNegocio {
     }
 
     @Override
-    public List<Domicilio> listarDomicilios() {
-        return domicilioDatos.findAll();
+    public List<Domicilio> listarDomicilios(String p_correoElectronico) {
+        return domicilioDatos.listarDomicilios(p_correoElectronico);
     }
     
 }

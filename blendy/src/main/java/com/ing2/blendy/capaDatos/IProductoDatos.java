@@ -42,6 +42,6 @@ public interface IProductoDatos extends JpaRepository<Producto,Integer>{
 
     @Modifying
     @Transactional
-    @Query("UPDATE Producto p SET p.estado = 0 WHERE p.idProducto = :p_id_producto")
-    void eliminarProducto(@Param("p_id_producto") int p_id_producto);
+    @Query("UPDATE Producto p SET p.estado = :p_nuevoEstado WHERE p.idProducto = :p_id_producto")
+    void cambiarEstadoProducto(@Param("p_id_producto") int p_id_producto, @Param("p_nuevoEstado") int p_nuevoEstado);
 }

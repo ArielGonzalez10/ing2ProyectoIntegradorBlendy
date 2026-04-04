@@ -14,7 +14,12 @@ export function buscarUsuario(data){
     })
 }
 
-
-export function modificarUsuario(data) {
+export function modificarUsuario(data){
     return api.put("/usuarios/modificar", data);
+}
+
+export function listarDomicilios(data){
+    return api.get("/domicilios/listar",{
+        params:{p_correoElectronico:data}
+    })
 }

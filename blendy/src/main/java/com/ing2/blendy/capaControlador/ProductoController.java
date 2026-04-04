@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RequestMapping("/productos")
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 public class ProductoController {
     @Autowired
     private IProductoNegocio productoNego;
@@ -25,13 +26,21 @@ public class ProductoController {
     public Producto buscarProducto(@PathVariable String p_descripcion){return productoNego.buscarProducto(p_descripcion);}
     
     @PostMapping("/crear")
-    public void crearProducto(@RequestBody Producto p_producto){
-        productoNego.crearProducto(p_producto);
+    public void crearProducto(@RequestBody Producto p_producto) {
+        if(this.buscarProducto(p_producto.getDescripcion()) != null){
+            throw new RuntimeException("Producto creado previamente");
+        }
+        productoNego.crearProducto(p_producto);productoNego.crearProducto(p_producto);
     }
     
-    @DeleteMapping("/eliminar/{p_id_producto}")
-    public void eliminarProducto(@PathVariable int p_id_producto){
-        productoNego.eliminarProducto(p_id_producto);
+    @DeleteMapping("/eliminar/{p_id_producto}/{p_nuevoEstado}")
+    public void eliminarProducto(@PathVariable int p_id_producto, @PathVariable int p_nuevoEstado){
+        productoNego.eliminarProducto(p_id_producto,p_nuevoEstado);
+    }
+
+    @PutMapping("/alta/{p_id_producto}/{p_nuevoEstado}")
+    public void altaProducto(@PathVariable int p_id_producto, @PathVariable int p_nuevoEstado){
+        productoNego.altaProducto(p_id_producto,p_nuevoEstado);
     }
 
     @PutMapping("/modificar/{p_id_producto}")

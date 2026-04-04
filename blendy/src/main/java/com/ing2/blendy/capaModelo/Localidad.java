@@ -4,6 +4,7 @@
  */
 package com.ing2.blendy.capaModelo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class Localidad {
     private String nombre;
     private int estado;
     @OneToOne(mappedBy = "localidad")
+    @JsonBackReference
     private Domicilio domicilio;
     @ManyToOne
     private Provincia provincia;

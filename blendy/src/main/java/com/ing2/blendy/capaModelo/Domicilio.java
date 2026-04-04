@@ -4,6 +4,8 @@
  */
 package com.ing2.blendy.capaModelo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,5 +31,6 @@ public class Domicilio {
     @OneToOne
     private Localidad localidad;
     @ManyToOne
+    @JsonBackReference
     private Usuario usuario;
 }

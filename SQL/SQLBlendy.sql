@@ -231,8 +231,12 @@ SELECT * FROM provincia;
 SELECT * FROM rol;
 SELECT * FROM usuario;
 SELECT * FROM domicilio;
-SELECT * FROM categoria;
+SELECT * FROM imagen;
 SELECT * FROM producto;
+SELECT * FROM categoria;
+
+ALTER TABLE Imagen 
+ALTER COLUMN descripcion VARCHAR(MAX);
 
 -- Actualizar Gaseosas por Refrescos
 UPDATE usuario 
