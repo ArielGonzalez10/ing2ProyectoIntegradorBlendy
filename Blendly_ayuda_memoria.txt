@@ -3,4 +3,173 @@ cd blendy-frontend
 npm run dev
 http://localhost:5173/
 
-Mascota Topo
+Mascota Topo?
+Administrador: reportes y estadisticas
+
+bd con correcciones
+CREATE TABLE Categoria
+(
+  idCategoria INT NOT NULL,
+  descripcion VARCHAR(30) NOT NULL,
+  estado INT NOT NULL,
+  PRIMARY KEY (idCategoria)
+);
+
+CREATE TABLE Rol
+(
+  idRol INT NOT NULL,
+  descripcion VARCHAR(30) NOT NULL,
+  estado INT NOT NULL,
+  PRIMARY KEY (idRol)
+);
+
+CREATE TABLE MetodoPago
+(
+  idMetodoPago INT NOT NULL,
+  descripcion VARCHAR(30) NOT NULL,
+  estado INT NOT NULL,
+  PRIMARY KEY (idMetodoPago)
+);
+
+CREATE TABLE Consulta
+(
+  idConsulta INT NOT NULL,
+  descripcion VARCHAR(100) NOT NULL,
+  asunto VARCHAR(100) NOT NULL,
+  respuesta VARCHAR(100) NOT NULL,
+  nombre VARCHAR(100) NOT NULL,
+  correoElectronico VARCHAR(100) NOT NULL,
+  estado INT NOT NULL,
+  PRIMARY KEY (idConsulta)
+);
+
+-- Provincia sin Código Postal
+CREATE TABLE Provincia
+(
+  idProvincia INT NOT NULL,
+  nombre VARCHAR(100) NOT NULL,
+  estado INT NOT NULL,
+  PRIMARY KEY (idProvincia)
+);
+
+
+CREATE TABLE Producto
+(
+  idProducto INT NOT NULL,
+  descripcion VARCHAR(100) NOT NULL,
+  stock INT NOT NULL,
+  precioUnitario FLOAT NOT NULL,
+  estado INT NOT NULL,
+  idCategoria INT NOT NULL,
+  PRIMARY KEY (idProducto),
+  FOREIGN KEY (idCategoria) REFERENCES Categoria(idCategoria)
+);
+
+-- Código Postal pasa a la Localidad
+CREATE TABLE Localidad
+(
+  idLocalidad INT NOT NULL,
+  nombre VARCHAR(30) NOT NULL,
+  codigoPostal VARCHAR(10) NOT NULL, 
+  estado INT NOT NULL,
+  idProvincia INT NOT NULL,
+  PRIMARY KEY (idLocalidad),
+  FOREIGN KEY (idProvincia) REFERENCES Provincia(idProvincia)
+);
+
+-- teléfono al Usuario
+CREATE TABLE Usuario
+(
+  idUsuario INT NOT NULL,
+  nombre VARCHAR(100) NOT NULL,
+  apellido VARCHAR(100) NOT NULL,
+  correoElectronico VARCHAR(100) NOT NULL,
+  contrasenia VARCHAR(100) NOT NULL,
+  telefono VARCHAR(20) NULL, -- nulo si no lo cargan
+  estado INT NOT NULL,
+  idRol INT NOT NULL,
+  PRIMARY KEY (idUsuario),
+  FOREIGN KEY (idRol) REFERENCES Rol(idRol)
+);
+
+
+-- descripción VARCHAR(255) para guardar la URL de la imagen
+CREATE TABLE Imagen
+(
+  idImagen INT NOT NULL,
+  descripcion VARCHAR(255) NOT NULL, 
+  estado INT NOT NULL,
+  idProducto INT NOT NULL,
+  PRIMARY KEY (idImagen),
+  FOREIGN KEY (idProducto) REFERENCES Producto(idProducto)
+);
+
+-- Calle VARCHAR, piso y departamento (opcionales)
+CREATE TABLE Domicilio
+(
+  idDomicilio INT NOT NULL,
+  calle VARCHAR(100) NOT NULL,
+  altura INT NOT NULL,
+  piso VARCHAR(10) NULL,
+  departamento VARCHAR(10) NULL,
+  idLocalidad INT NOT NULL,
+  idUsuario INT NOT NULL,
+  PRIMARY KEY (idDomicilio),
+  FOREIGN KEY (idLocalidad) REFERENCES Localidad(idLocalidad),
+  FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario)
+);
+
+
+-- (Ventas, Pagos y Envíos)
+-- totalVenta FLOAT. idDomicilio permite NULL para ventas físicas en la sucursal.
+CREATE TABLE VentaCabecera
+(
+  idVentaCabecera INT NOT NULL,
+  fecha DATE NOT NULL,
+  totalVenta FLOAT NOT NULL,
+  idUsuario INT NOT NULL,
+  idDomicilio INT NULL, -- el Vendedor pueda vender en el local
+  PRIMARY KEY (idVentaCabecera),
+  FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario),
+  FOREIGN KEY (idDomicilio) REFERENCES Domicilio(idDomicilio)
+);
+
+-- total FLOAT, y agregamos el precioUnitario
+CREATE TABLE VentaDetalle
+(
+  idVentaDetalle INT NOT NULL,
+  cantidad INT NOT NULL,
+  precioUnitario FLOAT NOT NULL, -- precio al momento de la compra
+  total FLOAT NOT NULL,
+  idProducto INT NOT NULL,
+  idVentaCabecera INT NOT NULL,
+  PRIMARY KEY (idVentaDetalle),
+  FOREIGN KEY (idProducto) REFERENCES Producto(idProducto),
+  FOREIGN KEY (idVentaCabecera) REFERENCES VentaCabecera(idVentaCabecera)
+);
+
+-- montoPago a FLOAT
+CREATE TABLE Pago
+(
+  montoPago FLOAT NOT NULL,
+  idVentaCabecera INT NOT NULL,
+  idMetodoPago INT NOT NULL,
+  PRIMARY KEY (idVentaCabecera, idMetodoPago),
+  FOREIGN KEY (idVentaCabecera) REFERENCES VentaCabecera(idVentaCabecera),
+  FOREIGN KEY (idMetodoPago) REFERENCES MetodoPago(idMetodoPago)
+);
+
+-- Se agrega la relación directa con VentaCabecera
+CREATE TABLE Envio
+(
+  idEnvio INT NOT NULL,
+  fechaDespacho DATE NOT NULL,
+  fechaRecepcion DATE NOT NULL,
+  idVentaCabecera INT NOT NULL, -- venta se está enviando
+  idUsuario INT NOT NULL,
+  idDomicilio INT NOT NULL,
+  PRIMARY KEY (idEnvio),
+  FOREIGN KEY (idVentaCabecera) REFERENCES VentaCabecera(idVentaCabecera),
+  FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario),
+  FOREIGN KEY (idDomicilio) REFERENCES Domicilio(idDomicilio)
+);

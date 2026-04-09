@@ -81,6 +81,145 @@
     color: #D6F7FF;
 }
 
+.nav-link-destacado {
+    color: var(--color-celeste) !important;
+    font-weight: bold;
+    border: 1px solid rgba(214, 247, 255, 0.2);
+    padding: 5px 15px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.nav-link-destacado:hover {
+    background-color: rgba(214, 247, 255, 0.1);
+    border-color: var(--color-celeste);
+}
+
+.perfil-menu-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.btn-perfil-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-blendy {
+    position: absolute;
+    top: 150%;
+    right: 0;
+    background-color: #1A1A1A;
+    border: 1px solid var(--color-gris-medio);
+    border-radius: 8px;
+    padding: 10px 0;
+    min-width: 200px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    z-index: 1001;
+    animation: fadeInDown 0.2s ease-out forwards;
+}
+
+/* Animación de entrada suave */
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-blendy a, 
+.btn-logout-nav {
+    padding: 12px 20px;
+    color: var(--color-texto);
+    font-family: var(--font-cuerpo);
+    font-size: 0.9rem;
+    text-align: left;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    width: 100%;
+}
+
+/* Botón destacado (Cierre de Caja) */
+.nav-link-destacado {
+    color: var(--color-celeste) !important;
+    font-weight: 800;
+    border: 1px solid rgba(214, 247, 255, 0.3);
+    padding: 6px 15px;
+    border-radius: 20px;
+    background-color: rgba(214, 247, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.nav-link-destacado:hover {
+    background-color: var(--color-celeste);
+    color: #0F0F0F !important;
+    border-color: var(--color-celeste);
+}
+
+/* Dropdown Container */
+.perfil-menu-container {
+    position: relative;
+}
+
+.dropdown-blendy {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 220px;
+    background-color: #1A1A1A;
+    border: 1px solid var(--color-gris-medio);
+    border-radius: 12px;
+    padding: 10px 0;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-blendy a, .btn-logout-nav {
+    padding: 12px 20px;
+    color: var(--color-texto);
+    font-family: 'Onest', sans-serif;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: none;
+    background: none;
+    text-align: left;
+    width: 100%;
+}
+
+.dropdown-blendy a:hover {
+    background-color: rgba(214, 247, 255, 0.05);
+    color: var(--color-celeste);
+    padding-left: 25px;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: #2D2D2D;
+    margin: 8px 0;
+}
+
+.btn-logout-nav:hover {
+    color: #FF5C5C;
+    background-color: rgba(255, 92, 92, 0.05);
+}
+
+.cart-count {
+    color: var(--color-celeste);
+    font-weight: 800;
+    font-size: 0.85rem;
+}
+
 @media (max-width: 768px) {
     .navbar-logo {
         font-size: 1.5rem;

@@ -1,0 +1,89 @@
+.cierre-page {
+    padding: 120px 5% 80px 5%;
+    background-color: var(--color-fondo);
+    min-height: 100vh;
+}
+
+.cierre-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* TARJETAS DE RESUMEN (KPIs) */
+.resumen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.kpi-card {
+    background-color: #141414;
+    border: 1px solid #1F1F1F;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.kpi-card h4 {
+    font-size: 0.8rem;
+    color: var(--color-subtitulos);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.kpi-card .monto {
+    font-size: 1.8rem;
+    color: var(--color-celeste);
+    font-weight: bold;
+}
+
+/* LISTADO DE VENTAS DE SUCURSAL */
+.cierre-seccion {
+    background-color: #141414;
+    border-radius: 12px;
+    border: 1px solid #1F1F1F;
+    overflow: hidden;
+}
+
+.cierre-seccion h2 {
+    padding: 20px;
+    font-size: 1.3rem;
+    border-bottom: 1px solid #1F1F1F;
+    background-color: #1A1A1A;
+}
+
+.tabla-cierre {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tabla-cierre th {
+    text-align: left;
+    padding: 15px 20px;
+    font-size: 0.85rem;
+    color: var(--color-subtitulos);
+    border-bottom: 1px solid #1F1F1F;
+}
+
+.tabla-cierre td {
+    padding: 15px 20px;
+    border-bottom: 1px solid #1F1F1F;
+    font-size: 0.95rem;
+}
+
+.metodo-pago-tag {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    background-color: #2A2A2A;
+    color: var(--color-texto);
+}
+
+/* ACCIÓN FINAL */
+.cierre-footer {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+}

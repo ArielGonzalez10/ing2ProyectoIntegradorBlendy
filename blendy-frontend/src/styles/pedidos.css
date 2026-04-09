@@ -1,0 +1,170 @@
+.pedidos-page {
+    padding: 120px 5% 80px 5%;
+    min-height: 80vh;
+    background-color: var(--color-fondo);
+    display: flex;
+    justify-content: center;
+}
+
+.pedidos-container {
+    width: 100%;
+    max-width: 1000px;
+}
+
+.pedidos-header {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--color-gris-medio);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+}
+
+.pedidos-title h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.pedidos-title p {
+    color: var(--color-subtitulos);
+    font-size: 1rem;
+    margin: 0;
+}
+
+.pedidos-search {
+    position: relative;
+    width: 300px;
+}
+
+.pedidos-search svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-gris-medio);
+}
+
+.pedidos-search input {
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid var(--color-gris-medio);
+    padding: 10px 15px 10px 40px;
+    border-radius: 8px;
+    color: var(--color-texto);
+    font-family: var(--font-cuerpo);
+    transition: border-color 0.3s ease;
+}
+
+.pedidos-search input:focus {
+    outline: none;
+    border-color: var(--color-celeste);
+}
+
+/* LISTA DE PEDIDOS Y TARJETAS */
+.pedidos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pedido-card {
+    background-color: #141414;
+    border: 1px solid #1F1F1F;
+    border-radius: 12px;
+    padding: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.pedido-card:hover {
+    border-color: var(--color-gris-medio);
+    transform: translateY(-2px);
+}
+
+.pedido-info-principal {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pedido-id {
+    font-family: var(--font-cuerpo);
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--color-texto);
+}
+
+.pedido-fecha, .pedido-cliente {
+    font-family: var(--font-cuerpo);
+    font-size: 0.9rem;
+    color: var(--color-subtitulos);
+}
+
+.pedido-total {
+    font-family: var(--font-cuerpo);
+    font-size: 1.2rem;
+    color: var(--color-celeste);
+    font-weight: bold;
+}
+
+.pedido-acciones {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 15px;
+}
+
+/* ETIQUETAS DE ESTADO */
+.badge-pedido {
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-family: var(--font-cuerpo);
+}
+
+.badge-entregado { background-color: rgba(40, 167, 69, 0.15); color: #28a745; border: 1px solid rgba(40, 167, 69, 0.3); }
+.badge-preparacion { background-color: rgba(255, 193, 7, 0.15); color: #ffc107; border: 1px solid rgba(255, 193, 7, 0.3); }
+.badge-cancelado { background-color: rgba(220, 53, 69, 0.15); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.3); }
+
+.pedidos-vacio {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: transparent;
+    border: 1px dashed var(--color-gris-medio);
+    border-radius: 12px;
+}
+
+.pedidos-vacio p {
+    color: var(--color-subtitulos);
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .pedidos-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .pedidos-search {
+        width: 100%;
+    }
+
+    .pedido-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .pedido-acciones {
+        align-items: flex-start;
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}

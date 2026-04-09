@@ -1,0 +1,268 @@
+.tienda-page {
+    padding-top: 80px;
+    background-color: var(--color-fondo);
+    min-height: 100vh;
+}
+
+.tienda-banner {
+    background-image: linear-gradient(rgba(15, 15, 15, 0.7), rgba(15, 15, 15, 0.9)), url('https://images.unsplash.com/photo-1597075687490-8f673c6c17f6?q=80&w=1200&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    padding: 60px 5%;
+    text-align: left;
+    border-bottom: 1px solid var(--color-gris-medio);
+}
+
+.breadcrumbs {
+    font-family: 'Onest', sans-serif;
+    font-size: 0.85rem;
+    color: var(--color-subtitulos);
+    margin-bottom: 15px;
+}
+
+.breadcrumbs span {
+    margin: 0 8px;
+}
+
+.tienda-banner h1 {
+    font-size: 3.5rem;
+    margin: 0;
+}
+
+.tienda-container {
+    display: flex;
+    padding: 40px 5%;
+    gap: 50px;
+    align-items: flex-start; 
+}
+
+/* BARRA LATERAL (Filtros) */
+.tienda-sidebar {
+    flex: 0 0 250px;
+    position: sticky;
+    top: 100px;
+}
+
+.filtro-seccion {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #1F1F1F;
+    padding-bottom: 20px;
+}
+
+.filtro-titulo {
+    font-family: 'Gazpacho', serif;
+    font-size: 1.2rem;
+    color: var(--color-texto);
+    margin-bottom: 15px;
+}
+
+.filtro-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.filtro-item {
+    font-family: 'Onest', sans-serif;
+    color: var(--color-subtitulos);
+    padding: 8px 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filtro-item:hover {
+    color: var(--color-celeste);
+}
+
+.filtro-item.activo {
+    color: var(--color-texto);
+    font-weight: bold;
+}
+
+.filtro-item.activo::before {
+    content: '•';
+    color: var(--color-celeste);
+    margin-right: 8px;
+}
+
+.tienda-main {
+    flex: 1;
+}
+
+.tienda-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.tienda-resultados {
+    color: var(--color-subtitulos);
+    font-family: 'Onest', sans-serif;
+    font-size: 0.9rem;
+}
+
+.tienda-orden {
+    background: transparent;
+    border: none;
+    color: var(--color-texto);
+    font-family: 'Onest', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+}
+
+.tienda-orden option {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+}
+
+/* GRILLA Y TARJETAS */
+.tienda-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 30px;
+}
+
+.tienda-producto-card {
+    background-color: transparent;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.tienda-producto-card:hover {
+    transform: translateY(-5px);
+}
+
+.img-container {
+    background-color: #F5F5F5;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.tienda-producto-img {
+    width: 100%;
+    height: 280px;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+}
+
+.tienda-producto-card:hover .tienda-producto-img {
+    transform: scale(1.05);
+}
+
+.tienda-producto-info h3 {
+    font-family: 'Onest', sans-serif;
+    font-size: 1.1rem;
+    margin: 0 0 5px 0;
+    color: var(--color-texto);
+}
+
+.tienda-producto-precio {
+    font-family: 'Onest', sans-serif;
+    font-size: 1.1rem;
+    color: var(--color-celeste);
+    margin: 0 0 15px 0;
+}
+
+/* BAJA */
+.btn-baja {
+    background-color: rgba(220, 53, 69, 0.1);
+    border: 1px solid #dc3545;
+    color: #dc3545;
+}
+
+.btn-baja:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* ALTA */
+.btn-alta {
+    background-color: rgba(40, 167, 69, 0.1);
+    border: 1px solid #28a745;
+    color: #28a745;
+}
+
+.btn-alta:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+/* BOTÓN DE FILTROS MÓVIL */
+.btn-mobile-filtros {
+    display: none !important; 
+}
+
+@media (max-width: 768px) {
+    .tienda-container {
+        flex-direction: column;
+        padding: 20px 5%;
+        gap: 20px;
+    }
+
+    /* 1. Botón forzado a mostrarse */
+    .btn-mobile-filtros {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    /* 2. PANEL DESLIZABLE (Drawer) - ¡Acá estaba el error! */
+    .tienda-sidebar {
+        position: fixed;
+        top: 0;
+        left: -100%; /* Arranca escondido a la izquierda */
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: #141414;
+        z-index: 2000;
+        padding: 80px 30px 40px 30px;
+        transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: block; /* MUY IMPORTANTE: Pisa el display:none anterior */
+    }
+
+    /* Clase que se activa al tocar el botón y desliza el panel */
+    .tienda-sidebar.abierto {
+        left: 0;
+        box-shadow: 10px 0 30px rgba(0,0,0,0.8); /* Sombra para resaltar */
+    }
+
+    /* 3. Fondo oscuro (Overlay) */
+    .overlay-filtros {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        z-index: 1999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .overlay-filtros.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .tienda-top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+}
