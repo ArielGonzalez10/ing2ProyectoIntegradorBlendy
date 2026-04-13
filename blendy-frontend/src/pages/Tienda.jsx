@@ -1,12 +1,22 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/tienda.css';
+import { useCart } from '../context/CartContext';
 
 const Tienda = () => {
     const navigate = useNavigate();
 
-    // Simulador de usuario logueado (Cambialo a 1 para ver la vista de Admin)
-    const user = { idRol: 2 }; 
+    const { addToCart } = useCart();
+    const user = { idRol: 2 };
+
+    const handleAccionBoton = (producto) => {
+        // Regla: Solo logueados (Cliente o Vendedor) agregan al carrito
+        if (user.idRol === 2 || user.idRol === 3) {
+            addToCart(producto);
+        } else {
+            navigate('/login');
+        }
+    };
 
     // Estados
     const [categoriaActiva, setCategoriaActiva] = useState('Todas');
@@ -28,10 +38,6 @@ const Tienda = () => {
 
     if (orden === 'menor-precio') productosMostrados.sort((a, b) => a.precioUnitario - b.precioUnitario);
     else if (orden === 'mayor-precio') productosMostrados.sort((a, b) => b.precioUnitario - a.precioUnitario);
-
-    const handleAccionBoton = () => {
-        navigate('/login');
-    };
 
     const handleCambiarEstado = (idProducto, estadoActual) => {
         alert(`Cambiar estado del producto ID: ${idProducto}`);
@@ -107,7 +113,7 @@ const Tienda = () => {
                                     <h3>{prod.descripcion}</h3>
                                     <p className="tienda-producto-precio">${prod.precioUnitario.toLocaleString('es-AR')}</p>
                                     
-                                    {/* LÓGICA DE ROLES INTACTA */}
+                                    {/* LÓGICA DE ROLES */}
                                     {user?.idRol === 1 ? (
                                         <button 
                                             className={`btn-blendy btn-pill w-100 ${prod.estado === 1 ? 'btn-baja' : 'btn-alta'}`}
@@ -116,9 +122,7 @@ const Tienda = () => {
                                             {prod.estado === 1 ? 'Dar de Baja' : 'Dar de Alta'}
                                         </button>
                                     ) : (
-                                        <button 
-                                            className="btn-blendy btn-secundario btn-pill w-100"
-                                            onClick={handleAccionBoton}
+                                        <button className="btn-blendy btn-secundario btn-pill w-100" onClick={() => handleAccionBoton(prod)} 
                                         >
                                             Añadir al carrito
                                         </button>

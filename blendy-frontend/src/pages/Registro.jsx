@@ -12,6 +12,7 @@ const Register = () => {
         estado: 1
     });
     
+    const [confirmarContrasenia, setConfirmarContrasenia] = useState('');
     const [feedback, setFeedback] = useState({ texto: '', tipo: '' });//Declara la variable para manejar el response entity de el back
 
     const handleChange = (e) => {
@@ -23,6 +24,14 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        if (usuario.contrasenia !== confirmarContrasenia) {
+            setFeedback({ 
+                texto: 'Las contraseñas no coinciden. Por favor, verifícalas.', 
+                tipo: 'danger' 
+            });
+            return; // Cortamos la ejecución para no llamar a la API
+        }
         
         const data = {
             idUsuario: 0, 
@@ -118,6 +127,17 @@ const Register = () => {
                         </div>
 
                         <div className="form-group">
+                            <label>Confirmar Contraseña *</label>
+                            <input 
+                                type="password" 
+                                placeholder="Repite tu contraseña" 
+                                value={confirmarContrasenia}
+                                onChange={(e) => setConfirmarContrasenia(e.target.value)}
+                                required 
+                            />
+                        </div>
+
+                        <div className="form-group">
                             <label>Teléfono</label>
                             <input 
                                 type="text" 
@@ -131,6 +151,7 @@ const Register = () => {
                         <button type="submit" className="btn-blendy btn-enfasis btn-pill w-100">
                             Crear cuenta
                         </button>
+                        
                         {/* Muestra el mensaje del back */}
                         {feedback.texto && (
                             <div style={{

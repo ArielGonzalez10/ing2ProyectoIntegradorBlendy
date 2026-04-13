@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/pedidos.css';
+import { useNavigate } from 'react-router-dom';
 
 const MisPedidos = () => {
+    const navigate = useNavigate();
     const [user] = useState({ idUsuario: 101, nombre: "Fátima", idRol:  2}); 
-
     const [busqueda, setBusqueda] = useState('');
 
     const [todasLasVentas] = useState([
@@ -89,7 +90,8 @@ const MisPedidos = () => {
                                     <span className={`badge-pedido ${getBadgeClass(venta.estado)}`}>
                                         {venta.estado}
                                     </span>
-                                    <button className="btn-blendy btn-secundario" style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+                                    <button className="btn-blendy btn-secundario" style={{ padding: '8px 16px', fontSize: '0.85rem' }}
+                                        onClick={() => navigate(`/confirmacion/${venta.idVentaCabecera}`)}>
                                         Ver detalles
                                     </button>
                                 </div>

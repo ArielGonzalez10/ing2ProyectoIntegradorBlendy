@@ -83,6 +83,7 @@
 .btn-enfasis:hover {
     background-color: #B5E8F7;
     border-color: #B5E8F7;
+    color: var(--color-fondo); 
     transform: translateY(-2px);
 }
 
