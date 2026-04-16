@@ -34,6 +34,7 @@ public class DomicilioController {
 
     @GetMapping("/listar")
     public ResponseEntity<?> listarDomicilio(@RequestParam String p_correoElectronico) {
+
         List<Domicilio> lista = domicilioNego.listarDomicilios(p_correoElectronico);
 
         if (lista.isEmpty()) {

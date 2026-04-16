@@ -150,107 +150,117 @@ CREATE TABLE Imagen
 INSERT INTO rol (descripcion,estado) VALUES ('Administrador',1);
 INSERT INTO rol (descripcion,estado) VALUES ('Cliente',1);
 
-INSERT INTO provincia (nombre, codigo_postal, estado) VALUES
-('Buenos Aires', 1900, 1),
-('Ciudad Autónoma de Buenos Aires', 1000, 1),
-('Catamarca', 4700, 1),
-('Chaco', 3500, 1),
-('Chubut', 9103, 1),
-('Córdoba', 5000, 1),
-('Corrientes', 3400, 1),
-('Entre Ríos', 3100, 1),
-('Formosa', 3600, 1),
-('Jujuy', 4600, 1),
-('La Pampa', 6300, 1),
-('La Rioja', 5300, 1),
-('Mendoza', 5500, 1),
-('Misiones', 3300, 1),
-('Neuquén', 8300, 1),
-('Río Negro', 8500, 1),
-('Salta', 4400, 1),
-('San Juan', 5400, 1),
-('San Luis', 5700, 1),
-('Santa Cruz', 9400, 1),
-('Santa Fe', 3000, 1),
-('Santiago del Estero', 4200, 1),
-('Tierra del Fuego', 9410, 1),
-('Tucumán', 4000, 1);
-
-INSERT INTO localidad (nombre, estado, provincia_id_provincia) VALUES
--- Buenos Aires (ID 1)
-('La Plata', 1, 1), ('Mar del Plata', 1, 1), ('Bahía Blanca', 1, 1),
--- CABA (ID 2)
-('Retiro', 1, 2), ('Palermo', 1, 2), ('Recoleta', 1, 2),
--- Catamarca (ID 3)
-('San Fernando del Valle', 1, 3),
--- Chaco (ID 4)
-('Resistencia', 1, 4),
--- Chubut (ID 5)
-('Rawson', 1, 5), ('Puerto Madryn', 1, 5),
--- Córdoba (ID 6)
-('Córdoba Capital', 1, 6), ('Villa Carlos Paz', 1, 6), ('Río Cuarto', 1, 6),
--- Corrientes (ID 7)
-('Corrientes Capital', 1, 7), ('Paso de los Libres', 1, 7),
--- Entre Ríos (ID 8)
-('Paraná', 1, 8), ('Gualeguaychú', 1, 8),
--- Formosa (ID 9)
-('Formosa Capital', 1, 9),
--- Jujuy (ID 10)
-('San Salvador de Jujuy', 1, 10),
--- La Pampa (ID 11)
-('Santa Rosa', 1, 11),
--- La Rioja (ID 12)
-('La Rioja Capital', 1, 12),
--- Mendoza (ID 13)
-('Mendoza Capital', 1, 13), ('San Rafael', 1, 13),
--- Misiones (ID 14)
-('Posadas', 1, 14), ('Puerto Iguazú', 1, 14),
--- Neuquén (ID 15)
-('Neuquén Capital', 1, 15),
--- Río Negro (ID 16)
-('Viedma', 1, 16), ('San Carlos de Bariloche', 1, 16),
--- Salta (ID 17)
-('Salta Capital', 1, 17), ('Cafayate', 1, 17),
--- San Juan (ID 18)
-('San Juan Capital', 1, 18),
--- San Luis (ID 19)
-('San Luis Capital', 1, 19), ('Villa Mercedes', 1, 19),
--- Santa Cruz (ID 20)
-('Río Gallegos', 1, 20), ('El Calafate', 1, 20),
--- Santa Fe (ID 21)
-('Santa Fe Capital', 1, 21), ('Rosario', 1, 21), ('Rafaela', 1, 21),
--- Santiago del Estero (ID 22)
-('Santiago del Estero Capital', 1, 22), ('La Banda', 1, 22),
--- Tierra del Fuego (ID 23)
-('Ushuaia', 1, 23), ('Río Grande', 1, 23),
--- Tucumán (ID 24)
-('San Miguel de Tucumán', 1, 24), ('Yerba Buena', 1, 24);
+INSERT INTO domicilio (calle, altura, localidad_id_localidad, usuario_id_usuario) 
+VALUES ('La paz 27', 2400, 14, 1);
 
 SELECT * FROM localidad;
 SELECT * FROM provincia;
+SELECT * FROM domicilio;
+
+SELECT * FROM imagen;
+SELECT * FROM producto;
+SELECT * FROM categoria;
+
+
+SELECT * FROM usuario;
 SELECT * FROM rol;
 
-SELECT * FROM producto;
-SELECT * FROM imagen;
-
-SELECT * FROM categoria;
-SELECT * FROM domicilio;
-SELECT * FROM usuario;
-
 SELECT * FROM metodo_pago;
+SELECT * FROM venta_cabecera;
+SELECT * FROM venta_detalle;
 
 INSERT INTO metodo_pago(descripcion,estado) VALUES ('Tarjeta de Debito',1);
 INSERT INTO metodo_pago(descripcion,estado) VALUES ('Tarjeta de Credito',1);
 INSERT INTO metodo_pago(descripcion,estado) VALUES ('Transferencia',1);
 
+INSERT INTO provincia (nombre, estado) VALUES
+('Buenos Aires', 1),
+('Ciudad Autónoma de Buenos Aires', 1),
+('Catamarca', 1),
+('Chaco', 1),
+('Chubut', 1),
+('Córdoba', 1),
+('Corrientes', 1),
+('Entre Ríos', 1),
+('Formosa', 1),
+('Jujuy', 1),
+('La Pampa', 1),
+('La Rioja', 1),
+('Mendoza', 1),
+('Misiones', 1),
+('Neuquén', 1),
+('Río Negro', 1),
+('Salta', 1),
+('San Juan', 1),
+('San Luis', 1),
+('Santa Cruz', 1),
+('Santa Fe', 1),
+('Santiago del Estero', 1),
+('Tierra del Fuego', 1),
+('Tucumán', 1);
+
+INSERT INTO localidad (nombre, codigo_postal, estado, provincia_id_provincia) VALUES
+-- Buenos Aires (ID 1)
+('La Plata', 1900, 1, 1), ('Mar del Plata', 7600, 1, 1), ('Bahía Blanca', 8000, 1, 1),
+-- CABA (ID 2)
+('Retiro', 1000, 1, 2), ('Palermo', 1425, 1, 2), ('Recoleta', 1113, 1, 2),
+-- Catamarca (ID 3)
+('San Fernando del Valle', 4700, 1, 3),
+-- Chaco (ID 4)
+('Resistencia', 3500, 1, 4),
+-- Chubut (ID 5)
+('Rawson', 9103, 1, 5), ('Puerto Madryn', 9120, 1, 5),
+-- Córdoba (ID 6)
+('Córdoba Capital', 5000, 1, 6), ('Villa Carlos Paz', 5152, 1, 6), ('Río Cuarto', 5800, 1, 6),
+-- Corrientes (ID 7)
+('Corrientes Capital', 3400, 1, 7), ('Paso de los Libres', 3230, 1, 7),
+-- Entre Ríos (ID 8)
+('Paraná', 3100, 1, 8), ('Gualeguaychú', 2820, 1, 8),
+-- Formosa (ID 9)
+('Formosa Capital', 3600, 1, 9),
+-- Jujuy (ID 10)
+('San Salvador de Jujuy', 4600, 1, 10),
+-- La Pampa (ID 11)
+('Santa Rosa', 6300, 1, 11),
+-- La Rioja (ID 12)
+('La Rioja Capital', 5300, 1, 12),
+-- Mendoza (ID 13)
+('Mendoza Capital', 5500, 1, 13), ('San Rafael', 5600, 1, 13),
+-- Misiones (ID 14)
+('Posadas', 3300, 1, 14), ('Puerto Iguazú', 3370, 1, 14),
+-- Neuquén (ID 15)
+('Neuquén Capital', 8300, 1, 15),
+-- Río Negro (ID 16)
+('Viedma', 8500, 1, 16), ('San Carlos de Bariloche', 8400, 1, 16),
+-- Salta (ID 17)
+('Salta Capital', 4400, 1, 17), ('Cafayate', 4427, 1, 17),
+-- San Juan (ID 18)
+('San Juan Capital', 5400, 1, 18),
+-- San Luis (ID 19)
+('San Luis Capital', 5700, 1, 19), ('Villa Mercedes', 5730, 1, 19),
+-- Santa Cruz (ID 20)
+('Río Gallegos', 9400, 1, 20), ('El Calafate', 9405, 1, 20),
+-- Santa Fe (ID 21)
+('Santa Fe Capital', 3000, 1, 21), ('Rosario', 2000, 1, 21), ('Rafaela', 2300, 1, 21),
+-- Santiago del Estero (ID 22)
+('Santiago del Estero Capital', 4200, 1, 22), ('La Banda', 4300, 1, 22),
+-- Tierra del Fuego (ID 23)
+('Ushuaia', 9410, 1, 23), ('Río Grande', 9420, 1, 23),
+-- Tucumán (ID 24)
+('San Miguel de Tucumán', 4000, 1, 24), ('Yerba Buena', 4107, 1, 24);
+
+INSERT INTO categoria (descripcion, estado) VALUES 
+('Vinos', 1),
+('Licores', 1),
+('Refrescos', 1),
+('Energeticos', 1);
 
 ALTER TABLE Imagen 
 ALTER COLUMN descripcion VARCHAR(MAX);
 
--- Actualizar Gaseosas por Refrescos
 UPDATE usuario 
-SET rol_id_rol = 2
-WHERE correo_electronico = 'iarabongio@gmail.com';
+SET rol_id_rol = 1
+WHERE correo_electronico = 'arielgonzalezr9@gmail.com';
 
 
 -- 1. REFRESCOS (id_categoria = 1)

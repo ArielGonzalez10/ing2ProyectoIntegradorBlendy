@@ -29,9 +29,8 @@ const Checkout = () => {
 
     const cargarDatos = async () => {
       try {
-        const usuario = JSON.parse(localStorage.getItem("user"));
-        const email = usuario?.correoElectronico;
-
+        const email = localStorage.getItem("userEmail");
+        console.log("1. Valor extraído de localStorage:", email);
         // Usamos Promise.allSettled en lugar de Promise.all
         // Esto permite que si uno falla (ej. domicilios), el otro siga adelante
         const resultados = await Promise.allSettled([

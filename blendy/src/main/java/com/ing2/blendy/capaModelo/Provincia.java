@@ -28,7 +28,6 @@ public class Provincia {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idProvincia;
     private String nombre;
-    private int codigoPostal;
     private int estado;
 
 }

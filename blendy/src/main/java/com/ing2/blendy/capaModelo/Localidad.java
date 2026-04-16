@@ -26,6 +26,7 @@ public class Localidad {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idLocalidad;
     private String nombre;
+    private int codigoPostal;
     private int estado;
     @OneToOne(mappedBy = "localidad")
     @JsonBackReference
