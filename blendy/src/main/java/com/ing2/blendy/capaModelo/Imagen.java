@@ -1,5 +1,6 @@
 package com.ing2.blendy.capaModelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,5 +21,6 @@ public class Imagen {
     private int estado;
     @ManyToOne
     @JoinColumn(name = "producto_id_producto")
+    @JsonIgnore
     private Producto producto;
 }

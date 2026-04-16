@@ -8,6 +8,7 @@ import com.ing2.blendy.capaModelo.Domicilio;
 import com.ing2.blendy.capaNegocio.IDomicilioNegocio;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -30,14 +31,16 @@ public class DomicilioController {
     public void crearDomicilio(@RequestBody Domicilio p_domicilio){
         domicilioNego.crearDomicilio(p_domicilio);
     }
-    
+
     @GetMapping("/listar")
-    @ResponseBody
-    public List<Domicilio> listarDomicilio(@RequestParam String p_correoElectronico){
-        if(domicilioNego.listarDomicilios(p_correoElectronico).isEmpty()){
-            throw new RuntimeException("No hay domicilios registrados");
+    public ResponseEntity<?> listarDomicilio(@RequestParam String p_correoElectronico) {
+        List<Domicilio> lista = domicilioNego.listarDomicilios(p_correoElectronico);
+
+        if (lista.isEmpty()) {
+            return ResponseEntity.status(404).body("No se encontraron domicilios registrados");
         }
-        return domicilioNego.listarDomicilios(p_correoElectronico);
+
+        return ResponseEntity.ok(lista);
     }
     
     @DeleteMapping("/eliminar/{p_id_domicilio}")

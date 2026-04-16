@@ -4,6 +4,7 @@
  */
 package com.ing2.blendy.capaModelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ public class Usuario {
     private String telefono;
     //Mapped by indica que la relación ya fue mapeado por domicilios y cascade crea el domicilio
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @JsonIgnoreProperties("usuario")
     private List<Domicilio> domicilios;
     @ManyToOne
     private Rol rol;

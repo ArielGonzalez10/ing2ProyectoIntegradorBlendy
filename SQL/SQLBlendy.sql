@@ -229,11 +229,20 @@ INSERT INTO localidad (nombre, estado, provincia_id_provincia) VALUES
 SELECT * FROM localidad;
 SELECT * FROM provincia;
 SELECT * FROM rol;
-SELECT * FROM usuario;
-SELECT * FROM domicilio;
-SELECT * FROM imagen;
+
 SELECT * FROM producto;
+SELECT * FROM imagen;
+
 SELECT * FROM categoria;
+SELECT * FROM domicilio;
+SELECT * FROM usuario;
+
+SELECT * FROM metodo_pago;
+
+INSERT INTO metodo_pago(descripcion,estado) VALUES ('Tarjeta de Debito',1);
+INSERT INTO metodo_pago(descripcion,estado) VALUES ('Tarjeta de Credito',1);
+INSERT INTO metodo_pago(descripcion,estado) VALUES ('Transferencia',1);
+
 
 ALTER TABLE Imagen 
 ALTER COLUMN descripcion VARCHAR(MAX);

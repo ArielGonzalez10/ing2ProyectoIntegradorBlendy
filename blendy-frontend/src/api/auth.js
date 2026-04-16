@@ -23,3 +23,7 @@ export function listarDomicilios(data){
         params:{p_correoElectronico:data}
     })
 }
+
+export function listarMetodosPagos(){
+    return api.get("/metodoPagos/listar");
+}

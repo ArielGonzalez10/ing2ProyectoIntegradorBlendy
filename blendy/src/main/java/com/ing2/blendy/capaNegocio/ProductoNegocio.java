@@ -5,6 +5,7 @@
 package com.ing2.blendy.capaNegocio;
 
 import com.ing2.blendy.capaModelo.Categoria;
+import com.ing2.blendy.capaModelo.Imagen;
 import com.ing2.blendy.capaModelo.Producto;
 import com.ing2.blendy.capaDatos.IProductoDatos;
 import java.util.List;
@@ -43,6 +44,11 @@ public class ProductoNegocio implements IProductoNegocio {
 
     @Override
     public void crearProducto(Producto p_producto) {
+        if(p_producto.getImagenes() != null){
+            for(Imagen img: p_producto.getImagenes()){
+                img.setProducto(p_producto);
+            }
+        }
         productoDatos.save(p_producto);
     }
 

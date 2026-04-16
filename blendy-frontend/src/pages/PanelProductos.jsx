@@ -24,7 +24,7 @@ const PanelProductos = () => {
         cargarProductosDesdeAPI();
     }, []);
 
-    // Ajustamos el filtro: ahora categoria es un OBJETO, usamos .descripcion
+    
     const productosFiltrados = productos.filter(producto => 
         producto.descripcion.toLowerCase().includes(busqueda.toLowerCase()) ||
         (producto.categoria?.descripcion || "").toLowerCase().includes(busqueda.toLowerCase())
