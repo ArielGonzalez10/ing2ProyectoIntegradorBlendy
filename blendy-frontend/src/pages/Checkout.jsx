@@ -15,9 +15,13 @@ const Checkout = () => {
   const [direccionSeleccionada, setDireccionSeleccionada] = useState("");
   const [metodoPago, setMetodoPago] = useState("");
   const [nuevaDireccion, setNuevaDireccion] = useState({
+    provincia: "",
+    localidad: "",
+    codigoPostal: "",
     calle: "",
-    ciudad: "",
-    cp: "",
+    altura: "",
+    piso: "",
+    departamento: ""
   });
 
   useEffect(() => {
@@ -131,23 +135,99 @@ const Checkout = () => {
                 </p>
               )}
 
-              <label
-                className={`opcion-radio ${
-                  direccionSeleccionada === "nueva" ? "seleccionada" : ""
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="direccion"
-                  value="nueva"
-                  checked={direccionSeleccionada === "nueva"}
-                  onChange={(e) => setDireccionSeleccionada(e.target.value)}
-                />
-                <div className="opcion-info">
-                  <h4>Enviar a otra dirección</h4>
-                  <p>Ingresar nuevos datos de entrega</p>
+              {/* Formulario que solo aparece si elige "Nueva" */}
+              {direccionSeleccionada === "nueva" && (
+                <div className="formulario-nuevo">
+                  
+                  {/* Fila 1: Provincia, Localidad y CP */}
+                  <div className="form-row">
+                    <div className="form-group" style={{ flex: 2 }}>
+                      <label style={{ fontSize: '0.85rem', color: 'gray' }}>Provincia *</label>
+                      <input
+                        type="text"
+                        placeholder="Ej: Corrientes"
+                        required
+                        value={nuevaDireccion.provincia}
+                        onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, provincia: e.target.value })}
+                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #2A2A2A', background: '#0F0F0F', color: 'white', marginTop: '5px' }}
+                      />
+                    </div>
+                    <div className="form-group" style={{ flex: 2 }}>
+                      <label style={{ fontSize: '0.85rem', color: 'gray' }}>Localidad *</label>
+                      <input
+                        type="text"
+                        placeholder="Ej: Corrientes Cap."
+                        required
+                        value={nuevaDireccion.localidad}
+                        onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, localidad: e.target.value })}
+                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #2A2A2A', background: '#0F0F0F', color: 'white', marginTop: '5px' }}
+                      />
+                    </div>
+                    <div className="form-group" style={{ flex: 1 }}>
+                      <label style={{ fontSize: '0.85rem', color: 'gray' }}>C.P. *</label>
+                      <input
+                        type="number"
+                        placeholder="3400"
+                        required
+                        value={nuevaDireccion.codigoPostal}
+                        onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, codigoPostal: e.target.value })}
+                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #2A2A2A', background: '#0F0F0F', color: 'white', marginTop: '5px' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Fila 2: Calle y Altura */}
+                  <div className="form-row" style={{ marginTop: '15px' }}>
+                    <div className="form-group" style={{ flex: 3 }}>
+                      <label style={{ fontSize: '0.85rem', color: 'gray' }}>Calle *</label>
+                      <input
+                        type="text"
+                        placeholder="Ej: San Martín"
+                        required
+                        value={nuevaDireccion.calle}
+                        onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, calle: e.target.value })}
+                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #2A2A2A', background: '#0F0F0F', color: 'white', marginTop: '5px' }}
+                      />
+                    </div>
+                    <div className="form-group" style={{ flex: 1 }}>
+                      <label style={{ fontSize: '0.85rem', color: 'gray' }}>Altura *</label>
+                      <input
+                        type="number"
+                        placeholder="Ej: 1234"
+                        required
+                        value={nuevaDireccion.altura}
+                        onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, altura: e.target.value })}
+                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #2A2A2A', background: '#0F0F0F', color: 'white', marginTop: '5px' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Fila 3: Piso y Departamento (Opcionales) */}
+                  <div className="form-row" style={{ marginTop: '15px' }}>
+                    <div className="form-group" style={{ flex: 1 }}>
+                      <label style={{ fontSize: '0.85rem', color: 'gray' }}>Piso (Opcional)</label>
+                      <input
+                        type="text"
+                        placeholder="Ej: 3"
+                        value={nuevaDireccion.piso}
+                        onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, piso: e.target.value })}
+                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #2A2A2A', background: '#0F0F0F', color: 'white', marginTop: '5px' }}
+                      />
+                    </div>
+                    <div className="form-group" style={{ flex: 1 }}>
+                      <label style={{ fontSize: '0.85rem', color: 'gray' }}>Dpto (Opcional)</label>
+                      <input
+                        type="text"
+                        placeholder="Ej: B"
+                        value={nuevaDireccion.departamento}
+                        onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, departamento: e.target.value })}
+                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #2A2A2A', background: '#0F0F0F', color: 'white', marginTop: '5px' }}
+                      />
+                    </div>
+                  </div>
+
                 </div>
-              </label>
+              )}
             </div>
           </div>
           {/* SECCIÓN 2: MÉTODOS DE PAGO */}

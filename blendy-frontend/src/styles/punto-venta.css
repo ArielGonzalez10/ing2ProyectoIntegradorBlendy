@@ -1,0 +1,256 @@
+.pos-page {
+    padding: 100px 2% 20px 2%;
+    min-height: 100vh;
+    background-color: var(--color-fondo);
+    display: flex;
+    gap: 20px;
+}
+
+/* BUSCADOR Y RESULTADOS */
+.pos-inventario {
+    flex: 2;
+    background-color: #141414;
+    border: 1px solid #1F1F1F;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.pos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.pos-header h1 {
+    font-family: 'Gazpacho', serif;
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+.pos-buscador {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #0F0F0F;
+    border: 1px solid #2A2A2A;
+    border-radius: 8px;
+    color: var(--color-texto);
+    font-family: 'Onest', sans-serif;
+    margin-bottom: 20px;
+}
+
+.pos-buscador:focus {
+    border-color: var(--color-celeste);
+    outline: none;
+}
+
+.pos-tabla {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.pos-tabla th {
+    text-align: left;
+    padding: 10px;
+    color: var(--color-subtitulos);
+    border-bottom: 1px solid #2A2A2A;
+    font-weight: normal;
+}
+
+.pos-tabla td {
+    padding: 15px 10px;
+    border-bottom: 1px solid #1F1F1F;
+    vertical-align: middle;
+}
+
+.btn-add-pos {
+    background-color: rgba(214, 247, 255, 0.1);
+    color: var(--color-celeste);
+    border: 1px solid var(--color-celeste);
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-add-pos:hover {
+    background-color: var(--color-celeste);
+    color: #0F0F0F;
+}
+
+/* TICKET DE VENTA */
+.pos-ticket {
+    flex: 1;
+    background-color: #111111;
+    border: 1px solid #1F1F1F;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 120px);
+    position: sticky;
+    top: 100px;
+}
+
+.pos-ticket h2 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #2A2A2A;
+    padding-bottom: 10px;
+}
+
+.ticket-items {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.ticket-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    background-color: #1A1A1A;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.ticket-item-info h4 {
+    margin: 0 0 5px 0;
+    font-size: 0.95rem;
+}
+
+.ticket-item-info p {
+    margin: 0;
+    color: var(--color-celeste);
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.ticket-controles {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ticket-controles button {
+    background: #2A2A2A;
+    border: none;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pos-totales {
+    border-top: 1px solid #2A2A2A;
+    padding-top: 15px;
+}
+
+.pos-metodo-pago {
+    width: 100%;
+    padding: 10px;
+    background-color: #0F0F0F;
+    border: 1px solid #2A2A2A;
+    color: white;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.pos-total-final {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* --- Modal de Comprobante --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+.comprobante-ticket {
+    background-color: #fff;
+    color: #000;
+    width: 380px;
+    padding: 30px;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.ticket-header {
+    text-align: center;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.ticket-header h2 {
+    font-family: 'Gazpacho', serif;
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.ticket-info-p {
+    font-size: 0.8rem;
+    margin: 5px 0;
+}
+
+.ticket-tabla {
+    width: 100%;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+}
+
+.ticket-tabla th {
+    border-bottom: 1px solid #000;
+    text-align: left;
+}
+
+.ticket-divisor {
+    border-top: 1px dashed #ccc;
+    margin: 10px 0;
+}
+
+.ticket-total-row {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.btn-ticket-accion {
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 20px;
+    font-family: 'Onest', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-imprimir {
+    background-color: #000;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.btn-nueva-venta {
+    background-color: #f0f0f0;
+    color: #333;
+}

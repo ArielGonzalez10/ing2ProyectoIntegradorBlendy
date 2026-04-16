@@ -11,6 +11,15 @@ const Perfil = () => {
 
   const [domicilios, setDomicilios] = useState([]);
   const [cargandoDirecciones, setCargandoDirecciones] = useState(false);
+  const [nuevaDireccion, setNuevaDireccion] = useState({
+    provincia: "",
+    localidad: "",
+    codigoPostal: "",
+    calle: "",
+    altura: "",
+    piso: "",
+    departamento: ""
+  });
 
   const [usuario, setUsuario] = useState({
     nombre: "",
@@ -200,8 +209,102 @@ const Perfil = () => {
                   </>
                 ) : (
                   <form onSubmit={handleGuardarDireccion}>
-                    <h3>Nueva Dirección</h3>
-                    <button type="button" onClick={() => setMostrandoFormularioDireccion(false)}>Cancelar</button>
+                    <h3>Agregar Nueva Dirección</h3>
+                    <p>Completá los datos para agilizar tus futuras compras.</p>
+                    
+                    {/* Fila 1: Provincia, Localidad y CP */}
+                    <div className="perfil-form-row">
+                      <div className="perfil-form-group" style={{ flex: 2 }}>
+                        <label>Provincia *</label>
+                        <input 
+                          type="text" 
+                          placeholder="Ej: Corrientes" 
+                          required 
+                          value={nuevaDireccion.provincia} 
+                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, provincia: e.target.value})} 
+                        />
+                      </div>
+                      <div className="perfil-form-group" style={{ flex: 2 }}>
+                        <label>Localidad *</label>
+                        <input 
+                          type="text" 
+                          placeholder="Ej: Corrientes Cap." 
+                          required 
+                          value={nuevaDireccion.localidad} 
+                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, localidad: e.target.value})} 
+                        />
+                      </div>
+                      <div className="perfil-form-group" style={{ flex: 1 }}>
+                        <label>C.P. *</label>
+                        <input 
+                          type="number" 
+                          placeholder="3400" 
+                          required 
+                          value={nuevaDireccion.codigoPostal} 
+                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, codigoPostal: e.target.value})} 
+                        />
+                      </div>
+                    </div>
+
+                    {/* Fila 2: Calle y Altura */}
+                    <div className="perfil-form-row">
+                      <div className="perfil-form-group" style={{ flex: 3 }}>
+                        <label>Calle *</label>
+                        <input 
+                          type="text" 
+                          placeholder="Ej: San Martín" 
+                          required 
+                          value={nuevaDireccion.calle} 
+                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, calle: e.target.value})} 
+                        />
+                      </div>
+                      <div className="perfil-form-group" style={{ flex: 1 }}>
+                        <label>Altura *</label>
+                        <input 
+                          type="number" 
+                          placeholder="Ej: 1234" 
+                          required 
+                          value={nuevaDireccion.altura} 
+                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, altura: e.target.value})} 
+                        />
+                      </div>
+                    </div>
+
+                    {/* Fila 3: Piso y Departamento */}
+                    <div className="perfil-form-row">
+                      <div className="perfil-form-group" style={{ flex: 1 }}>
+                        <label>Piso (Opcional)</label>
+                        <input 
+                          type="text" 
+                          placeholder="Ej: 3" 
+                          value={nuevaDireccion.piso} 
+                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, piso: e.target.value})} 
+                        />
+                      </div>
+                      <div className="perfil-form-group" style={{ flex: 1 }}>
+                        <label>Dpto (Opcional)</label>
+                        <input 
+                          type="text" 
+                          placeholder="Ej: B" 
+                          value={nuevaDireccion.departamento} 
+                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, departamento: e.target.value})} 
+                        />
+                      </div>
+                    </div>
+
+                    {/* Botones de Acción */}
+                    <div className="perfil-acciones" style={{ marginTop: '20px' }}>
+                      <button 
+                        type="button" 
+                        className="btn-blendy btn-secundario" 
+                        onClick={() => setMostrandoFormularioDireccion(false)}
+                      >
+                        Cancelar
+                      </button>
+                      <button type="submit" className="btn-blendy btn-enfasis">
+                        Guardar Dirección
+                      </button>
+                    </div>
                   </form>
                 )}
               </div>

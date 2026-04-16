@@ -15,6 +15,7 @@ import CierreCaja from './pages/CierreCaja';
 import Carrito from './pages/Carrito';
 import Confirmacion from './pages/Confirmacion';
 import Checkout from './pages/Checkout';
+import NuevaVentaLocal from './pages/NuevaVentaLocal';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
 
             {/* Rutas del Vendedor */}
             <Route path="/panel/cierre-caja" element={<CierreCaja />} />
+            <Route path="/panel/nueva-venta" element={<NuevaVentaLocal />} />
 
             {/* Rutas de Administración */}
             <Route path="/panel/productos" element={<PanelProductos />} />

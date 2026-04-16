@@ -26,7 +26,16 @@ const Navbar = () => {
 
             <ul className="navbar-links mb-0 p-0">
                 <li><Link to="/">Inicio</Link></li>
-                <li><Link to="/tienda">Tienda</Link></li>
+                {/* Ocultamos Tienda para el vendedor, mostramos Nueva Venta */}
+                {rol !== "3" && <li><Link to="/tienda">Tienda</Link></li>}
+
+                {rol === "3" && (
+                    <li>
+                        <Link to="/panel/nueva-venta" style={{ color: 'var(--color-celeste)', fontWeight: 'bold' }}>
+                            Venta Mostrador
+                        </Link>
+                    </li>
+                )}
                 
                 {/* Enlace destacado para roles de gestión */}
                 {(rol === "1" || rol === "3") && (
