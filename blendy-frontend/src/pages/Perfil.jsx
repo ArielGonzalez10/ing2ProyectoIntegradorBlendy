@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react'; 
-import { buscarUsuario } from '../api/auth';
-import { modificarUsuario } from '../api/auth';
-import { listarDomicilios } from '../api/auth';
+import { 
+  buscarUsuario, 
+  modificarUsuario, 
+  listarDomicilios, 
+  listarProvincias, 
+  listarLocalidades,
+  crearDomicilio // <--- Importación agregada
+} from '../api/auth';
 import '../styles/perfil.css';
 
 const Perfil = () => {
@@ -11,6 +16,10 @@ const Perfil = () => {
 
   const [domicilios, setDomicilios] = useState([]);
   const [cargandoDirecciones, setCargandoDirecciones] = useState(false);
+  
+  const [listaProvincias, setListaProvincias] = useState([]);
+  const [listaLocalidades, setListaLocalidades] = useState([]);
+
   const [nuevaDireccion, setNuevaDireccion] = useState({
     provincia: "",
     localidad: "",
@@ -29,12 +38,12 @@ const Perfil = () => {
     domicilio: "", 
   });
 
+  // --- CARGA DE DATOS ---
+
   const cargarDatosUsuario = async (email) => {
     try {
       const res = await buscarUsuario(email);
-      if (res.data) {
-        setUsuario(res.data);
-      }
+      if (res.data) setUsuario(res.data);
     } catch (error) {
       console.error("Error al buscar usuario:", error);
     }
@@ -44,55 +53,110 @@ const Perfil = () => {
     setCargandoDirecciones(true);
     try {
       const res = await listarDomicilios(email);
-      console.log("Respuesta de la API:", res.data);
-      if (res.data) {
-        setDomicilios(res.data);
-      }
+      if (res.data) setDomicilios(res.data);
     } catch (error) {
       console.error("Error al traer domicilios:", error);
-      setDomicilios([]); 
     } finally {
       setCargandoDirecciones(false);
     }
   };
 
+  // Carga inicial de Provincias
   useEffect(() => {
     const emailLogueado = localStorage.getItem("userEmail");
     if (emailLogueado) {
       cargarDatosUsuario(emailLogueado);
       cargarMisDirecciones(emailLogueado);
     }
+
+    const cargarProvinciasBD = async () => {
+      try {
+        const res = await listarProvincias();
+        console.log("Datos Provincias recibidos:", res.data);
+        if (res.data) setListaProvincias(res.data);
+      } catch (error) {
+        console.error("Error en listarProvincias:", error);
+      }
+    };
+    cargarProvinciasBD();
   }, []);
 
+  // Carga de Localidades cuando cambia la provincia
+  useEffect(() => {
+    const cargarLocalidadesBD = async () => {
+      if (nuevaDireccion.provincia) {
+        try {
+          console.log("Buscando localidades para provincia ID:", nuevaDireccion.provincia);
+          const res = await listarLocalidades(nuevaDireccion.provincia);
+          console.log("Datos Localidades recibidos:", res.data);
+          if (res.data) setListaLocalidades(res.data);
+        } catch (error) {
+          console.error("Error en listarLocalidades:", error);
+        }
+      } else {
+        setListaLocalidades([]);
+      }
+    };
+    cargarLocalidadesBD();
+  }, [nuevaDireccion.provincia]);
+
+  // --- HANDLERS ---
+
   const handleChange = (e) => {
-    setUsuario({
-      ...usuario,
-      [e.target.name]: e.target.value,
-    });
+    setUsuario({ ...usuario, [e.target.name]: e.target.value });
   };
 
   const handleGuardar = async (e) => {
     e.preventDefault();
     try {
       const response = await modificarUsuario(usuario);
-      if (response.status === 200) {
-        alert("¡Datos actualizados con éxito!");
+      if (response.status === 200) alert("¡Datos actualizados!");
+    } catch (error) {
+      alert("Error al actualizar.");
+    }
+  };
+
+  // LOGICA DE GUARDADO INTEGRADA AQUÍ
+  const handleGuardarDireccion = async (e) => {
+    e.preventDefault();
+    const emailLogueado = localStorage.getItem("userEmail");
+
+    const datosEnvio = {
+      calle: nuevaDireccion.calle,
+      altura: parseInt(nuevaDireccion.altura),
+      localidad: {
+        idLocalidad: parseInt(nuevaDireccion.localidad)
+      },
+      usuario: {
+        correoElectronico: emailLogueado
+      }
+    };
+
+    try {
+      const res = await crearDomicilio(datosEnvio);
+      if (res.status === 200 || res.status === 201) {
+        alert("Dirección guardada con éxito");
+        setNuevaDireccion({
+          provincia: "",
+          localidad: "",
+          codigoPostal: "",
+          calle: "",
+          altura: "",
+          piso: "",
+          departamento: ""
+        });
+        setMostrandoFormularioDireccion(false);
+        if (emailLogueado) cargarMisDirecciones(emailLogueado);
       }
     } catch (error) {
-      console.error("Error al actualizar:", error);
-      alert("No se pudo actualizar la información.");
+      console.error("Error al guardar dirección:", error);
+      alert("Error al guardar la dirección.");
     }
   };
 
   const handleGuardarTarjeta = (e) => {
     e.preventDefault();
-    alert("¡Tarjeta guardada de forma segura! (Vista simulada)");
     setMostrandoFormularioBilletera(false);
-  };
-
-  const handleGuardarDireccion = (e) => {
-    e.preventDefault();
-    setMostrandoFormularioDireccion(false);
   };
 
   return (
@@ -115,7 +179,6 @@ const Perfil = () => {
               <form onSubmit={handleGuardar}>
                 <div className="perfil-seccion">
                   <h3>Información Personal</h3>
-                  <p>Actualiza tus datos básicos para tus pedidos y facturación.</p>
                   <div className="perfil-form-row">
                     <div className="perfil-form-group">
                       <label>Nombre</label>
@@ -131,16 +194,14 @@ const Perfil = () => {
                       <label>Teléfono</label>
                       <input type="text" name="telefono" value={usuario.telefono || ""} onChange={handleChange} />
                     </div>
-                    <div className="perfil-form-group"></div>
                   </div>
                 </div>
 
                 <div className="perfil-seccion">
                   <h3>Acceso y Seguridad</h3>
-                  <p>Tus credenciales para ingresar a Blendly.</p>
                   <div className="perfil-form-row">
                     <div className="perfil-form-group">
-                      <label>Correo Electrónico (No editable)</label>
+                      <label>Correo Electrónico</label>
                       <input type="email" value={usuario.correoElectronico || ""} disabled />
                     </div>
                     <div className="perfil-form-group">
@@ -148,9 +209,6 @@ const Perfil = () => {
                       <input type="password" value="********" disabled />
                     </div>
                   </div>
-                  <span style={{ fontSize: "0.85rem", color: "#00bcd4", cursor: "pointer", textDecoration: "underline" }}>
-                    Solicitar cambio de contraseña
-                  </span>
                 </div>
 
                 <div className="perfil-acciones">
@@ -165,145 +223,102 @@ const Perfil = () => {
                 {!mostrandoFormularioDireccion ? (
                   <>
                     <div className="perfil-header-flex" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <div>
-                        <h3>Mis Direcciones</h3>
-                        <p>Administra tus lugares de entrega.</p>
-                      </div>
+                      <h3>Mis Direcciones</h3>
                       <button className="btn-blendy btn-enfasis btn-pill" onClick={() => setMostrandoFormularioDireccion(true)}>+ Nueva</button>
                     </div>
-
-                    {cargandoDirecciones ? (
-                      <p>Cargando direcciones...</p>
-                    ) : (
+                    {cargandoDirecciones ? <p>Cargando...</p> : (
                       <div className="direcciones-lista" style={{ marginTop: "20px" }}>
-                                                  {domicilios.map((dom) => (
-                                                      <div
-                                                          /* 1. Usamos id_domicilio o idDomicilio según lo que mande el backend */
-                                                          key={dom.id_domicilio || dom.idDomicilio || Math.random()}
-                                                          className="direccion-card"
-                                                          style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "15px", marginBottom: "10px", display: "flex", justifyContent: "space-between" }}
-                                                      >
-                                                          <div>
-                                                              <strong style={{ display: "block", fontSize: "1.1rem" }}>
-                                                                  {dom.calle} {dom.altura}
-                                                              </strong>
-                                                              <span style={{ color: "#666" }}>
-                                                                  {/* 2. Mapeo flexible para la localidad y el nombre */}
-                                                                  {dom.localidad?.nombreLocalidad || dom.localidad?.nombre || "Localidad"},
-                                                                  CP {dom.codigoPostal || dom.codigo_postal || "3400"}
-                                                              </span>
-
-                                                              {(dom.piso || dom.depto) && (
-                                                                  <p style={{ margin: "5px 0 0 0", fontSize: "0.9rem", color: "#888" }}>
-                                                                      {dom.piso ? `Piso ${dom.piso}` : ""} {dom.depto ? `- Depto ${dom.depto}` : ""}
-                                                                  </p>
-                                                              )}
-                                                          </div>
-                                                          <div className="direccion-badge" style={{ background: "#e0f7fa", color: "#00838f", padding: "5px 10px", borderRadius: "15px", fontSize: "0.8rem", height: "fit-content" }}>
-                                                              Guardada
-                                                          </div>
-                                                      </div>
-                                                  ))}
+                        {domicilios.map((dom) => (
+                          <div key={dom.idDomicilio || Math.random()} className="direccion-card" style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "15px", marginBottom: "10px" }}>
+                            <strong>{dom.calle} {dom.altura}</strong>
+                            <p>{dom.localidad?.nombre || "Localidad"}, CP {dom.localidad?.codigoPostal || dom.codigoPostal}</p>
+                          </div>
+                        ))}
                       </div>
                     )}
                   </>
                 ) : (
                   <form onSubmit={handleGuardarDireccion}>
                     <h3>Agregar Nueva Dirección</h3>
-                    <p>Completá los datos para agilizar tus futuras compras.</p>
-                    
-                    {/* Fila 1: Provincia, Localidad y CP */}
                     <div className="perfil-form-row">
                       <div className="perfil-form-group" style={{ flex: 2 }}>
                         <label>Provincia *</label>
-                        <input 
-                          type="text" 
-                          placeholder="Ej: Corrientes" 
+                        <select 
                           required 
+                          className="perfil-input"
                           value={nuevaDireccion.provincia} 
-                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, provincia: e.target.value})} 
-                        />
+                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, provincia: e.target.value, localidad: "", codigoPostal: ""})}
+                        >
+                          <option value="">Seleccione Provincia</option>
+                          {listaProvincias.map(p => (
+                            <option key={p.idProvincia} value={p.idProvincia}>
+                                {p.nombre}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                       <div className="perfil-form-group" style={{ flex: 2 }}>
                         <label>Localidad *</label>
-                        <input 
-                          type="text" 
-                          placeholder="Ej: Corrientes Cap." 
+                        <select 
                           required 
+                          className="perfil-input"
+                          disabled={!nuevaDireccion.provincia}
                           value={nuevaDireccion.localidad} 
-                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, localidad: e.target.value})} 
-                        />
+                          onChange={(e) => {
+                            const idSel = parseInt(e.target.value);
+                            const loc = listaLocalidades.find(l => l.idLocalidad === idSel);
+                            setNuevaDireccion({
+                              ...nuevaDireccion, 
+                              localidad: e.target.value,
+                              codigoPostal: loc ? loc.codigoPostal : "" 
+                            });
+                          }}
+                        >
+                          <option value="">Seleccione Localidad</option>
+                          {listaLocalidades.map(loc => (
+                            <option key={loc.idLocalidad} value={loc.idLocalidad}>
+                                {loc.nombre}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                       <div className="perfil-form-group" style={{ flex: 1 }}>
                         <label>C.P. *</label>
                         <input 
-                          type="number" 
-                          placeholder="3400" 
+                          type="text" 
                           required 
+                          readOnly 
+                          className="perfil-input"
                           value={nuevaDireccion.codigoPostal} 
-                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, codigoPostal: e.target.value})} 
                         />
                       </div>
                     </div>
 
-                    {/* Fila 2: Calle y Altura */}
                     <div className="perfil-form-row">
                       <div className="perfil-form-group" style={{ flex: 3 }}>
                         <label>Calle *</label>
-                        <input 
-                          type="text" 
-                          placeholder="Ej: San Martín" 
-                          required 
-                          value={nuevaDireccion.calle} 
-                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, calle: e.target.value})} 
-                        />
+                        <input type="text" placeholder="Ej: San Martin" className="perfil-input" required value={nuevaDireccion.calle} onChange={(e) => setNuevaDireccion({...nuevaDireccion, calle: e.target.value})} />
                       </div>
                       <div className="perfil-form-group" style={{ flex: 1 }}>
                         <label>Altura *</label>
-                        <input 
-                          type="number" 
-                          placeholder="Ej: 1234" 
-                          required 
-                          value={nuevaDireccion.altura} 
-                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, altura: e.target.value})} 
-                        />
+                        <input type="number" placeholder="Ej: 1234" className="perfil-input" required value={nuevaDireccion.altura} onChange={(e) => setNuevaDireccion({...nuevaDireccion, altura: e.target.value})} />
                       </div>
                     </div>
 
-                    {/* Fila 3: Piso y Departamento */}
                     <div className="perfil-form-row">
-                      <div className="perfil-form-group" style={{ flex: 1 }}>
+                      <div className="perfil-form-group">
                         <label>Piso (Opcional)</label>
-                        <input 
-                          type="text" 
-                          placeholder="Ej: 3" 
-                          value={nuevaDireccion.piso} 
-                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, piso: e.target.value})} 
-                        />
+                        <input type="text" placeholder="Ej: 3" className="perfil-input" value={nuevaDireccion.piso} onChange={(e) => setNuevaDireccion({...nuevaDireccion, piso: e.target.value})} />
                       </div>
-                      <div className="perfil-form-group" style={{ flex: 1 }}>
+                      <div className="perfil-form-group">
                         <label>Dpto (Opcional)</label>
-                        <input 
-                          type="text" 
-                          placeholder="Ej: B" 
-                          value={nuevaDireccion.departamento} 
-                          onChange={(e) => setNuevaDireccion({...nuevaDireccion, departamento: e.target.value})} 
-                        />
+                        <input type="text" placeholder="Ej: B" className="perfil-input" value={nuevaDireccion.departamento} onChange={(e) => setNuevaDireccion({...nuevaDireccion, departamento: e.target.value})} />
                       </div>
                     </div>
 
-                    {/* Botones de Acción */}
-                    <div className="perfil-acciones" style={{ marginTop: '20px' }}>
-                      <button 
-                        type="button" 
-                        className="btn-blendy btn-secundario" 
-                        onClick={() => setMostrandoFormularioDireccion(false)}
-                      >
-                        Cancelar
-                      </button>
-                      <button type="submit" className="btn-blendy btn-enfasis">
-                        Guardar Dirección
-                      </button>
+                    <div className="perfil-acciones">
+                      <button type="button" className="btn-blendy btn-secundario" onClick={() => setMostrandoFormularioDireccion(false)}>Cancelar</button>
+                      <button type="submit" className="btn-blendy btn-enfasis">Guardar Dirección</button>
                     </div>
                   </form>
                 )}
@@ -313,42 +328,17 @@ const Perfil = () => {
             {activeTab === "billetera" && (
               <div className="perfil-seccion">
                 {!mostrandoFormularioBilletera ? (
-                  <>
-                    <h3>Billetera</h3>
-                    <p>Guarda tus detalles de pago para finalizar la compra de forma rápida y segura.</p>
-                    <div style={{ textAlign: "center", padding: "60px 0" }}>
-                      <p style={{ fontSize: "1.1rem", margin: "0 0 20px 0" }}>No tienes métodos de pago guardados.</p>
-                      <button className="btn-blendy btn-secundario btn-pill" onClick={() => setMostrandoFormularioBilletera(true)}>+ Agregar nueva tarjeta</button>
-                    </div>
-                  </>
+                  <div style={{ textAlign: "center", padding: "60px 0" }}>
+                    <p>No tienes métodos de pago guardados.</p>
+                    <button className="btn-blendy btn-secundario btn-pill" onClick={() => setMostrandoFormularioBilletera(true)}>+ Agregar tarjeta</button>
+                  </div>
                 ) : (
                   <form onSubmit={handleGuardarTarjeta}>
                     <h3>Agregar Tarjeta</h3>
-                    <p>Aceptamos todas las tarjetas de crédito y débito.</p>
                     <div className="perfil-form-row">
                       <div className="perfil-form-group">
                         <label>Número de Tarjeta *</label>
-                        <input type="text" required placeholder="0000 0000 0000 0000" maxLength="19" />
-                      </div>
-                    </div>
-                    <div className="perfil-form-row">
-                      <div className="perfil-form-group">
-                        <label>Nombre en la Tarjeta *</label>
-                        <input type="text" required placeholder="Ej: JUAN PÉREZ" style={{ textTransform: "uppercase" }} />
-                      </div>
-                    </div>
-                    <div className="perfil-form-row">
-                      <div className="perfil-form-group" style={{ flex: 1 }}>
-                        <label>Vencimiento (MM/AA) *</label>
-                        <input type="text" required placeholder="MM/AA" maxLength="5" />
-                      </div>
-                      <div className="perfil-form-group" style={{ flex: 1 }}>
-                        <label>Código de Seguridad *</label>
-                        <input type="password" required placeholder="CVC" maxLength="4" />
-                      </div>
-                      <div className="perfil-form-group" style={{ flex: 1 }}>
-                        <label>DNI del Titular *</label>
-                        <input type="text" required placeholder="Ej: 12345678" maxLength="8" />
+                        <input type="text" className="perfil-input" required placeholder="0000 0000 0000 0000" />
                       </div>
                     </div>
                     <div className="perfil-acciones">

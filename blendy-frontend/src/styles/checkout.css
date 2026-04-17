@@ -54,7 +54,7 @@
     font-weight: bold;
 }
 
-/* Opciones guardadas vs Nuevas */
+/* Opciones de Radio */
 .opcion-radio-group {
     display: flex;
     flex-direction: column;
@@ -118,8 +118,7 @@
     gap: 20px;
 }
 
-/* Resumen reutiliza clases de carrito.css */
-
+/* Media Query para móviles */
 @media (max-width: 768px) {
     .checkout-layout {
         flex-direction: column-reverse;

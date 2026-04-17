@@ -24,6 +24,18 @@ export function listarDomicilios(data){
     })
 }
 
+export function crearDomicilio(data){
+    return api.post("/domicilios/crear",data);
+}
+
+export function listarProvincias(){
+    return api.get("/provincias/listar");
+}
+
+export function listarLocalidades(p_id_provincia){
+    return api.get(`/localidades/listar/${p_id_provincia}`);
+}
+
 export function listarMetodosPagos(){
     return api.get("/metodoPagos/listar");
 }

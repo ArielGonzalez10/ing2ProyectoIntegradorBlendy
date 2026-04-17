@@ -2,30 +2,84 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { listarDomicilios, listarMetodosPagos } from "../api/auth";
+import { crearVentaCabecera, crearVentaDetalle, crearPagos, crearEnvios } from "../api/pagos"; 
 import "../styles/checkout.css";
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { cartItems } = useCart();
+  const { cartItems, clearCart } = useCart();
 
   const [direccionesGuardadas, setDireccionesGuardadas] = useState([]);
   const [metodosPagoBD, setMetodosPagoBD] = useState([]);
-  const [loading, setLoading] = useState(true); // Estado de carga
+  const [loading, setLoading] = useState(true);
 
   const [direccionSeleccionada, setDireccionSeleccionada] = useState("");
   const [metodoPago, setMetodoPago] = useState("");
-  const [nuevaDireccion, setNuevaDireccion] = useState({
-    provincia: "",
-    localidad: "",
-    codigoPostal: "",
-    calle: "",
-    altura: "",
-    piso: "",
-    departamento: ""
-  });
+
+  const subtotal = cartItems.reduce((acc, item) => acc + item.precioUnitario * item.cantidad, 0);
+  const costoEnvio = 2500;
+  const total = subtotal + costoEnvio;
+
+  const handleConfirmarPago = async (e) => {
+    e.preventDefault();
+    
+    if (!direccionSeleccionada) {
+      alert("Por favor, selecciona una dirección de envío.");
+      return;
+    }
+
+    try {
+      const email = localStorage.getItem("userEmail");
+      const idUsuarioActual = direccionesGuardadas.length > 0 ? direccionesGuardadas[0]?.usuario?.idUsuario : null;
+
+      // 1. Crear Venta Cabecera
+      const datosCabecera = {
+        fecha: new Date().toISOString().split('T')[0],
+        totalVenta: total,
+        usuario: idUsuarioActual ? { idUsuario: idUsuarioActual } : { correoElectronico: email }
+      };
+
+      const resCabecera = await crearVentaCabecera(datosCabecera);
+      const idCabeceraGenerada = resCabecera.data.idVentaCabecera;
+
+      if (!idCabeceraGenerada) throw new Error("Error al obtener ID de cabecera");
+
+      // 2. Crear Venta Detalle
+      for (const item of cartItems) {
+        await crearVentaDetalle({
+          cantidad: item.cantidad,
+          total: item.precioUnitario * item.cantidad,
+          producto: { idProducto: item.idProducto },
+          ventaCabecera: { idVentaCabecera: idCabeceraGenerada }
+        });
+      }
+
+      // 3. Crear Pago
+      await crearPagos({
+        montoPago: total,
+        ventaCabecera: { idVentaCabecera: idCabeceraGenerada },
+        metodoPago: { idMetodoPago: parseInt(metodoPago) }
+      });
+
+      // 4. Crear Envío
+      await crearEnvios({
+        fechaDespacho: null,
+        fechaRecepcion: null,
+        usuario: idUsuarioActual ? { idUsuario: idUsuarioActual } : { correoElectronico: email },
+        domicilio: { idDomicilio: parseInt(direccionSeleccionada) }
+      });
+
+      alert("¡Compra realizada con éxito!");
+      if (clearCart) clearCart();
+      navigate("/MisPedidos");
+
+    } catch (error) {
+      console.error("Error en la transacción:", error);
+      alert("No se pudo procesar la compra.");
+    }
+  };
 
   useEffect(() => {
-    // Redirigir si el carrito está vacío
     if (cartItems.length === 0) {
       navigate("/tienda");
       return;
@@ -34,41 +88,22 @@ const Checkout = () => {
     const cargarDatos = async () => {
       try {
         const email = localStorage.getItem("userEmail");
-        console.log("1. Valor extraído de localStorage:", email);
-        // Usamos Promise.allSettled en lugar de Promise.all
-        // Esto permite que si uno falla (ej. domicilios), el otro siga adelante
-        const resultados = await Promise.allSettled([
+        const [resDom, resPagos] = await Promise.all([
           listarDomicilios(email),
           listarMetodosPagos(),
         ]);
 
-        // Procesar Domicilios
-        if (resultados[0].status === "fulfilled") {
-          const resDom = resultados[0].value;
-          setDireccionesGuardadas(resDom.data);
-          if (resDom.data.length > 0) {
-            setDireccionSeleccionada(String(resDom.data[0].idDomicilio));
-          }
-        } else {
-          // Aquí cae si el backend tiró el error 404
-          console.warn(
-            "Aviso:",
-            resultados[0].reason.response?.data || "Sin domicilios"
-          );
-          setDireccionesGuardadas([]);
-          setDireccionSeleccionada("nueva"); // Marcamos nueva por defecto
-        }
+        setDireccionesGuardadas(resDom.data);
+        setMetodosPagoBD(resPagos.data);
 
-        // Procesar Métodos de Pago
-        if (resultados[1].status === "fulfilled") {
-          const resPagos = resultados[1].value;
-          setMetodosPagoBD(resPagos.data);
-          if (resPagos.data.length > 0) {
-            setMetodoPago(String(resPagos.data[0].idMetodoPago));
-          }
+        if (resDom.data.length > 0) {
+          setDireccionSeleccionada(String(resDom.data[0].idDomicilio));
+        }
+        if (resPagos.data.length > 0) {
+          setMetodoPago(String(resPagos.data[0].idMetodoPago));
         }
       } catch (error) {
-        console.error("Error crítico en checkout:", error);
+        console.error("Error cargando datos:", error);
       } finally {
         setLoading(false);
       }
@@ -77,174 +112,49 @@ const Checkout = () => {
     cargarDatos();
   }, [cartItems.length, navigate]);
 
-  // Totales
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.precioUnitario * item.cantidad,
-    0
-  );
-  const total = subtotal + 2500;
-
-  if (loading)
-    return <div className="loading">Cargando opciones de pago y envío...</div>;
+  if (loading) return <div className="loading">Cargando...</div>;
 
   return (
     <div className="checkout-page">
       <h1>Finalizar Compra</h1>
 
-      <form className="checkout-layout" onSubmit={(e) => e.preventDefault()}>
+      <form className="checkout-layout" onSubmit={handleConfirmarPago}>
         <div className="checkout-formularios">
-          {/* SECCIÓN 1: DOMICILIOS */}
           <div className="checkout-seccion">
-            <h2>
-              <span className="checkout-numero-paso">1</span> Entrega
-            </h2>
+            <h2><span className="checkout-numero-paso">1</span> Entrega</h2>
             <div className="opcion-radio-group">
               {direccionesGuardadas.length > 0 ? (
                 direccionesGuardadas.map((dir) => (
-                  <label
-                    key={dir.idDomicilio}
-                    className={`opcion-radio ${
-                      direccionSeleccionada === String(dir.idDomicilio)
-                        ? "seleccionada"
-                        : ""
-                    }`}
-                  >
+                  <label key={dir.idDomicilio} className={`opcion-radio ${direccionSeleccionada === String(dir.idDomicilio) ? "seleccionada" : ""}`}>
                     <input
                       type="radio"
                       name="direccion"
                       value={dir.idDomicilio}
-                      checked={
-                        direccionSeleccionada === String(dir.idDomicilio)
-                      }
+                      checked={direccionSeleccionada === String(dir.idDomicilio)}
                       onChange={(e) => setDireccionSeleccionada(e.target.value)}
                     />
                     <div className="opcion-info">
-                      {/* Vinculado a los atributos de tu tabla SQL y entidad Java */}
                       <h4>{dir.calle} {dir.altura}</h4>
-                      <p>
-                        {dir.localidad ? dir.localidad.descripcion : "Dirección guardada"}
-                      </p>
+                      <p>{dir.localidad?.nombre || "Dirección guardada"}</p>
                     </div>
                   </label>
                 ))
               ) : (
-                <p
-                  style={{ color: "gray", fontSize: "0.9rem", padding: "10px" }}
-                >
-                  No tienes domicilios guardados.
-                </p>
-              )}
-
-              {/* Formulario que solo aparece si elige "Nueva" */}
-              {direccionSeleccionada === "nueva" && (
-                <div className="formulario-nuevo">
-                  
-                  {/* Fila 1: Provincia, Localidad y CP */}
-                  <div className="form-row">
-                    <div className="form-group" style={{ flex: 2 }}>
-                      <label style={{ fontSize: '0.85rem', color: 'gray' }}>Provincia *</label>
-                      <input
-                        type="text"
-                        placeholder="Ej: Corrientes"
-                        required
-                        value={nuevaDireccion.provincia}
-                        onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, provincia: e.target.value })}
-                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #2A2A2A', background: '#0F0F0F', color: 'white', marginTop: '5px' }}
-                      />
-                    </div>
-                    <div className="form-group" style={{ flex: 2 }}>
-                      <label style={{ fontSize: '0.85rem', color: 'gray' }}>Localidad *</label>
-                      <input
-                        type="text"
-                        placeholder="Ej: Corrientes Cap."
-                        required
-                        value={nuevaDireccion.localidad}
-                        onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, localidad: e.target.value })}
-                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #2A2A2A', background: '#0F0F0F', color: 'white', marginTop: '5px' }}
-                      />
-                    </div>
-                    <div className="form-group" style={{ flex: 1 }}>
-                      <label style={{ fontSize: '0.85rem', color: 'gray' }}>C.P. *</label>
-                      <input
-                        type="number"
-                        placeholder="3400"
-                        required
-                        value={nuevaDireccion.codigoPostal}
-                        onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, codigoPostal: e.target.value })}
-                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #2A2A2A', background: '#0F0F0F', color: 'white', marginTop: '5px' }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Fila 2: Calle y Altura */}
-                  <div className="form-row" style={{ marginTop: '15px' }}>
-                    <div className="form-group" style={{ flex: 3 }}>
-                      <label style={{ fontSize: '0.85rem', color: 'gray' }}>Calle *</label>
-                      <input
-                        type="text"
-                        placeholder="Ej: San Martín"
-                        required
-                        value={nuevaDireccion.calle}
-                        onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, calle: e.target.value })}
-                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #2A2A2A', background: '#0F0F0F', color: 'white', marginTop: '5px' }}
-                      />
-                    </div>
-                    <div className="form-group" style={{ flex: 1 }}>
-                      <label style={{ fontSize: '0.85rem', color: 'gray' }}>Altura *</label>
-                      <input
-                        type="number"
-                        placeholder="Ej: 1234"
-                        required
-                        value={nuevaDireccion.altura}
-                        onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, altura: e.target.value })}
-                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #2A2A2A', background: '#0F0F0F', color: 'white', marginTop: '5px' }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Fila 3: Piso y Departamento (Opcionales) */}
-                  <div className="form-row" style={{ marginTop: '15px' }}>
-                    <div className="form-group" style={{ flex: 1 }}>
-                      <label style={{ fontSize: '0.85rem', color: 'gray' }}>Piso (Opcional)</label>
-                      <input
-                        type="text"
-                        placeholder="Ej: 3"
-                        value={nuevaDireccion.piso}
-                        onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, piso: e.target.value })}
-                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #2A2A2A', background: '#0F0F0F', color: 'white', marginTop: '5px' }}
-                      />
-                    </div>
-                    <div className="form-group" style={{ flex: 1 }}>
-                      <label style={{ fontSize: '0.85rem', color: 'gray' }}>Dpto (Opcional)</label>
-                      <input
-                        type="text"
-                        placeholder="Ej: B"
-                        value={nuevaDireccion.departamento}
-                        onChange={(e) => setNuevaDireccion({ ...nuevaDireccion, departamento: e.target.value })}
-                        style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid #2A2A2A', background: '#0F0F0F', color: 'white', marginTop: '5px' }}
-                      />
-                    </div>
-                  </div>
-
+                <div className="perfil-form-group">
+                  <p>No tienes direcciones guardadas.</p>
+                  <button type="button" className="btn-blendy btn-pill" onClick={() => navigate("/perfil")}>
+                    Agregar dirección en mi perfil
+                  </button>
                 </div>
               )}
             </div>
           </div>
-          {/* SECCIÓN 2: MÉTODOS DE PAGO */}
+
           <div className="checkout-seccion">
-            <h2>
-              <span className="checkout-numero-paso">2</span> Pago
-            </h2>
+            <h2><span className="checkout-numero-paso">2</span> Pago</h2>
             <div className="opcion-radio-group">
               {metodosPagoBD.map((pago) => (
-                <label
-                  key={pago.idMetodoPago}
-                  className={`opcion-radio ${
-                    metodoPago === String(pago.idMetodoPago)
-                      ? "seleccionada"
-                      : ""
-                  }`}
-                >
+                <label key={pago.idMetodoPago} className={`opcion-radio ${metodoPago === String(pago.idMetodoPago) ? "seleccionada" : ""}`}>
                   <input
                     type="radio"
                     name="pago"
@@ -254,11 +164,7 @@ const Checkout = () => {
                   />
                   <div className="opcion-info">
                     <h4>{pago.descripcion}</h4>
-                    <p>
-                      {pago.idMetodoPago === 1
-                        ? "5% OFF"
-                        : "Cuotas disponibles"}
-                    </p>
+                    <p>{pago.idMetodoPago === 1 ? "5% OFF" : "Cuotas disponibles"}</p>
                   </div>
                 </label>
               ))}
@@ -266,17 +172,29 @@ const Checkout = () => {
           </div>
         </div>
 
-        {/* RESUMEN */}
         <div className="carrito-resumen">
           <h3>Tu pedido</h3>
-          <div className="resumen-total">
-            <span>Total</span>
-            <span>${total.toLocaleString("es-AR")}</span>
+          <div className="resumen-items-container">
+            {cartItems.map((item) => (
+              <div key={item.idProducto} className="resumen-item-flex">
+                <span>{item.cantidad}x {item.descripcion}</span>
+                <span>${(item.precioUnitario * item.cantidad).toLocaleString("es-AR")}</span>
+              </div>
+            ))}
           </div>
-          <button
-            className="btn-blendy btn-enfasis btn-pill w-100"
-            style={{ marginTop: "20px" }}
-          >
+          <div className="resumen-linea">
+            <span>Subtotal</span>
+            <span>${subtotal.toLocaleString("es-AR")}</span>
+          </div>
+          <div className="resumen-linea">
+            <span>Envío</span>
+            <span>${costoEnvio.toLocaleString("es-AR")}</span>
+          </div>
+          <div className="resumen-total">
+            <span>Total a pagar</span>
+            <span className="total-highlight">${total.toLocaleString("es-AR")}</span>
+          </div>
+          <button type="submit" className="btn-blendy btn-enfasis btn-pill w-100" disabled={direccionesGuardadas.length === 0}>
             Confirmar y Pagar
           </button>
         </div>
