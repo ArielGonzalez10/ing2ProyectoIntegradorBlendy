@@ -28,9 +28,7 @@ public class Localidad {
     private String nombre;
     private int codigoPostal;
     private int estado;
-    @OneToOne(mappedBy = "localidad")
-    @JsonBackReference
-    private Domicilio domicilio;
     @ManyToOne
+    @JoinColumn(name = "provincia_id_provincia")
     private Provincia provincia;
 }

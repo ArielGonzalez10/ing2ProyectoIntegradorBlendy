@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
  * @author ariel
  */
 @RequestMapping("/productos")
-@RestController
 @CrossOrigin(origins = "http://localhost:5173")
+@RestController
 public class ProductoController {
     @Autowired
     private IProductoNegocio productoNego;
@@ -44,7 +44,7 @@ public class ProductoController {
     }
 
     @PutMapping("/modificar/{p_id_producto}")
-    public void modificarProducto(@PathVariable int p_id_producto, @RequestParam String p_descripcion, @RequestParam int p_stock, @RequestParam int p_stockMin, @RequestParam double p_precioUnitario, @RequestParam Categoria p_categoria, @RequestParam int p_estado){productoNego.modificarProducto(p_id_producto,p_descripcion,p_stock,p_stockMin,p_precioUnitario,p_categoria,p_estado);}
+    public void modificarProducto(@PathVariable int p_id_producto, @RequestParam String p_descripcion, @RequestParam int p_stock, @RequestParam double p_precioUnitario, @RequestParam int p_estado){productoNego.modificarProducto(p_id_producto,p_descripcion,p_stock,p_precioUnitario,p_estado);}
 
     @GetMapping("/listar")
     @ResponseBody

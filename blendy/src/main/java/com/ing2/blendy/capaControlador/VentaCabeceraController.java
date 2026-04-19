@@ -4,15 +4,26 @@
  */
 package com.ing2.blendy.capaControlador;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ing2.blendy.capaModelo.VentaCabecera;
+import com.ing2.blendy.capaNegocio.IVentaCabeceraNegocio;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *
  * @author ariel
  */
 @RequestMapping("/ventas")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 public class VentaCabeceraController {
-    
+    @Autowired
+    private IVentaCabeceraNegocio ventaNegocio;
+
+    @PostMapping("/crear")
+    public ResponseEntity<VentaCabecera> crearVentaCabecera(@RequestBody VentaCabecera p_venta_cabecera) {
+        VentaCabecera nuevaCabecera = ventaNegocio.crearVentaCabecera(p_venta_cabecera);
+        return ResponseEntity.ok(nuevaCabecera);
+    }
 }

@@ -4,9 +4,12 @@
  */
 package com.ing2.blendy.capaNegocio;
 
+import com.ing2.blendy.capaDatos.IUsuarioDatos;
 import com.ing2.blendy.capaModelo.Domicilio;
 import com.ing2.blendy.capaDatos.IDomicilioDatos;
 import java.util.List;
+
+import com.ing2.blendy.capaModelo.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +22,15 @@ public class DomicilioNegocio implements IDomicilioNegocio {
     
     @Autowired
     private IDomicilioDatos domicilioDatos;
+    @Autowired
+    private IUsuarioDatos usuarioDatos;
 
     @Override
     public void crearDomicilio(Domicilio p_id_domicilio) {
+        Usuario usuarioBusc = usuarioDatos.buscarPorCorreo(p_id_domicilio.getUsuario().getCorreoElectronico());
+        if (usuarioBusc != null){
+            p_id_domicilio.setUsuario(usuarioBusc);
+        }
         domicilioDatos.save(p_id_domicilio);
     }
 

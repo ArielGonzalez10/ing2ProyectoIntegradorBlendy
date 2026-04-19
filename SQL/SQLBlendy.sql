@@ -155,19 +155,19 @@ VALUES ('La paz 27', 2400, 14, 1);
 
 SELECT * FROM localidad;
 SELECT * FROM provincia;
-SELECT * FROM domicilio;
-
+SELECT * FROM rol;
 SELECT * FROM imagen;
-SELECT * FROM producto;
+
 SELECT * FROM categoria;
 
+SELECT * FROM domicilio;
 
 SELECT * FROM usuario;
-SELECT * FROM rol;
-
-SELECT * FROM metodo_pago;
 SELECT * FROM venta_cabecera;
 SELECT * FROM venta_detalle;
+SELECT * FROM pago;
+SELECT * FROM producto;
+SELECT * from envio;
 
 INSERT INTO metodo_pago(descripcion,estado) VALUES ('Tarjeta de Debito',1);
 INSERT INTO metodo_pago(descripcion,estado) VALUES ('Tarjeta de Credito',1);
@@ -255,29 +255,9 @@ INSERT INTO categoria (descripcion, estado) VALUES
 ('Refrescos', 1),
 ('Energeticos', 1);
 
-ALTER TABLE Imagen 
-ALTER COLUMN descripcion VARCHAR(MAX);
-
 UPDATE usuario 
 SET rol_id_rol = 1
-WHERE correo_electronico = 'arielgonzalezr9@gmail.com';
+WHERE correo_electronico = 'arielgonzalezr10@gmail.com';
 
-
--- 1. REFRESCOS (id_categoria = 1)
-UPDATE producto SET descripcion = 'Pepsi Black 1.5L', estado = 1 WHERE id_producto = 1;
-UPDATE producto SET descripcion = 'Fanta Naranja Original 2L', estado = 1 WHERE id_producto = 2;
-
--- 2. LICORES (id_categoria = 2) 
--- (Cambiamos las cervezas por licores más fuertes)
-UPDATE producto SET descripcion = 'Fernet Branca 750ml' WHERE id_producto = 3;
-UPDATE producto SET descripcion = 'Vodka Absolut Blue 1L' WHERE id_producto = 4;
-
--- 3. VINOS (id_categoria = 3)
-UPDATE producto SET descripcion = 'Vino Cabernet Sauvignon Premium' WHERE id_producto = 5;
-
--- 4. ENERGÉTICAS (id_categoria = 4)
--- (Cambiamos el agua y jugo por bebidas energizantes)
-UPDATE producto SET descripcion = 'Monster Energy Original 473ml' WHERE id_producto = 6;
-UPDATE producto SET descripcion = 'Red Bull Sugar Free 250ml' WHERE id_producto = 7;
-
-SELECT * FROM Usuario WHERE correo_electronico = 'arielgonzalezr10@gmail.com';
+SELECT * FROM Usuario;
+SELECT * FROM Domicilio;

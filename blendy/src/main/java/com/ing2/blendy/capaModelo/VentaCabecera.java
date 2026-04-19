@@ -4,12 +4,9 @@
  */
 package com.ing2.blendy.capaModelo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -33,9 +30,13 @@ public class VentaCabecera {
     private int idVentaCabecera;
     private LocalDate fecha;
     private double totalVenta;
-    @ManyToOne
+    // En tu archivo VentaCabecera.java
+
+    @ManyToOne(cascade = CascadeType.MERGE) // <-- AGREGA ESTO
+    @JoinColumn(name = "usuario_id_usuario") // Asegurate que el nombre coincida con tu BD
     private Usuario usuario;
     //Indica que atributo es el dueño de la relación e indica que tabla va a tener la FK
-    @OneToMany(mappedBy = "ventaCabecera")
+    @OneToMany(mappedBy = "ventaCabecera", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<VentaDetalle> listaVentaDetalle;
 }

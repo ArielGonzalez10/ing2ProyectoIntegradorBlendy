@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
  * @author ariel
  */
 @RequestMapping("/categorias")
-@RestController
 @CrossOrigin(origins = "http://localhost:5173")
+@RestController
 public class CategoriaController {
     @Autowired
     private ICategoriaNegocio categoriaNego;

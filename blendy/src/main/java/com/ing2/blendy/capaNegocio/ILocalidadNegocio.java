@@ -15,5 +15,5 @@ public interface ILocalidadNegocio {
     void crearLocalidad(Localidad p_localidad);
     Localidad buscarLocalidad(int p_id_localidad);
     void eliminarLocalidad(int p_id_localidad);
-    List<Localidad> listarLocalidades();
+    List<Localidad> listarLocalidades(int p_id_provincia);
 }

@@ -4,11 +4,7 @@
  */
 package com.ing2.blendy.capaModelo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,8 +25,10 @@ public class Pago {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idPago;
     private double montoPago;
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "venta_cabecera_id_venta_cabecera")
     private VentaCabecera ventaCabecera;
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "metodo_pago_id_metodo_pago")
     private MetodoPago metodoPago;
 }

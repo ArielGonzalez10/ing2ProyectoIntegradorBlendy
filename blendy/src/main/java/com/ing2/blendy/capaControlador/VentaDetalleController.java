@@ -4,15 +4,24 @@
  */
 package com.ing2.blendy.capaControlador;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.ing2.blendy.capaModelo.VentaDetalle;
+import com.ing2.blendy.capaNegocio.IVentaDetalleNegocio;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *
  * @author ariel
  */
 @RequestMapping("/detalles")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 public class VentaDetalleController {
-    
+    @Autowired
+    private IVentaDetalleNegocio ventaNegocio;
+
+    @PostMapping("/crear")
+    public void crearVentaDetalle(@RequestBody VentaDetalle p_venta_detalle){
+        ventaNegocio.crearVentaDetalle(p_venta_detalle);
+    }
 }

@@ -18,11 +18,11 @@ import org.springframework.stereotype.Service;
 public class VentaCabeceraNegocio implements IVentaCabeceraNegocio {
     
     @Autowired
-    private IVentaCabeceraDatos ventaCabeceraRepo;
+    private IVentaCabeceraDatos ventaCabeceraDatos;
 
     @Override
-    public void crearVentaCabecera(VentaCabecera p_ventaCabecera) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public VentaCabecera crearVentaCabecera(VentaCabecera p_ventaCabecera) {
+        return ventaCabeceraDatos.save(p_ventaCabecera);
     }
 
     @Override

@@ -16,6 +16,7 @@ import java.util.List;
  * @author ariel
  */
 @RequestMapping("/pagos")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 public class PagoController {
     @Autowired

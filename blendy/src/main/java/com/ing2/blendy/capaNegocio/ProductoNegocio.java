@@ -68,8 +68,14 @@ public class ProductoNegocio implements IProductoNegocio {
     }
 
     @Override
-    public void modificarProducto(int p_id_producto, String p_descripcion, int p_stock, int p_stockMin, double p_precioUnitario, Categoria p_categoria, int p_estado) {
-
+    public void modificarProducto(int p_id_producto, String p_descripcion, int p_stock,double p_precioUnitario, int p_estado) {
+        Producto productoBusc = this.buscarProducto(p_descripcion);
+        productoBusc.setIdProducto(p_id_producto);
+        productoBusc.setDescripcion(p_descripcion);
+        productoBusc.setPrecioUnitario(p_precioUnitario);
+        productoBusc.setEstado(p_estado);
+        productoBusc.setStock(p_stock);
+        productoDatos.save(productoBusc);
     }
 
     @Override

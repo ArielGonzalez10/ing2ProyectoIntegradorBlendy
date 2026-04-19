@@ -36,8 +36,8 @@ public class LocalidadNegocio implements ILocalidadNegocio {
     }
 
     @Override
-    public List<Localidad> listarLocalidades() {
-        return localidadDatos.findAll();
+    public List<Localidad> listarLocalidades(int p_id_provincia) {
+        return localidadDatos.listarLocalidades(p_id_provincia);
     }
     
 }

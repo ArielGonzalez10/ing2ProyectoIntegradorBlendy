@@ -12,7 +12,7 @@ import java.util.List;
  * @author ariel
  */
 public interface IVentaCabeceraNegocio {
-    void crearVentaCabecera(VentaCabecera p_ventaCabecera);
+    VentaCabecera crearVentaCabecera(VentaCabecera p_ventaCabecera);
     VentaCabecera buscarVentaCabecera(int p_id_ventaCabecera);
     void eliminarVentaCabecera(int p_id_ventaCabecera);
     List<VentaCabecera> listarVentaCabeceras();

@@ -4,8 +4,6 @@
  */
 package com.ing2.blendy.capaModelo;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +27,8 @@ public class Domicilio {
     private int idDomicilio;
     private String calle;
     private int altura;
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "localidad_id_localidad")
     private Localidad localidad;
     @ManyToOne
     @JsonIgnoreProperties("domicilios")

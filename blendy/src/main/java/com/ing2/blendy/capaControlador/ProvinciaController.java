@@ -16,6 +16,7 @@ import java.util.List;
  * @author ariel
  */
 @RequestMapping("/provincias")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 public class ProvinciaController {
 

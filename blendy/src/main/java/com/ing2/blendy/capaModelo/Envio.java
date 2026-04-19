@@ -34,6 +34,6 @@ public class Envio {
     private LocalDate fechaRecepcion;
     @ManyToOne
     private Usuario usuario;
-    @OneToOne
+    @ManyToOne
     private Domicilio domicilio;
 }

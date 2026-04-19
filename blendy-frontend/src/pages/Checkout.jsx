@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { listarDomicilios, listarMetodosPagos } from "../api/auth";
-import { crearVentaCabecera, crearVentaDetalle, crearPagos, crearEnvios } from "../api/pagos"; 
+// Importamos todas las funciones necesarias, incluida la de modificar producto
+import { 
+  crearVentaCabecera,crearVentaDetalle,crearPagos,crearEnvios
+} from "../api/pagos"; 
+import {modificarProducto} from "../api/products"
 import "../styles/checkout.css";
 
 const Checkout = () => {
@@ -29,44 +33,58 @@ const Checkout = () => {
     }
 
     try {
-      const email = localStorage.getItem("userEmail");
       const idUsuarioActual = direccionesGuardadas.length > 0 ? direccionesGuardadas[0]?.usuario?.idUsuario : null;
+      if (!idUsuarioActual) throw new Error("No se pudo identificar al usuario.");
 
-      // 1. Crear Venta Cabecera
-      const datosCabecera = {
+      // --- 1. CREAR VENTA CABECERA ---
+      const resCabecera = await crearVentaCabecera({
         fecha: new Date().toISOString().split('T')[0],
         totalVenta: total,
-        usuario: idUsuarioActual ? { idUsuario: idUsuarioActual } : { correoElectronico: email }
-      };
-
-      const resCabecera = await crearVentaCabecera(datosCabecera);
+        usuario: { idUsuario: idUsuarioActual }
+      });
       const idCabeceraGenerada = resCabecera.data.idVentaCabecera;
 
-      if (!idCabeceraGenerada) throw new Error("Error al obtener ID de cabecera");
-
-      // 2. Crear Venta Detalle
-      for (const item of cartItems) {
-        await crearVentaDetalle({
-          cantidad: item.cantidad,
-          total: item.precioUnitario * item.cantidad,
-          producto: { idProducto: item.idProducto },
-          ventaCabecera: { idVentaCabecera: idCabeceraGenerada }
-        });
-      }
-
-      // 3. Crear Pago
+      // --- 2. CREAR PAGO ---
       await crearPagos({
         montoPago: total,
         ventaCabecera: { idVentaCabecera: idCabeceraGenerada },
         metodoPago: { idMetodoPago: parseInt(metodoPago) }
       });
 
-      // 4. Crear Envío
+      // --- 3. CREAR VENTA DETALLE Y ACTUALIZAR STOCK ---
+      for (const item of cartItems) {
+        // A. Crear el detalle
+        await crearVentaDetalle({
+          cantidad: item.cantidad,
+          total: item.precioUnitario * item.cantidad,
+          producto: { idProducto: item.idProducto },
+          ventaCabecera: { idVentaCabecera: idCabeceraGenerada },
+        });
+
+        // B. Modificar el producto (Descontar Stock)
+        const nuevoStock = item.stock - item.cantidad;
+        await modificarProducto(item.idProducto, {
+          p_descripcion: item.descripcion,
+          p_stock: nuevoStock,
+          p_precioUnitario: item.precioUnitario,
+          p_estado: item.estado,
+        });
+      }
+
+      // Calculamos las fechas
+      const hoy = new Date();
+      const fechaDespacho = hoy.toISOString().split("T")[0]; // Fecha actual
+
+      const fechaRec = new Date();
+      fechaRec.setDate(hoy.getDate() + 3); // Sumamos 3 días
+      const fechaRecepcion = fechaRec.toISOString().split("T")[0];
+
+      // --- 4. CREAR ENVÍO ---
       await crearEnvios({
-        fechaDespacho: null,
-        fechaRecepcion: null,
-        usuario: idUsuarioActual ? { idUsuario: idUsuarioActual } : { correoElectronico: email },
-        domicilio: { idDomicilio: parseInt(direccionSeleccionada) }
+        fechaDespacho: fechaDespacho,
+        fechaRecepcion: fechaRecepcion,
+        usuario: { idUsuario: idUsuarioActual },
+        domicilio: { idDomicilio: parseInt(direccionSeleccionada) },
       });
 
       alert("¡Compra realizada con éxito!");
@@ -74,7 +92,7 @@ const Checkout = () => {
       navigate("/MisPedidos");
 
     } catch (error) {
-      console.error("Error en la transacción:", error);
+      console.error("Error en la secuencia de transacciones:", error);
       alert("No se pudo procesar la compra.");
     }
   };
@@ -123,30 +141,21 @@ const Checkout = () => {
           <div className="checkout-seccion">
             <h2><span className="checkout-numero-paso">1</span> Entrega</h2>
             <div className="opcion-radio-group">
-              {direccionesGuardadas.length > 0 ? (
-                direccionesGuardadas.map((dir) => (
-                  <label key={dir.idDomicilio} className={`opcion-radio ${direccionSeleccionada === String(dir.idDomicilio) ? "seleccionada" : ""}`}>
-                    <input
-                      type="radio"
-                      name="direccion"
-                      value={dir.idDomicilio}
-                      checked={direccionSeleccionada === String(dir.idDomicilio)}
-                      onChange={(e) => setDireccionSeleccionada(e.target.value)}
-                    />
-                    <div className="opcion-info">
-                      <h4>{dir.calle} {dir.altura}</h4>
-                      <p>{dir.localidad?.nombre || "Dirección guardada"}</p>
-                    </div>
-                  </label>
-                ))
-              ) : (
-                <div className="perfil-form-group">
-                  <p>No tienes direcciones guardadas.</p>
-                  <button type="button" className="btn-blendy btn-pill" onClick={() => navigate("/perfil")}>
-                    Agregar dirección en mi perfil
-                  </button>
-                </div>
-              )}
+              {direccionesGuardadas.map((dir) => (
+                <label key={dir.idDomicilio} className={`opcion-radio ${direccionSeleccionada === String(dir.idDomicilio) ? "seleccionada" : ""}`}>
+                  <input
+                    type="radio"
+                    name="direccion"
+                    value={dir.idDomicilio}
+                    checked={direccionSeleccionada === String(dir.idDomicilio)}
+                    onChange={(e) => setDireccionSeleccionada(e.target.value)}
+                  />
+                  <div className="opcion-info">
+                    <h4>{dir.calle} {dir.altura}</h4>
+                    <p>{dir.localidad?.nombre || "Dirección guardada"}</p>
+                  </div>
+                </label>
+              ))}
             </div>
           </div>
 
