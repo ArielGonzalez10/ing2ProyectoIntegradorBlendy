@@ -45,7 +45,7 @@ const Login = () => {
         // Si hay respuesta del servidor, el mensaje es el "body" directo
         if (err.response) {
             // Como enviamos solo e.getMessage(), Axios lo pone en err.response.data
-            setError(err.response.data); 
+            setError("Usuario o contraseña incorrecta"); 
         } else {
             setError("Error de conexión con Blendly");
         }

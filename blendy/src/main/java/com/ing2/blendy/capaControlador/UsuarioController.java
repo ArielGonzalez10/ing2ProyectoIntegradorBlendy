@@ -51,7 +51,7 @@ public class UsuarioController {
     public ResponseEntity<?> crearUsuario(@RequestBody Usuario p_usuario){
         try{
             usuarioNego.crearUsuario(p_usuario);
-            return new ResponseEntity<>("Usuario creado con éxito", HttpStatus.CREATED);
+            return new ResponseEntity<>("Registro exitoso!", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

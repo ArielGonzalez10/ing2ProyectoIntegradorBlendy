@@ -147,8 +147,6 @@ CREATE TABLE Imagen
   FOREIGN KEY (idProducto) REFERENCES Producto(idProducto)
 );
 
-INSERT INTO rol (descripcion,estado) VALUES ('Administrador',1);
-INSERT INTO rol (descripcion,estado) VALUES ('Cliente',1);
 
 INSERT INTO domicilio (calle, altura, localidad_id_localidad, usuario_id_usuario) 
 VALUES ('La paz 27', 2400, 14, 1);
@@ -168,6 +166,8 @@ SELECT * FROM venta_detalle;
 SELECT * FROM pago;
 SELECT * FROM producto;
 SELECT * from envio;
+
+SELECT * FROM metodo_pago;
 
 INSERT INTO metodo_pago(descripcion,estado) VALUES ('Tarjeta de Debito',1);
 INSERT INTO metodo_pago(descripcion,estado) VALUES ('Tarjeta de Credito',1);
@@ -255,9 +255,13 @@ INSERT INTO categoria (descripcion, estado) VALUES
 ('Refrescos', 1),
 ('Energeticos', 1);
 
+INSERT INTO rol (descripcion,estado) VALUES ('Administrador',1);
+INSERT INTO rol (descripcion,estado) VALUES ('Cliente',1);
+
+
 UPDATE usuario 
 SET rol_id_rol = 1
-WHERE correo_electronico = 'arielgonzalezr10@gmail.com';
+WHERE correo_electronico = 'arielgonzalezr9@gmail.com';
 
 SELECT * FROM Usuario;
 SELECT * FROM Domicilio;
