@@ -4,11 +4,14 @@
  */
 package com.ing2.blendy.capaControlador;
 
+import com.ing2.blendy.capaModelo.Envio;
 import com.ing2.blendy.capaModelo.VentaCabecera;
 import com.ing2.blendy.capaNegocio.IVentaCabeceraNegocio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  *
@@ -25,5 +28,11 @@ public class VentaCabeceraController {
     public ResponseEntity<VentaCabecera> crearVentaCabecera(@RequestBody VentaCabecera p_venta_cabecera) {
         VentaCabecera nuevaCabecera = ventaNegocio.crearVentaCabecera(p_venta_cabecera);
         return ResponseEntity.ok(nuevaCabecera);
+    }
+
+    @GetMapping("/listar")
+    @ResponseBody
+    public List<VentaCabecera> listarVentaCabeceras(@RequestParam String p_correoElectronico){
+        return ventaNegocio.listarVentaCabeceras(p_correoElectronico);
     }
 }

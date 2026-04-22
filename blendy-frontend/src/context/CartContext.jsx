@@ -40,6 +40,16 @@ export const CartProvider = ({ children }) => {
         setCartItems(prev => prev.map(item => {
             if (item.idProducto === id) {
                 const newQty = item.cantidad + delta;
+                
+                // Si el usuario intenta incrementar (+)
+                if (delta > 0) {
+                    const stockVendible = item.stock - item.stockMin;
+                    if (newQty > stockVendible) {
+                        alert("Stock Insuficiente");
+                        return item; // No cambia la cantidad
+                    }
+                }
+
                 return { ...item, cantidad: newQty > 0 ? newQty : 1 };
             }
             return item;

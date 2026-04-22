@@ -24,4 +24,9 @@ public class VentaDetalleController {
     public void crearVentaDetalle(@RequestBody VentaDetalle p_venta_detalle){
         ventaNegocio.crearVentaDetalle(p_venta_detalle);
     }
+
+    @GetMapping("/buscar/{p_id_detalle}")
+    public VentaDetalle buscarVentaDetalle(@PathVariable int p_id_detalle){
+        return ventaNegocio.buscarVentaDetalle(p_id_detalle);
+    }
 }

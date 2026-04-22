@@ -4,9 +4,14 @@
  */
 package com.ing2.blendy.capaDatos;
 
+import com.ing2.blendy.capaModelo.Domicilio;
 import com.ing2.blendy.capaModelo.Envio;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  *
@@ -14,5 +19,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IEnvioDatos extends JpaRepository<Envio,Integer>{
-    
+    @Query("SELECT e FROM Envio e INNER JOIN e.usuario u WHERE u.correoElectronico = :p_correoElectronico")
+    List<Envio> listarEnvios(@Param("p_correoElectronico") String p_correoElectronico);
 }

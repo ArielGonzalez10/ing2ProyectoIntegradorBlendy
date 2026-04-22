@@ -36,8 +36,8 @@ public class VentaCabeceraNegocio implements IVentaCabeceraNegocio {
     }
 
     @Override
-    public List<VentaCabecera> listarVentaCabeceras() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public List<VentaCabecera> listarVentaCabeceras(String p_correoElectronico) {
+        return ventaCabeceraDatos.listarVentas(p_correoElectronico);
     }
     
 }

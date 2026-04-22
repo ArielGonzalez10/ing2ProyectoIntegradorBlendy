@@ -15,5 +15,5 @@ public interface IEnvioNegocio {
     void crearEnvio(Envio p_envio);
     Envio buscarEnvio(int p_id_envio);
     void eliminarEnvio(int p_id_envio);
-    List<Envio> listarEnvios();
+    List<Envio> listarEnvios(String p_correoElectronico);
 }

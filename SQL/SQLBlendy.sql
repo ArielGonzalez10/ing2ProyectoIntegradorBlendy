@@ -163,8 +163,9 @@ SELECT * FROM domicilio;
 SELECT * FROM usuario;
 SELECT * FROM venta_cabecera;
 SELECT * FROM venta_detalle;
-SELECT * FROM pago;
+
 SELECT * FROM producto;
+SELECT * FROM pago;
 SELECT * from envio;
 
 SELECT * FROM metodo_pago;
@@ -259,9 +260,14 @@ INSERT INTO rol (descripcion,estado) VALUES ('Administrador',1);
 INSERT INTO rol (descripcion,estado) VALUES ('Cliente',1);
 
 
-UPDATE usuario 
-SET rol_id_rol = 1
-WHERE correo_electronico = 'arielgonzalezr9@gmail.com';
+UPDATE producto 
+SET stock = 2
+WHERE id_producto =1;
 
+UPDATE producto 
+SET stock = 7
+WHERE id_producto = 2;
+
+SELECT * FROM producto;
 SELECT * FROM Usuario;
 SELECT * FROM Domicilio;

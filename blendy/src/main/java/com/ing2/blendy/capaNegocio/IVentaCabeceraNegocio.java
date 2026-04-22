@@ -15,5 +15,5 @@ public interface IVentaCabeceraNegocio {
     VentaCabecera crearVentaCabecera(VentaCabecera p_ventaCabecera);
     VentaCabecera buscarVentaCabecera(int p_id_ventaCabecera);
     void eliminarVentaCabecera(int p_id_ventaCabecera);
-    List<VentaCabecera> listarVentaCabeceras();
+    List<VentaCabecera> listarVentaCabeceras(String p_correoElectronico);
 }

@@ -29,8 +29,8 @@ public class EnvioController {
 
     @GetMapping("/listar")
     @ResponseBody
-    public List<Envio> listarenvios(){
-        return envioNego.listarEnvios();
+    public List<Envio> listarenvios(@RequestParam String p_correoElectronico){
+        return envioNego.listarEnvios(p_correoElectronico);
     }
 
     @GetMapping("/bucar/{p_id_envio}")

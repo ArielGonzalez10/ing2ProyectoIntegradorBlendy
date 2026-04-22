@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { listarDomicilios, listarMetodosPagos } from "../api/auth";
-// Importamos todas las funciones necesarias, incluida la de modificar producto
-import { 
-  crearVentaCabecera,crearVentaDetalle,crearPagos,crearEnvios
-} from "../api/pagos"; 
+import { listarDomicilios} from "../api/domicilios";
+import {crearPagos, listarMetodosPagos} from "../api/pagos";
+import {crearEnvios} from "../api/envios";
+import {crearVentaCabecera,crearVentaDetalle} from "../api/ventas"; 
 import {modificarProducto} from "../api/products"
 import "../styles/checkout.css";
 
@@ -100,7 +99,7 @@ const Checkout = () => {
   useEffect(() => {
     if (cartItems.length === 0) {
       navigate("/tienda");
-      return;
+
     }
 
     const cargarDatos = async () => {

@@ -1,12 +1,6 @@
 import { useState, useEffect } from 'react'; 
-import { 
-  buscarUsuario, 
-  modificarUsuario, 
-  listarDomicilios, 
-  listarProvincias, 
-  listarLocalidades,
-  crearDomicilio // <--- Importación agregada
-} from '../api/auth';
+import { buscarUsuario,modificarUsuario} from '../api/auth';
+import { listarDomicilios, listarProvincias, listarLocalidades, crearDomicilio} from "../api/domicilios";
 import '../styles/perfil.css';
 
 const Perfil = () => {
