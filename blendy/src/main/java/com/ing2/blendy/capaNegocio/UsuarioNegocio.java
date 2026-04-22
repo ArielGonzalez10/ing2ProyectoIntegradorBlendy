@@ -76,7 +76,15 @@ public class UsuarioNegocio implements IUsuarioNegocio {
         }
         //Codifica la contraseña
         p_usuario.setContrasenia(passwordEncoder.encode(p_usuario.getContrasenia()));
-        usuarioDatos.save(p_usuario);
+        usuarioDatos.crearUsuarioSP(
+                p_usuario.getNombre(),
+                p_usuario.getApellido(),
+                p_usuario.getCorreoElectronico(),
+                p_usuario.getContrasenia(),
+                p_usuario.getTelefono(),
+                p_usuario.getEstado(),
+                p_usuario.getRol().getIdRol()
+        );
     }
 
     @Override

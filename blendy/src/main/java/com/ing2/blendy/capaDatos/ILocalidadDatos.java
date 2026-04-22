@@ -18,6 +18,6 @@ import java.util.List;
  */
 @Repository
 public interface ILocalidadDatos extends JpaRepository<Localidad,Integer>{
-    @Query("SELECT l FROM Localidad l WHERE l.provincia.idProvincia = :p_id_provincia")
+    @Query(value = "EXEC sp_listar_localidades_por_provincia @p_id_provincia = :p_id_provincia", nativeQuery = true)
     List<Localidad> listarLocalidades(@Param("p_id_provincia") int p_id_provincia);
 }

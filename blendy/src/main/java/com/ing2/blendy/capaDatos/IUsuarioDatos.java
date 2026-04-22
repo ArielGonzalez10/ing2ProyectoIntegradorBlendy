@@ -35,6 +35,19 @@ public interface IUsuarioDatos extends JpaRepository<Usuario,Integer>{
     List<Usuario> listarUsuarios();
 
     @Modifying
+    @Transactional
+    @Query(value = "EXEC sp_crear_usuario :apellido, :contrasenia, :correoElectronico, :estado, :nombre, :telefono, :rolId", nativeQuery = true)
+    void crearUsuarioSP(
+            @Param("nombre") String nombre,
+            @Param("apellido") String apellido,
+            @Param("correoElectronico") String correoElectronico,
+            @Param("contrasenia") String contrasenia,
+            @Param("telefono") String telefono,
+            @Param("estado") int estado,
+            @Param("rolId") int rolId
+    );
+
+    @Modifying
     @Transactional // Importante: Los updates requieren una transacción activa
     @Query("UPDATE Usuario u SET u.nombre = :p_nombre, u.apellido = :p_apellido, u.telefono = :p_telefono WHERE u.correoElectronico = :p_correo")
     void modificarUsuario(@Param("p_nombre" )String p_nombre, @Param("p_apellido" )String p_apellido,@Param("p_telefono" )String p_telefono,@Param("p_correo" )String p_correo);

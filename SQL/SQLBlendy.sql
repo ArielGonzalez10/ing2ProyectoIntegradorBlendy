@@ -1,174 +1,5 @@
 CREATE DATABASE blendy;
 USE blendy;
-CREATE TABLE Categoria
-(
-  idCategoria INT NOT NULL,
-  descripcion VARCHAR(30) NOT NULL,
-  estado INT NOT NULL,
-  PRIMARY KEY (idCategoria)
-);
-
-CREATE TABLE Producto
-(
-  idProducto INT NOT NULL,
-  descripcion VARCHAR(100) NOT NULL,
-  stock INT NOT NULL,
-  precioUnitario FLOAT NOT NULL,
-  estado INT NOT NULL,
-  idCategoria INT NOT NULL,
-  PRIMARY KEY (idProducto),
-  FOREIGN KEY (idCategoria) REFERENCES Categoria(idCategoria)
-);
-
-CREATE TABLE Rol
-(
-  idRol INT NOT NULL,
-  descripcion VARCHAR(30) NOT NULL,
-  estado INT NOT NULL,
-  PRIMARY KEY (idRol)
-);
-
-CREATE TABLE Usuario
-(
-  idUsuario INT NOT NULL,
-  nombre VARCHAR(100) NOT NULL,
-  apellido VARCHAR(100) NOT NULL,
-  correoElectronico VARCHAR(100) NOT NULL,
-  contrasenia VARCHAR(100) NOT NULL,
-  estado INT NOT NULL,
-  idRol INT NOT NULL,
-  PRIMARY KEY (idUsuario),
-  FOREIGN KEY (idRol) REFERENCES Rol(idRol)
-);
-
-CREATE TABLE Provincia
-(
-  idProvincia INT NOT NULL,
-  nombre VARCHAR(100) NOT NULL,
-  codigoPostal INT NOT NULL,
-  estado INT NOT NULL,
-  PRIMARY KEY (idProvincia)
-);
-
-CREATE TABLE Localidad
-(
-  idLocalidad INT NOT NULL,
-  nombre VARCHAR(30) NOT NULL,
-  estado INT NOT NULL,
-  idProvincia INT NOT NULL,
-  PRIMARY KEY (idLocalidad),
-  FOREIGN KEY (idProvincia) REFERENCES Provincia(idProvincia)
-);
-
-CREATE TABLE Domicilio
-(
-  idDomicilio INT NOT NULL,
-  calle INT NOT NULL,
-  altura INT NOT NULL,
-  idLocalidad INT NOT NULL,
-  idUsuario INT NOT NULL,
-  PRIMARY KEY (idDomicilio),
-  FOREIGN KEY (idLocalidad) REFERENCES Localidad(idLocalidad),
-  FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario)
-);
-
-CREATE TABLE VentaCabecera
-(
-  idVentaCabecera INT NOT NULL,
-  fecha DATE NOT NULL,
-  totalVenta INT NOT NULL,
-  idUsuario INT NOT NULL,
-  idDomicilio INT NOT NULL,
-  PRIMARY KEY (idVentaCabecera),
-  FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario),
-  FOREIGN KEY (idDomicilio) REFERENCES Domicilio(idDomicilio)
-);
-
-CREATE TABLE VentaDetalle
-(
-  idVentaDetalle INT NOT NULL,
-  cantidad INT NOT NULL,
-  total INT NOT NULL,
-  idProducto INT NOT NULL,
-  idVentaCabecera INT NOT NULL,
-  FOREIGN KEY (idProducto) REFERENCES Producto(idProducto),
-  FOREIGN KEY (idVentaCabecera) REFERENCES VentaCabecera(idVentaCabecera)
-);
-
-CREATE TABLE MetodoPago
-(
-  idMetodoPago INT NOT NULL,
-  descripcion VARCHAR(30) NOT NULL,
-  estado INT NOT NULL,
-  PRIMARY KEY (idMetodoPago)
-);
-
-CREATE TABLE Pago
-(
-  montoPago INT NOT NULL,
-  idVentaCabecera INT NOT NULL,
-  idMetodoPago INT NOT NULL,
-  PRIMARY KEY (idVentaCabecera, idMetodoPago),
-  FOREIGN KEY (idVentaCabecera) REFERENCES VentaCabecera(idVentaCabecera),
-  FOREIGN KEY (idMetodoPago) REFERENCES MetodoPago(idMetodoPago)
-);
-
-CREATE TABLE Consulta
-(
-  idConsulta INT NOT NULL,
-  descripcion VARCHAR(100) NOT NULL,
-  asunto VARCHAR(100) NOT NULL,
-  respuesta VARCHAR(100) NOT NULL,
-  nombre VARCHAR(100) NOT NULL,
-  correoElectronico VARCHAR(100) NOT NULL,
-  estado INT NOT NULL,
-  PRIMARY KEY (idConsulta)
-);
-
-CREATE TABLE Envio
-(
-  idEnvio INT NOT NULL,
-  fechaDespacho DATE NOT NULL,
-  fechaRecepcion DATE NOT NULL,
-  idUsuario INT NOT NULL,
-  idDomicilio INT NOT NULL,
-  PRIMARY KEY (idEnvio),
-  FOREIGN KEY (idUsuario) REFERENCES Usuario(idUsuario),
-  FOREIGN KEY (idDomicilio) REFERENCES Domicilio(idDomicilio)
-);
-
-CREATE TABLE Imagen
-(
-  idImagen INT NOT NULL,
-  descripcion INT NOT NULL,
-  estado INT NOT NULL,
-  idProducto INT NOT NULL,
-  PRIMARY KEY (idImagen),
-  FOREIGN KEY (idProducto) REFERENCES Producto(idProducto)
-);
-
-
-INSERT INTO domicilio (calle, altura, localidad_id_localidad, usuario_id_usuario) 
-VALUES ('La paz 27', 2400, 14, 1);
-
-SELECT * FROM localidad;
-SELECT * FROM provincia;
-SELECT * FROM rol;
-SELECT * FROM imagen;
-
-SELECT * FROM categoria;
-
-SELECT * FROM domicilio;
-
-SELECT * FROM usuario;
-SELECT * FROM venta_cabecera;
-SELECT * FROM venta_detalle;
-
-SELECT * FROM producto;
-SELECT * FROM pago;
-SELECT * from envio;
-
-SELECT * FROM metodo_pago;
 
 INSERT INTO metodo_pago(descripcion,estado) VALUES ('Tarjeta de Debito',1);
 INSERT INTO metodo_pago(descripcion,estado) VALUES ('Tarjeta de Credito',1);
@@ -260,14 +91,76 @@ INSERT INTO rol (descripcion,estado) VALUES ('Administrador',1);
 INSERT INTO rol (descripcion,estado) VALUES ('Cliente',1);
 
 
-UPDATE producto 
-SET stock = 2
-WHERE id_producto =1;
-
-UPDATE producto 
-SET stock = 7
-WHERE id_producto = 2;
-
+SELECT * FROM localidad;
+SELECT * FROM provincia;
+SELECT * FROM rol;
+SELECT * FROM imagen;
+SELECT * FROM categoria;
+SELECT * FROM domicilio;
+SELECT * FROM usuario;
+SELECT * FROM venta_cabecera;
+SELECT * FROM venta_detalle;
 SELECT * FROM producto;
-SELECT * FROM Usuario;
-SELECT * FROM Domicilio;
+SELECT * FROM pago;
+SELECT * from envio;
+SELECT * FROM metodo_pago;
+
+
+CREATE PROCEDURE sp_crear_usuario
+    @p_apellido VARCHAR(255),
+    @p_contrasenia VARCHAR(255),
+    @p_correoElectronico VARCHAR(255),
+    @p_estado INT,
+    @p_nombre VARCHAR(255),
+    @p_telefono VARCHAR(255),
+    @p_rolId INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO usuario (
+        apellido, 
+        contrasenia, 
+        correo_electronico, 
+        estado, 
+        nombre, 
+        telefono, 
+        rol_id_rol
+    )
+    VALUES (
+        @p_apellido, 
+        @p_contrasenia, 
+        @p_correoElectronico, 
+        @p_estado, 
+        @p_nombre, 
+        @p_telefono, 
+        @p_rolId
+    );
+END
+GO
+
+CREATE PROCEDURE sp_listar_provincias
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT id_provincia, estado, nombre 
+    FROM provincia;
+END
+GO
+
+CREATE PROCEDURE sp_listar_localidades_por_provincia
+    @p_id_provincia INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Filtramos por la columna exacta de tu captura de pantalla
+    SELECT 
+        id_localidad, 
+        codigo_postal, 
+        estado, 
+        nombre, 
+        provincia_id_provincia 
+    FROM localidad 
+    WHERE provincia_id_provincia = @p_id_provincia;
+END
+GO

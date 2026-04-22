@@ -37,7 +37,7 @@ public class ProvinciaNegocio implements IProvinciaNegocio {
 
     @Override
     public List<Provincia> listarProvincias() {
-        return provinciaDatos.findAll();
+        return provinciaDatos.listarProvinciasSP();
     }
 
     @Override
