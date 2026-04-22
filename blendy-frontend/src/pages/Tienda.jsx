@@ -174,9 +174,9 @@ const Tienda = () => {
                                             <button
                                                 className={`btn-blendy btn-pill w-100 ${sinStockDisponible ? "btn-agotado" : "btn-secundario"}`}
                                                 onClick={() => handleAccionBoton(prod)}
-                                                disabled={sinStockDisponible}
+                                                disabled={sinStockDisponible} // Bloquea el clic si no hay stock
                                             >
-                                                {sinStockDisponible ? "Stock Insuficiente" : "Añadir al carrito"}
+                                                {sinStockDisponible ? "Sin Stock" : "Añadir al carrito"}
                                             </button>
                                         )}
                                     </div>

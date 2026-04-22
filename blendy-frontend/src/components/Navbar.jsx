@@ -27,12 +27,15 @@ const Navbar = () => {
             <ul className="navbar-links mb-0 p-0">
                 <li><Link to="/">Inicio</Link></li>
                 {/* Ocultamos Tienda para el vendedor, mostramos Nueva Venta */}
-                {rol !== "3" && <li><Link to="/tienda">Tienda</Link></li>}
+                {(!token || rol === "2") && (
+                    <li><Link to="/tienda">Tienda</Link></li>
+                )}
 
+                {/* Vendedor */}
                 {rol === "3" && (
                     <li>
                         <Link to="/panel/nueva-venta" style={{ color: 'var(--color-celeste)', fontWeight: 'bold' }}>
-                            Venta Mostrador
+                            Nueva Venta
                         </Link>
                     </li>
                 )}
@@ -89,12 +92,24 @@ const Navbar = () => {
                     </div>
                 )}
 
-                <button className="navbar-icon" onClick={() => setIsCartOpen(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }} title="Ver Carrito">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                    
-                    {/* El número ahora es dinámico */}
-                    <span className="cart-count">{totalItems}</span>
-                </button>
+                {/* El carrito solo se muestra si el usuario NO es Administrador (rol !== "1") */}
+                {rol !== "1" && (
+                    <button 
+                        className="navbar-icon" 
+                        onClick={() => setIsCartOpen(true)} 
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px' }} 
+                        title="Ver Carrito"
+                    >
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        
+                        {/* El número dinámico de ítems */}
+                        <span className="cart-count">{totalItems}</span>
+                    </button>
+                )}
             </div>
         </nav>
     );

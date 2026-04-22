@@ -76,11 +76,22 @@ const Home = () => {
                     <span className="hero-subtitle">BIENVENIDOS A BLENDY</span>
                     <h1>Tu botillería,<br />unida y<br />simplificada</h1>
                     <div className="hero-botones">
-                        <Link to="/tienda" className="btn-blendy btn-primario btn-pill">
-                            Ir a la Tienda
-                        </Link>
+                        
+                        {rol === "3" ? (
+                            <Link to="/panel/nueva-venta" className="btn-blendy btn-secundario btn-pill">
+                                Nueva Venta
+                            </Link>
+                        ) : rol === "1" ? (
+                            <Link to="/panel/cierre-caja" className="btn-blendy btn-secundario btn-pill">
+                                Cierre de Caja
+                            </Link>
+                        ) : (
+                            <Link to="/tienda" className="btn-blendy btn-primario btn-pill">
+                                Ir a la Tienda
+                            </Link>
+                        )}
 
-                        {/* BOTÓN SEGÚN EL ROL */}
+                        
                         {rol === "1" ? (
                             <Link to="/panel/productos" className="btn-blendy btn-secundario btn-pill">
                                 Panel de Control

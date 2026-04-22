@@ -89,6 +89,16 @@ INSERT INTO categoria (descripcion, estado) VALUES
 
 INSERT INTO rol (descripcion,estado) VALUES ('Administrador',1);
 INSERT INTO rol (descripcion,estado) VALUES ('Cliente',1);
+INSERT INTO rol (descripcion,estado) VALUES ('Vendedor',1);
+
+
+UPDATE USUARIO 
+SET rol_id_rol = 1 -- administrador
+WHERE correo_electronico = 'fatimabret@gmail.com';
+
+UPDATE USUARIO 
+SET rol_id_rol = 3  -- vendedor
+WHERE correo_electronico = 'arielgonzalezr9@gmail.com';
 
 
 SELECT * FROM localidad;

@@ -202,6 +202,20 @@
     display: none !important; 
 }
 
+/* Botón cuando no hay stock */
+.btn-agotado {
+    background-color: #2D2D2D !important;
+    border: 1px solid #444 !important;
+    color: #888 !important;          
+    cursor: not-allowed !important;    
+    opacity: 0.7;
+}
+
+.btn-agotado:hover {
+    background-color: #2D2D2D !important;
+    transform: none !important;
+}
+
 @media (max-width: 768px) {
     .tienda-container {
         flex-direction: column;
