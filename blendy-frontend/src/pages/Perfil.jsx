@@ -165,7 +165,6 @@ const Perfil = () => {
           <aside className="perfil-sidebar">
             <button className={`perfil-tab ${activeTab === "cuenta" ? "active" : ""}`} onClick={() => setActiveTab("cuenta")}>Mi Cuenta</button>
             <button className={`perfil-tab ${activeTab === "direcciones" ? "active" : ""}`} onClick={() => setActiveTab("direcciones")}>Mis Direcciones</button>
-            <button className={`perfil-tab ${activeTab === "billetera" ? "active" : ""}`} onClick={() => setActiveTab("billetera")}>Billetera</button>
           </aside>
 
           <main className="perfil-content">
@@ -299,17 +298,6 @@ const Perfil = () => {
                       </div>
                     </div>
 
-                    <div className="perfil-form-row">
-                      <div className="perfil-form-group">
-                        <label>Piso (Opcional)</label>
-                        <input type="text" placeholder="Ej: 3" className="perfil-input" value={nuevaDireccion.piso} onChange={(e) => setNuevaDireccion({...nuevaDireccion, piso: e.target.value})} />
-                      </div>
-                      <div className="perfil-form-group">
-                        <label>Dpto (Opcional)</label>
-                        <input type="text" placeholder="Ej: B" className="perfil-input" value={nuevaDireccion.departamento} onChange={(e) => setNuevaDireccion({...nuevaDireccion, departamento: e.target.value})} />
-                      </div>
-                    </div>
-
                     <div className="perfil-acciones">
                       <button type="button" className="btn-blendy btn-secundario" onClick={() => setMostrandoFormularioDireccion(false)}>Cancelar</button>
                       <button type="submit" className="btn-blendy btn-enfasis">Guardar Dirección</button>
@@ -319,30 +307,6 @@ const Perfil = () => {
               </div>
             )}
 
-            {activeTab === "billetera" && (
-              <div className="perfil-seccion">
-                {!mostrandoFormularioBilletera ? (
-                  <div style={{ textAlign: "center", padding: "60px 0" }}>
-                    <p>No tienes métodos de pago guardados.</p>
-                    <button className="btn-blendy btn-secundario btn-pill" onClick={() => setMostrandoFormularioBilletera(true)}>+ Agregar tarjeta</button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleGuardarTarjeta}>
-                    <h3>Agregar Tarjeta</h3>
-                    <div className="perfil-form-row">
-                      <div className="perfil-form-group">
-                        <label>Número de Tarjeta *</label>
-                        <input type="text" className="perfil-input" required placeholder="0000 0000 0000 0000" />
-                      </div>
-                    </div>
-                    <div className="perfil-acciones">
-                      <button type="button" className="btn-blendy btn-secundario" onClick={() => setMostrandoFormularioBilletera(false)}>Cancelar</button>
-                      <button type="submit" className="btn-blendy btn-enfasis">Guardar Tarjeta</button>
-                    </div>
-                  </form>
-                )}
-              </div>
-            )}
           </main>
         </div>
       </div>
