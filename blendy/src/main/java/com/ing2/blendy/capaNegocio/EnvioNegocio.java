@@ -6,6 +6,8 @@ package com.ing2.blendy.capaNegocio;
 
 import com.ing2.blendy.capaModelo.Envio;
 import com.ing2.blendy.capaDatos.IEnvioDatos;
+
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class EnvioNegocio implements IEnvioNegocio {
-    
+    @Override
+    public void modificarEnvio(Date p_fecha_despacho, Date p_fecha_recepcion) {
+
+    }
+
     @Autowired
     private IEnvioDatos envioDatos;
 
