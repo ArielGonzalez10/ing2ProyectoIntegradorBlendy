@@ -5,6 +5,8 @@
 package com.ing2.blendy.capaNegocio;
 
 import com.ing2.blendy.capaModelo.Envio;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,4 +18,5 @@ public interface IEnvioNegocio {
     Envio buscarEnvio(int p_id_envio);
     void eliminarEnvio(int p_id_envio);
     List<Envio> listarEnvios(String p_correoElectronico);
+    void modificarEnvio(Date p_fecha_despacho, Date p_fecha_recepcion);
 }
