@@ -116,7 +116,7 @@ const AgregarProducto = () => {
                 descripcion: producto.descripcion,
                 precioUnitario: parseFloat(producto.precioUnitario),
                 stock: parseInt(producto.stock),
-                stockMin: 1, 
+                stockMin: 0, 
                 estado: 1,  
                 categoria: {
                     idCategoria: parseInt(producto.idCategoria)

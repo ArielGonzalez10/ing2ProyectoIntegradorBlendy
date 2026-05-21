@@ -100,6 +100,19 @@ UPDATE USUARIO
 SET rol_id_rol = 3  -- vendedor
 WHERE correo_electronico = 'arielgonzalezr9@gmail.com';
 
+UPDATE producto 
+SET precio_unitario = 75000 -- administrador
+WHERE descripcion = 'Licor de Hierbas Italiano';
+
+UPDATE producto 
+SET stock = 1 -- administrador
+WHERE descripcion = 'Vino Tinto Francés';
+
+UPDATE producto 
+SET stock_min = 0 -- administrador
+WHERE stock_min = 1;
+
+
 
 SELECT * FROM localidad;
 SELECT * FROM provincia;
@@ -114,7 +127,14 @@ SELECT * FROM producto;
 SELECT * FROM pago;
 SELECT * from envio;
 SELECT * FROM metodo_pago;
+SELECT * FROM consulta;
 
+
+
+ALTER TABLE Consulta
+ADD id_usuario INT NULL;
+ALTER TABLE Consulta
+ADD CONSTRAINT FK_Consulta_Usuario FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario);
 
 CREATE PROCEDURE sp_crear_usuario
     @p_apellido VARCHAR(255),

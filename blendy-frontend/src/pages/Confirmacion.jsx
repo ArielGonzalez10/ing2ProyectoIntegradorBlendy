@@ -13,8 +13,8 @@ const Confirmacion = () => {
 
         const pedidoEncontrado = {
             idPedido: id,
-            cliente: "Fátima",
-            email: "fatima@email.com",
+            cliente: "Juana",
+            email: "yero@gmail.com",
             subtotal: 15500,
             envio: 2500,
             total: 18000,
@@ -22,7 +22,7 @@ const Confirmacion = () => {
                 { id: 1, nombre: "Vino Tinto Malbec Reserva", cantidad: 1, precio: 15500, img: "https://images.unsplash.com/photo-1584916201218-f4242ceb4809?q=80&w=400&auto=format&fit=crop" }
             ],
             direccionEnvio: {
-                nombre: "Fátima",
+                nombre: "Juana",
                 calle: "San Martín 1234",
                 ciudad: "Corrientes Capital",
                 cp: "3400"
