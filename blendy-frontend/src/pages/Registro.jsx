@@ -14,25 +14,75 @@ const Register = () => {
     
     const [confirmarContrasenia, setConfirmarContrasenia] = useState('');
     const [feedback, setFeedback] = useState({ texto: '', tipo: '' });//Declara la variable para manejar el response entity de el back
+    const [errores, setErrores] = useState({});
+    
+    const validarCampo = (name, value) => {
+        let errorMsg = '';
+        const letrasRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const numerosRegex = /^[0-9]+$/;
+
+        switch(name) {
+            case 'nombre':
+            case 'apellido':
+                if (value && !letrasRegex.test(value)) errorMsg = 'Solo debe contener letras y espacios.';
+                break;
+            case 'correoElectronico':
+                if (value && !emailRegex.test(value)) errorMsg = 'Formato requerido (ej. usuario@gmail.com).';
+                break;
+            case 'contrasenia':
+                if (value && value.length < 8) errorMsg = 'Mínimo 8 caracteres.';
+                break;
+            case 'telefono':
+                if (value && !numerosRegex.test(value)) errorMsg = 'Solo admite caracteres numéricos.';
+                break;
+            default:
+                break;
+        }
+        
+        // Actualiza solo el error del campo que se está modificando
+        setErrores(prev => ({ ...prev, [name]: errorMsg }));
+    };
 
     const handleChange = (e) => {
+        const { name, value } = e.target;
         setUsuario({
             ...usuario,
-            [e.target.name]: e.target.value
+            [name]: value
         });
+        validarCampo(name, value);
+
+        if (name === 'contrasenia' && confirmarContrasenia) {
+            if (value !== confirmarContrasenia) {
+                setErrores(prev => ({ ...prev, confirmarContrasenia: 'Las contraseñas no coinciden.' }));
+            } else {
+                setErrores(prev => ({ ...prev, confirmarContrasenia: '' }));
+            }
+        }
+    };
+
+    const handleConfirmPasswordChange = (e) => {
+        const value = e.target.value;
+        setConfirmarContrasenia(value);
+        if (value && value !== usuario.contrasenia) {
+            setErrores(prev => ({ ...prev, confirmarContrasenia: 'Las contraseñas no coinciden.' }));
+        } else {
+            setErrores(prev => ({ ...prev, confirmarContrasenia: '' }));
+        }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        if (usuario.contrasenia !== confirmarContrasenia) {
+        const hayErrores = Object.values(errores).some(error => error !== '');
+        if (hayErrores) {
             setFeedback({ 
-                texto: 'Las contraseñas no coinciden. Por favor, verifícalas.', 
+                texto: 'Por favor, revise los campos marcados antes de continuar.', 
                 tipo: 'danger' 
             });
-            return; // Cortamos la ejecución para no llamar a la API
+            return;
         }
-        
+
         const data = {
             idUsuario: 0, 
             ...usuario,            
@@ -50,7 +100,9 @@ const Register = () => {
                 texto: response.data, 
                 tipo: 'success' 
             });
-            // redirección al login
+            setTimeout(() => {
+                navigate('/login');
+            }, 2500);
         } catch (error) {
            const mensajeError = error.response?.data || "Error de conexión";
             //Carga el mensaje del back
@@ -59,6 +111,13 @@ const Register = () => {
                 tipo: 'danger' 
             });
         }
+    };
+
+    const estiloError = {
+        color: '#666666',
+        fontSize: '0.8rem',
+        marginTop: '4px',
+        display: 'block'
     };
 
     return (
@@ -83,11 +142,12 @@ const Register = () => {
                                 <input 
                                     type="text" 
                                     name="nombre"
-                                    placeholder="Ej: Fátima" 
+                                    placeholder="Ej: Juan" 
                                     value={usuario.nombre}
                                     onChange={handleChange}
                                     required 
                                 />
+                                {errores.nombre && <span style={estiloError}>{errores.nombre}</span>}
                             </div>
                             <div className="form-group" style={{ flex: 1 }}>
                                 <label>Apellido *</label>
@@ -99,6 +159,7 @@ const Register = () => {
                                     onChange={handleChange}
                                     required 
                                 />
+                                {errores.apellido && <span style={estiloError}>{errores.apellido}</span>}
                             </div>
                         </div>
 
@@ -112,6 +173,7 @@ const Register = () => {
                                 onChange={handleChange}
                                 required 
                             />
+                            {errores.correoElectronico && <span style={estiloError}>{errores.correoElectronico}</span>}
                         </div>
                         
                         <div className="form-group">
@@ -122,8 +184,10 @@ const Register = () => {
                                 placeholder="Crea una contraseña segura" 
                                 value={usuario.contrasenia}
                                 onChange={handleChange}
-                                required 
+                                required
+                                minLength="8"
                             />
+                            {errores.contrasenia && <span style={estiloError}>{errores.contrasenia}</span>}
                         </div>
 
                         <div className="form-group">
@@ -134,7 +198,9 @@ const Register = () => {
                                 value={confirmarContrasenia}
                                 onChange={(e) => setConfirmarContrasenia(e.target.value)}
                                 required 
+                                minLength="8"
                             />
+                            {errores.confirmarContrasenia && <span style={estiloError}>{errores.confirmarContrasenia}</span>}
                         </div>
 
                         <div className="form-group">
@@ -145,7 +211,9 @@ const Register = () => {
                                 placeholder="Ej: 3794123456" 
                                 value={usuario.telefono}
                                 onChange={handleChange}
+                                maxLength="15"
                             />
+                            {errores.telefono && <span style={estiloError}>{errores.telefono}</span>}
                         </div>
 
                         <button type="submit" className="btn-blendy btn-enfasis btn-pill w-100">
