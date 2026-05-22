@@ -82,8 +82,8 @@ const Home = () => {
                                 Nueva Venta
                             </Link>
                         ) : rol === "1" ? (
-                            <Link to="/panel/cierre-caja" className="btn-blendy btn-secundario btn-pill">
-                                Cierre de Caja
+                            <Link to="/panel/auditoria-cajas" className="btn-blendy btn-secundario btn-pill">
+                                Auditoría de Cajas
                             </Link>
                         ) : (
                             <Link to="/tienda" className="btn-blendy btn-primario btn-pill">

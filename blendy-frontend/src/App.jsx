@@ -1,21 +1,22 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
-import CarritoLateral from './components/CarritoLateral';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Registro';
-import Footer from './components/Footer';
-import Perfil from './pages/Perfil';
-import PanelProductos from './pages/PanelProductos';
-import AgregarProducto from './pages/AgregarProducto';
 import Tienda from './pages/Tienda';
-import MisPedidos from './pages/MisPedidos';
-import CierreCaja from './pages/CierreCaja';
+import { CartProvider } from './context/CartContext';
+import CarritoLateral from './components/CarritoLateral';
 import Carrito from './pages/Carrito';
-import Confirmacion from './pages/Confirmacion';
+import Perfil from './pages/Perfil';
+import MisPedidos from './pages/MisPedidos';
 import Checkout from './pages/Checkout';
+import Confirmacion from './pages/Confirmacion';
 import NuevaVentaLocal from './pages/NuevaVentaLocal';
+import AgregarProducto from './pages/AgregarProducto';
+import PanelProductos from './pages/PanelProductos';
+import CierreCaja from './pages/CierreCaja';
+import AuditoriaCajas from './pages/AuditoriaCajas';
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
             {/* Rutas de Administración */}
             <Route path="/panel/productos" element={<PanelProductos />} />
             <Route path="/panel/productos/nuevo" element={<AgregarProducto />} />
+            <Route path="/panel/auditoria-cajas" element={<AuditoriaCajas />} />
           </Routes>
           
           <Footer />

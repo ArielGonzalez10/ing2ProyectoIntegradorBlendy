@@ -43,9 +43,15 @@ const Navbar = () => {
                 {/* Enlace destacado para roles de gestión */}
                 {(rol === "1" || rol === "3") && (
                     <li>
-                        <Link to="/panel/cierre-caja" className="nav-link-destacado">
-                            Cierre de Caja
-                        </Link>
+                        {rol === "1" ? (
+                            <Link to="/panel/auditoria-cajas" className="nav-link-destacado">
+                                Auditoría de Cajas
+                            </Link>
+                        ) : (
+                            <Link to="/panel/cierre-caja" className="nav-link-destacado">
+                                Cierre de Caja
+                            </Link>
+                        )}
                     </li>
                 )}
             </ul>
@@ -70,7 +76,7 @@ const Navbar = () => {
                                 {rol === "1" && (
                                     <>
                                         <Link to="/panel/productos" onClick={() => setMenuAbierto(false)}>Gestión de Productos</Link>
-                                        <Link to="/panel/cierre-caja" onClick={() => setMenuAbierto(false)}>Caja</Link>
+                                        <Link to="/panel/auditoria-cajas" onClick={() => setMenuAbierto(false)}>Auditoría de Cajas</Link>
                                     </>
                                 )}
 

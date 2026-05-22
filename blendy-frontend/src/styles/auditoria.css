@@ -1,0 +1,104 @@
+.cierre-badge-ok {
+    background-color: #e6f2e6;
+    color: #006600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: 1px solid #006600;
+}
+
+.cierre-badge-warn {
+    background-color: #fff3e6;
+    color: #cc6600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border: 1px solid #cc6600;
+}
+
+/* Modal superpuesto para ver el detalle del turno */
+.cierre-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.cierre-modal-content {
+    background-color: #ffffff;
+    width: 900px;
+    max-width: 95%;
+    padding: 30px;
+    border: 1px solid #000000;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.cierre-modal-content h2 {
+    margin-top: 0;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.cierre-grid-auditoria {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.cierre-auditoria-sis, .cierre-auditoria-fisico {
+    background-color: #fcfcfc;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+}
+
+.cierre-auditoria-sis h3, .cierre-auditoria-fisico h3 {
+    font-size: 1rem;
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    color: #666666;
+}
+
+.cierre-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.cierre-input-auditoria {
+    padding: 12px;
+    border: 1px solid #000000;
+    font-size: 1.2rem;
+    font-weight: bold;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.cierre-input-auditoria:focus {
+    outline: none;
+    background-color: #f5f5f5;
+}
+
+.cierre-resultado-diferencia {
+    text-align: center;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px dashed #000000;
+}
+
+.cierre-resultado-diferencia h2 {
+    margin: 10px 0;
+    font-size: 2.5rem;
+    border-bottom: none;
+}
