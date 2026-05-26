@@ -19,6 +19,5 @@ import java.util.List;
  */
 @Repository
 public interface IEnvioDatos extends JpaRepository<Envio,Integer>{
-    @Query("SELECT e FROM Envio e INNER JOIN e.usuario u WHERE u.correoElectronico = :p_correoElectronico")
-    List<Envio> listarEnvios(@Param("p_correoElectronico") String p_correoElectronico);
+
 }

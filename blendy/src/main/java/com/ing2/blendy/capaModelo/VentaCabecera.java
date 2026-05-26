@@ -30,10 +30,14 @@ public class VentaCabecera {
     private int idVentaCabecera;
     private LocalDate fecha;
     private double totalVenta;
-    // En tu archivo VentaCabecera.java
+    private int estado;
 
-    @ManyToOne(cascade = CascadeType.MERGE) // <-- AGREGA ESTO
-    @JoinColumn(name = "usuario_id_usuario") // Asegurate que el nombre coincida con tu BD
+    @OneToOne
+    @JoinColumn(name = "envio_id_envio", nullable = true)
+    private Envio envio;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "usuario_id_usuario")
     private Usuario usuario;
     //Indica que atributo es el dueño de la relación e indica que tabla va a tener la FK
     @OneToMany(mappedBy = "ventaCabecera", cascade = CascadeType.ALL)

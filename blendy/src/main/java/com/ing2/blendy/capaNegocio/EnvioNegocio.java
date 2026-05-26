@@ -43,7 +43,7 @@ public class EnvioNegocio implements IEnvioNegocio {
 
     @Override
     public List<Envio> listarEnvios(String p_correoElectronico) {
-        return envioDatos.listarEnvios(p_correoElectronico);
+        return envioDatos.findAll();
     }
     
 }

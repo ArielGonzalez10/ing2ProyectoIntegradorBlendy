@@ -4,12 +4,8 @@
  */
 package com.ing2.blendy.capaModelo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,8 +28,9 @@ public class Envio {
     private int idEnvio;
     private LocalDate fechaDespacho;
     private LocalDate fechaRecepcion;
-    @ManyToOne
-    private Usuario usuario;
+    @OneToOne
+    @JoinColumn(name = "venta_cabecera_id_venta_cabecera", unique = true)
+    private VentaCabecera venta;
     @ManyToOne
     private Domicilio domicilio;
 }
