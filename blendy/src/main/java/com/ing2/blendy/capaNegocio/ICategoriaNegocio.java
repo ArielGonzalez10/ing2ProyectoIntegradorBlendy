@@ -10,11 +10,12 @@ import java.util.List;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 public interface ICategoriaNegocio {
     void crearCategoria(Categoria p_categoria);
     Categoria buscarCategoria(int p_id_categoria);
     void eliminarCategoria(int p_id_categoria);
-    void modificarCategoria(int p_id_categoria, String p_descripcion, int p_estado);
+    void modificarCategoria(int p_id_categoria, Categoria p_categoria_modificada);
     List<Categoria> listarCategorias();
 }

@@ -1,16 +1,20 @@
 package com.ing2.blendy.capaModelo;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/*
- @Getter
- @Setter
- @NoArgsConstructor
- @Entity*/
-public class Vendedor {
+/**
+ *
+ * @author ariel
+ * @author Fatima
+ */
+@Getter
+@Setter
+@Entity
+@DiscriminatorValue("3")
+public class Vendedor extends Usuario {
     private String nroLegajo;
     private String dni;
 }

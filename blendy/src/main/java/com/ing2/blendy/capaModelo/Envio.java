@@ -15,6 +15,7 @@ import lombok.Setter;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Getter
 @Setter
@@ -28,9 +29,10 @@ public class Envio {
     private int idEnvio;
     private LocalDate fechaDespacho;
     private LocalDate fechaRecepcion;
-    @OneToOne
-    @JoinColumn(name = "venta_cabecera_id_venta_cabecera", unique = true)
-    private VentaCabecera venta;
+    private String estado;
     @ManyToOne
+    @JoinColumn(name = "domicilio_id_domicilio")
     private Domicilio domicilio;
+    @OneToOne(mappedBy = "envio")
+    private VentaCabecera venta;
 }

@@ -16,6 +16,7 @@ import java.util.List;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @RequestMapping("/ventas")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -25,14 +26,19 @@ public class VentaCabeceraController {
     private IVentaCabeceraNegocio ventaNegocio;
 
     @PostMapping("/crear")
-    public ResponseEntity<VentaCabecera> crearVentaCabecera(@RequestBody VentaCabecera p_venta_cabecera) {
-        VentaCabecera nuevaCabecera = ventaNegocio.crearVentaCabecera(p_venta_cabecera);
-        return ResponseEntity.ok(nuevaCabecera);
+    public ResponseEntity<?> crearVenta(@RequestBody VentaCabecera venta) {
+        try {
+            VentaCabecera nuevaVenta = ventaNegocio.crearVenta(venta);
+            return ResponseEntity.ok(nuevaVenta);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/listar")
     @ResponseBody
     public List<VentaCabecera> listarVentaCabeceras(@RequestParam String p_correoElectronico){
-        return ventaNegocio.listarVentaCabeceras(p_correoElectronico);
+        return ventaNegocio.listarVenta(p_correoElectronico);
     }
+
 }

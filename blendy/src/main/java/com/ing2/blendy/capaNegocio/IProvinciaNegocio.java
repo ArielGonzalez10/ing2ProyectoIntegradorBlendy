@@ -10,11 +10,12 @@ import java.util.List;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 public interface IProvinciaNegocio {
     void crearProvincia(Provincia p_provincia);
     Provincia buscarProvincia(int p_id_provincia);
-    void modificarProvincia(Provincia p_provincia);
+    void modificarProvincia(int p_id_provincia, Provincia p_provincia);
     void eliminarProvincia(int p_id_provincia);
     List<Provincia> listarProvincias();
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @RequestMapping("/categorias")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -20,26 +21,30 @@ import org.springframework.web.bind.annotation.*;
 public class CategoriaController {
     @Autowired
     private ICategoriaNegocio categoriaNego;
-    
-    @GetMapping("/bucar/{p_id_categoria}")
-    public Categoria buscarCategoria(@PathVariable int p_id_categoria){return categoriaNego.buscarCategoria(p_id_categoria);}
-    
+
+    @GetMapping("/buscar/{p_id_categoria}")
+    public Categoria buscarCategoria(@PathVariable int p_id_categoria) {
+        return categoriaNego.buscarCategoria(p_id_categoria);
+    }
+
     @GetMapping("/listar")
     @ResponseBody
-    public List<Categoria> listarCategorias(){
+    public List<Categoria> listarCategorias() {
         return categoriaNego.listarCategorias();
     }
-    
+
     @PostMapping("/crear")
-    public void crearCategoria(@RequestBody Categoria p_categoria){
+    public void crearCategoria(@RequestBody Categoria p_categoria) {
         categoriaNego.crearCategoria(p_categoria);
     }
-    
+
     @DeleteMapping("/eliminar/{p_id_categoria}")
-    public void eliminarCategoria(@PathVariable int p_id_categoria){
+    public void eliminarCategoria(@PathVariable int p_id_categoria) {
         categoriaNego.eliminarCategoria(p_id_categoria);
     }
 
     @PutMapping("/modificar/{p_id_categoria}")
-    public void modificarCategoria(@PathVariable int p_id_categoria, @RequestParam String p_descripcion, @RequestParam int p_estado){categoriaNego.modificarCategoria(p_id_categoria, p_descripcion, p_estado);}
+    public void modificarCategoria(@PathVariable int p_id_categoria, @RequestBody Categoria p_categoria_modificada) {
+        categoriaNego.modificarCategoria(p_id_categoria, p_categoria_modificada);
+    }
 }

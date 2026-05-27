@@ -12,8 +12,8 @@ import java.util.List;
  * @author ariel
  */
 public interface IVentaCabeceraNegocio {
-    VentaCabecera crearVentaCabecera(VentaCabecera p_ventaCabecera);
-    VentaCabecera buscarVentaCabecera(int p_id_ventaCabecera);
-    void eliminarVentaCabecera(int p_id_ventaCabecera);
-    List<VentaCabecera> listarVentaCabeceras(String p_correoElectronico);
+    VentaCabecera crearVenta(VentaCabecera p_ventaCabecera);
+    VentaCabecera buscarVenta(int p_id_ventaCabecera);
+    void eliminarVenta(int p_id_ventaCabecera);
+    List<VentaCabecera> listarVenta(String p_correoElectronico);
 }

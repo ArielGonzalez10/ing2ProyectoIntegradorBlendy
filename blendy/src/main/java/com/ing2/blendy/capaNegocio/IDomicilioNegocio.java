@@ -10,10 +10,12 @@ import java.util.List;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 public interface IDomicilioNegocio {
     void crearDomicilio(Domicilio p_id_domicilio);
-    Domicilio buscarDomicilioPorUsuario(int p_id_usuario);
+    Domicilio buscarDomicilio(int p_id_domicilio);
+
     void eliminarDomicilio(int p_id_domicilio);
     List<Domicilio> listarDomicilios(String p_correoElectronico);
 }

@@ -7,6 +7,8 @@ package com.ing2.blendy.capaNegocio;
 import com.ing2.blendy.capaDatos.IVentaCabeceraDatos;
 import com.ing2.blendy.capaModelo.Pago;
 import com.ing2.blendy.capaDatos.IPagoDatos;
+
+import java.time.LocalDate;
 import java.util.List;
 
 import com.ing2.blendy.capaModelo.VentaCabecera;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Service
 public class PagoNegocio implements IPagoNegocio {
@@ -25,6 +28,9 @@ public class PagoNegocio implements IPagoNegocio {
 
     @Override
     public void crearPago(Pago p_pago) {
+        if (p_pago.getFechaPago() == null) {
+            p_pago.setFechaPago(LocalDate.now());
+        }
         pagoDatos.save(p_pago);
     }
 
@@ -44,7 +50,16 @@ public class PagoNegocio implements IPagoNegocio {
     }
 
     @Override
-    public void modificarPago(Pago p_pago) {
-        pagoDatos.save(p_pago);
+    public void modificarPago(int p_id_pago, Pago p_pago_modificado) {
+        Pago pagoBuscado = this.buscarPago(p_id_pago);
+
+        if (pagoBuscado != null) {
+            pagoBuscado.setMontoPago(p_pago_modificado.getMontoPago());
+            pagoBuscado.setFechaPago(p_pago_modificado.getFechaPago());
+            pagoBuscado.setMetodoPago(p_pago_modificado.getMetodoPago());
+            pagoDatos.save(pagoBuscado);
+        } else {
+            throw new RuntimeException("Error: El pago que intenta modificar no existe.");
+        }
     }
 }

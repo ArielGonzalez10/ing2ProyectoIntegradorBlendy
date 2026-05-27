@@ -12,10 +12,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.persistence.*;
 
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Getter
 @Setter
@@ -27,10 +29,13 @@ public class Consulta {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idConsulta;
-    private String nombre;
-    private String correoElectronico;
+
     private String descripcion;
     private String asunto;
     private String respuesta;
     private int estado;
+
+    @ManyToOne
+    @JoinColumn(name = "usuario_id_usuario")
+    private Usuario usuario;
 }

@@ -11,13 +11,15 @@ import java.util.List;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 public interface IProductoNegocio {
     void crearProducto(Producto p_producto);
     Producto buscarProducto(String p_descripcion);
+    Producto buscarProductoPorId(int p_id_producto);
     void eliminarProducto(int p_id_producto,int p_nuevoEstado);
     void altaProducto(int p_id_producto,int p_nuevoEstado);
-    void modificarProducto(int p_id_producto, String p_descripcion, int p_stock, double p_precioUnitario, int p_estado);
+    void modificarProducto(int p_id_producto, Producto p_producto_modificado);
     List<Producto> listarProductos();
     List<Producto> ordenarAlfabeticamenteAsc();
     List<Producto> ordenarAlfabeticamenteDesc();

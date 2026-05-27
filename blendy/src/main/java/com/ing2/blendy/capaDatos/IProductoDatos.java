@@ -17,6 +17,7 @@ import java.util.List;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Repository
 public interface IProductoDatos extends JpaRepository<Producto,Integer>{

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @RequestMapping("/metodoPagos")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -40,5 +41,10 @@ public class MetodoPagoController {
     @DeleteMapping("/eliminar/{p_id_metodo_pago}")
     public void eliminarMetodoPago(@PathVariable int p_id_metodo_pago){
         metodoPagoNego.eliminarMetodoPago(p_id_metodo_pago);
+    }
+
+    @PutMapping("/modificar/{p_id_metodo_pago}")
+    public void modificarMetodoPago(@PathVariable int p_id_metodo_pago, @RequestBody MetodoPago p_metodoPago){
+        metodoPagoNego.modificarMetodoPago(p_id_metodo_pago, p_metodoPago);
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Service
 public class UsuarioNegocio implements IUsuarioNegocio {
@@ -35,12 +36,12 @@ public class UsuarioNegocio implements IUsuarioNegocio {
     @Override
     public void modificarUsuario(UsuarioDTO p_usuario) {
         Usuario usuarioBusc = usuarioDatos.buscarPorCorreo(p_usuario.getCorreoElectronico());
-        if ( usuarioBusc != null){
+        if (usuarioBusc != null){
             usuarioBusc.setTelefono(p_usuario.getTelefono());
             usuarioBusc.setApellido(p_usuario.getApellido());
             usuarioBusc.setNombre(p_usuario.getNombre());
-            usuarioDatos.modificarUsuario(usuarioBusc.getCorreoElectronico(),usuarioBusc.getApellido(),usuarioBusc.getNombre(),usuarioBusc.getTelefono());
-        }else {
+            usuarioDatos.save(usuarioBusc);
+        } else {
             throw new RuntimeException("Usuario no encontrado");
         }
     }

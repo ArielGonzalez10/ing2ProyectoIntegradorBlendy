@@ -16,12 +16,15 @@ import java.util.List;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "rol_id_rol", discriminatorType = DiscriminatorType.INTEGER)
 public class Usuario {
     //Atributos
     @Id
@@ -38,5 +41,6 @@ public class Usuario {
     @JsonIgnoreProperties("usuario")
     private List<Domicilio> domicilios;
     @ManyToOne
+    @JoinColumn(name = "rol_id_rol", insertable = false, updatable = false)
     private Rol rol;
 }

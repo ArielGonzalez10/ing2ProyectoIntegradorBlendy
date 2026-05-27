@@ -17,6 +17,7 @@ import lombok.Setter;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Getter
 @Setter
@@ -32,15 +33,19 @@ public class VentaCabecera {
     private double totalVenta;
     private int estado;
 
-    @OneToOne
-    @JoinColumn(name = "envio_id_envio", nullable = true)
-    private Envio envio;
-
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "usuario_id_usuario")
     private Usuario usuario;
-    //Indica que atributo es el dueño de la relación e indica que tabla va a tener la FK
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "envio_id_envio")
+    private Envio envio;
+
     @OneToMany(mappedBy = "ventaCabecera", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<VentaDetalle> listaVentaDetalle;
+
+    @ManyToOne
+    @JoinColumn(name = "cierre_turno_id_cierre")
+    private CierreTurno cierreTurno;
 }

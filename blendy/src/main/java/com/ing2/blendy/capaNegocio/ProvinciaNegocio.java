@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Service
 public class ProvinciaNegocio implements IProvinciaNegocio {
@@ -41,7 +42,14 @@ public class ProvinciaNegocio implements IProvinciaNegocio {
     }
 
     @Override
-    public void modificarProvincia(Provincia p_provincia) {
-        provinciaDatos.save(p_provincia);
+    public void modificarProvincia(int p_id_provincia, Provincia p_provincia_modificada) {
+        Provincia provBuscada = this.buscarProvincia(p_id_provincia);
+        if (provBuscada != null) {
+            provBuscada.setNombre(p_provincia_modificada.getNombre());
+            provBuscada.setEstado(p_provincia_modificada.getEstado());
+            provinciaDatos.save(provBuscada);
+        } else {
+            throw new RuntimeException("Error: La provincia no existe.");
+        }
     }
 }

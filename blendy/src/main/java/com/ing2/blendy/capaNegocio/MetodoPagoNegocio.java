@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Service
 public class MetodoPagoNegocio implements IMetodoPagoNegocio {
@@ -39,5 +40,17 @@ public class MetodoPagoNegocio implements IMetodoPagoNegocio {
     public List<MetodoPago> listarMetodoPagos() {
         return metodoPagoDatos.findAll();
     }
-    
+
+    @Override
+    public void modificarMetodoPago(int p_id_metodo_pago, MetodoPago p_metodo_pago_modificado) {
+        MetodoPago metodoBuscado = this.buscarMetodoPago(p_id_metodo_pago);
+
+        if (metodoBuscado != null) {
+            metodoBuscado.setDescripcion(p_metodo_pago_modificado.getDescripcion());
+            metodoBuscado.setEstado(p_metodo_pago_modificado.getEstado());
+            metodoPagoDatos.save(metodoBuscado);
+        } else {
+            throw new RuntimeException("Error: El método de pago que intenta modificar no existe.");
+        }
+    }
 }

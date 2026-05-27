@@ -14,8 +14,10 @@ import java.util.List;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @RequestMapping("/roles")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 public class RolController {
     @Autowired
@@ -26,9 +28,9 @@ public class RolController {
         rolNego.crearRol(p_rol);
     }
 
-    @PutMapping
-    public void modificarRol(@RequestBody Rol p_rol){
-        rolNego.modificarRol(p_rol);
+    @PutMapping("/modificar/{p_id_rol}")
+    public void modificarRol(@PathVariable int p_id_rol, @RequestBody Rol p_rol){
+        rolNego.modificarRol(p_id_rol, p_rol);
     }
 
     @GetMapping("/buscar/{p_id_rol}")

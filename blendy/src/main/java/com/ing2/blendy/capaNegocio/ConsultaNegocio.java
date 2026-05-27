@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Service
 public class ConsultaNegocio implements IConsultaNegocio {
@@ -22,6 +23,7 @@ public class ConsultaNegocio implements IConsultaNegocio {
     
     @Override
     public void crearConsulta(Consulta p_consulta) {
+        p_consulta.setEstado(0);
         consultaDatos.save(p_consulta);
     }
 
@@ -39,5 +41,17 @@ public class ConsultaNegocio implements IConsultaNegocio {
     public List<Consulta> listarConsultas() {
         return consultaDatos.findAll();
     }
-    
+
+    @Override
+    public void responderConsulta(int p_id_consulta, String p_respuesta) {
+        Consulta consultaBuscada = this.buscarConsulta(p_id_consulta);
+
+        if(consultaBuscada != null) {
+            consultaBuscada.setRespuesta(p_respuesta);
+            consultaBuscada.setEstado(1);
+            consultaDatos.save(consultaBuscada);
+        } else {
+            throw new RuntimeException("Error: La consulta que intenta responder no existe.");
+        }
+    }
 }

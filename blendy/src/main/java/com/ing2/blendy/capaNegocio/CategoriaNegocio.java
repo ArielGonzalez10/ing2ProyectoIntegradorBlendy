@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Service
 public class CategoriaNegocio implements ICategoriaNegocio {
@@ -34,14 +35,20 @@ public class CategoriaNegocio implements ICategoriaNegocio {
     }
 
     @Override
-    public void modificarCategoria(int p_id_categoria, String p_descripcion, int p_estado) {
+    public void modificarCategoria(int p_id_categoria, Categoria p_categoria_modificada) {
         Categoria categoBusc = this.buscarCategoria(p_id_categoria);
-        categoBusc.setDescripcion(p_descripcion);
-        categoBusc.setEstado(p_estado);
-        categoriaDatos.save(categoBusc);
+
+        if (categoBusc != null) {
+            categoBusc.setDescripcion(p_categoria_modificada.getDescripcion());
+            categoBusc.setEstado(p_categoria_modificada.getEstado());
+            categoriaDatos.save(categoBusc);
+        } else {
+            throw new RuntimeException("Error: La categoría que intenta modificar no existe.");
+        }
     }
 
     @Override
-    public List<Categoria> listarCategorias() {return categoriaDatos.findAll();}
-    
+    public List<Categoria> listarCategorias() {
+        return categoriaDatos.findAll();
+    }
 }

@@ -129,6 +129,13 @@ SELECT * from envio;
 SELECT * FROM metodo_pago;
 SELECT * FROM consulta;
 
+ALTER TABLE consulta DROP CONSTRAINT FK_Consulta_Usuario;
+ALTER TABLE consulta DROP COLUMN id_usuario;
+ALTER TABLE consulta DROP COLUMN nombre;
+ALTER TABLE consulta DROP COLUMN correo_electronico;
+
+ALTER TABLE venta_cabecera ADD estado INT NOT NULL DEFAULT 1;
+ALTER TABLE venta_detalle ADD precio_historico FLOAT NOT NULL DEFAULT 0;
 
 
 ALTER TABLE Consulta

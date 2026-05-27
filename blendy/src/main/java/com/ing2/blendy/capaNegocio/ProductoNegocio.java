@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Service
 public class ProductoNegocio implements IProductoNegocio {
@@ -58,6 +59,11 @@ public class ProductoNegocio implements IProductoNegocio {
     }
 
     @Override
+    public Producto buscarProductoPorId(int p_id_producto) {
+        return productoDatos.findById(p_id_producto).orElse(null);
+    }
+
+    @Override
     public void eliminarProducto(int p_id_producto, int p_nuevoEstado) {
         productoDatos.cambiarEstadoProducto(p_id_producto,p_nuevoEstado);
     }
@@ -68,14 +74,20 @@ public class ProductoNegocio implements IProductoNegocio {
     }
 
     @Override
-    public void modificarProducto(int p_id_producto, String p_descripcion, int p_stock,double p_precioUnitario, int p_estado) {
-        Producto productoBusc = this.buscarProducto(p_descripcion);
-        productoBusc.setIdProducto(p_id_producto);
-        productoBusc.setDescripcion(p_descripcion);
-        productoBusc.setPrecioUnitario(p_precioUnitario);
-        productoBusc.setEstado(p_estado);
-        productoBusc.setStock(p_stock);
-        productoDatos.save(productoBusc);
+    public void modificarProducto(int p_id_producto, Producto p_producto_modificado) {
+        Producto productoBusc = this.buscarProductoPorId(p_id_producto);
+
+        if(productoBusc != null){
+            productoBusc.setDescripcion(p_producto_modificado.getDescripcion());
+            productoBusc.setPrecioUnitario(p_producto_modificado.getPrecioUnitario());
+            productoBusc.setEstado(p_producto_modificado.getEstado());
+            productoBusc.setStock(p_producto_modificado.getStock());
+            productoBusc.setStockMin(p_producto_modificado.getStockMin()); // Faltaba actualizar esto
+            productoBusc.setCategoria(p_producto_modificado.getCategoria()); // Faltaba actualizar esto
+            productoDatos.save(productoBusc);
+        } else {
+            throw new RuntimeException("Error: El producto que intenta modificar no existe.");
+        }
     }
 
     @Override

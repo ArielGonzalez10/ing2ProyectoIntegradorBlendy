@@ -14,6 +14,7 @@ import java.util.List;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @RequestMapping("/provincias")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -28,9 +29,9 @@ public class ProvinciaController {
         provinciaNego.crearProvincia(p_provincia);
     }
 
-    @PutMapping("/modificar")
-    public void modificarProvincia(@RequestBody Provincia p_provincia){
-        provinciaNego.modificarProvincia(p_provincia);
+    @PutMapping("/modificar/{p_id_provincia}")
+    public void modificarProvincia(@PathVariable int p_id_provincia, @RequestBody Provincia p_provincia){
+        provinciaNego.modificarProvincia(p_id_provincia, p_provincia);
     }
 
     @GetMapping("/listar")

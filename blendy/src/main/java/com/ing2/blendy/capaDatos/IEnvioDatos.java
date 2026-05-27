@@ -16,8 +16,12 @@ import java.util.List;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Repository
 public interface IEnvioDatos extends JpaRepository<Envio,Integer>{
+
+    @Query("SELECT e FROM Envio e WHERE e.venta.usuario.correoElectronico = :correo")
+    List<Envio> findByCorreoUsuario(@Param("correo") String correo);
 
 }

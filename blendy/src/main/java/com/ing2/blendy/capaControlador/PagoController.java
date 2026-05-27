@@ -14,6 +14,7 @@ import java.util.List;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @RequestMapping("/pagos")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -27,14 +28,14 @@ public class PagoController {
         pagoNego.crearPago(p_pago);
     }
 
-    @DeleteMapping("/eliminar")
-    public void eliminarPago(int p_id_pago){
+    @DeleteMapping("/eliminar/{p_id_pago}")
+    public void eliminarPago(@PathVariable int p_id_pago){
         pagoNego.eliminarPago(p_id_pago);
     }
 
-    @PutMapping("/modificar")
-    public void modificarPago(@RequestBody Pago p_pago){
-        pagoNego.modificarPago(p_pago);
+    @PutMapping("/modificar/{p_id_pago}")
+    public void modificarPago(@PathVariable int p_id_pago, @RequestBody Pago p_pago){
+        pagoNego.modificarPago(p_id_pago, p_pago);
     }
 
     @GetMapping("/listar")

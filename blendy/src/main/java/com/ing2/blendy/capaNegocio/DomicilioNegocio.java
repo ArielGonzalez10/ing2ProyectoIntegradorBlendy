@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Service
 public class DomicilioNegocio implements IDomicilioNegocio {
@@ -35,7 +36,9 @@ public class DomicilioNegocio implements IDomicilioNegocio {
     }
 
     @Override
-    public Domicilio buscarDomicilioPorUsuario(int p_id_usuario) {return domicilioDatos.findById(p_id_usuario).orElse(null);}
+    public Domicilio buscarDomicilio(int p_id_domicilio) {
+        return domicilioDatos.findById(p_id_domicilio).orElse(null);
+    }
 
     @Override
     public void eliminarDomicilio(int p_id_domicilio) {

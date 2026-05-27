@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @RequestMapping("/domicilios")
 @CrossOrigin(origins = "http://localhost:5173")
@@ -23,8 +24,8 @@ public class DomicilioController {
     private IDomicilioNegocio domicilioNego;
     
     @GetMapping("/buscar/{p_id_domicilio}")
-    public Domicilio buscarDomicilio(@PathVariable int p_id_usuario){
-        return domicilioNego.buscarDomicilioPorUsuario(p_id_usuario);
+    public Domicilio buscarDomicilio(@PathVariable int p_id_domicilio){
+        return domicilioNego.buscarDomicilio(p_id_domicilio);
     }
     
     @PostMapping("/crear")
@@ -43,9 +44,9 @@ public class DomicilioController {
 
         return ResponseEntity.ok(lista);
     }
-    
+
     @DeleteMapping("/eliminar/{p_id_domicilio}")
-    public void eliminarDomicilio(int p_id_domicilio){
+    public void eliminarDomicilio(@PathVariable int p_id_domicilio){
         domicilioNego.eliminarDomicilio(p_id_domicilio);
     }
 }

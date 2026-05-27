@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 @Service
 public class RolNegocio implements IRolNegocio {
@@ -41,7 +42,15 @@ public class RolNegocio implements IRolNegocio {
     }
 
     @Override
-    public void modificarRol(Rol p_rol) {
-        rolDatos.save(p_rol);
+    public void modificarRol(int p_id_rol, Rol p_rol_modificado) {
+        Rol rolBuscado = this.buscarRol(p_id_rol);
+
+        if (rolBuscado != null) {
+            rolBuscado.setDescripcion(p_rol_modificado.getDescripcion());
+            rolBuscado.setEstado(p_rol_modificado.getEstado());
+            rolDatos.save(rolBuscado);
+        } else {
+            throw new RuntimeException("Error: El rol que intenta modificar no existe.");
+        }
     }
 }

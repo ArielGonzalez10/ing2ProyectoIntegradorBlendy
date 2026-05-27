@@ -10,10 +10,12 @@ import java.util.List;
 /**
  *
  * @author ariel
+ * @author Fatima
  */
 public interface IConsultaNegocio {
     void crearConsulta(Consulta p_consulta);
     Consulta buscarConsulta(int p_id_consulta);
     void eliminarConsulta(int p_id_consulta);
     List<Consulta> listarConsultas();
+    void responderConsulta(int p_id_consulta, String pRespuesta);
 }

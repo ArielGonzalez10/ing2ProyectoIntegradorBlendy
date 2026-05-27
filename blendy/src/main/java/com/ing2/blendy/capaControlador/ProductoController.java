@@ -30,22 +30,24 @@ public class ProductoController {
         if(this.buscarProducto(p_producto.getDescripcion()) != null){
             throw new RuntimeException("Producto creado previamente");
         }
-        productoNego.crearProducto(p_producto);productoNego.crearProducto(p_producto);
-    }
-    
-    @DeleteMapping("/eliminar/{p_id_producto}/{p_nuevoEstado}")
-    public void eliminarProducto(@PathVariable int p_id_producto, @PathVariable int p_nuevoEstado){
-        productoNego.eliminarProducto(p_id_producto,p_nuevoEstado);
+        productoNego.crearProducto(p_producto);
     }
 
-    @PutMapping("/alta/{p_id_producto}/{p_nuevoEstado}")
-    public void altaProducto(@PathVariable int p_id_producto, @PathVariable int p_nuevoEstado){
-        productoNego.altaProducto(p_id_producto,p_nuevoEstado);
+    @DeleteMapping("/eliminar/{p_id_producto}")
+    public void eliminarProducto(@PathVariable int p_id_producto){
+        productoNego.eliminarProducto(p_id_producto, 0);
+    }
+
+    @PutMapping("/alta/{p_id_producto}")
+    public void altaProducto(@PathVariable int p_id_producto){
+        productoNego.altaProducto(p_id_producto, 1);
     }
 
     @PutMapping("/modificar/{p_id_producto}")
-    public void modificarProducto(@PathVariable int p_id_producto, @RequestParam String p_descripcion, @RequestParam int p_stock, @RequestParam double p_precioUnitario, @RequestParam int p_estado){productoNego.modificarProducto(p_id_producto,p_descripcion,p_stock,p_precioUnitario,p_estado);}
-
+    public void modificarProducto(@PathVariable int p_id_producto, @RequestBody Producto p_producto){
+        productoNego.modificarProducto(p_id_producto, p_producto);
+    }
+    
     @GetMapping("/listar")
     @ResponseBody
     public List<Producto> listarProductos(){
