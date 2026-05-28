@@ -30,9 +30,6 @@ public class Pago {
     private double montoPago;
     private LocalDate fechaPago;
     @ManyToOne
-    @JoinColumn(name = "venta_cabecera_id_venta_cabecera")
-    private VentaCabecera ventaCabecera;
-    @ManyToOne
-    @JoinColumn(name = "metodo_pago_id_metodo_pago")
+    @JoinColumn(name = "FK_id_metodo_pago")
     private MetodoPago metodoPago;
 }

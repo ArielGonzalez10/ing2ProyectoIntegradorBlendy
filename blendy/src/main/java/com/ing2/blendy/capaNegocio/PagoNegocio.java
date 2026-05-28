@@ -4,14 +4,12 @@
  */
 package com.ing2.blendy.capaNegocio;
 
-import com.ing2.blendy.capaDatos.IVentaCabeceraDatos;
 import com.ing2.blendy.capaModelo.Pago;
 import com.ing2.blendy.capaDatos.IPagoDatos;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import com.ing2.blendy.capaModelo.VentaCabecera;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

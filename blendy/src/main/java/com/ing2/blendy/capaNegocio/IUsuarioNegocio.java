@@ -4,6 +4,7 @@
  */
 package com.ing2.blendy.capaNegocio;
 
+import com.ing2.blendy.capaModelo.CierreTurno;
 import com.ing2.blendy.capaModelo.Usuario;
 import com.ing2.blendy.dto.TokenResponse;
 import com.ing2.blendy.dto.UsuarioDTO;
@@ -22,4 +23,8 @@ public interface IUsuarioNegocio {
     List<Usuario> listarUsuarios();
     TokenResponse iniciarSesion(String p_correoElectronico, String p_contrasenia);
     void modificarUsuario(UsuarioDTO p_usuario);
+    void auditarCierre();
+    double calcularDiferenciaCaja(double p_montoIncial, double p_montoCalculado);
+    void iniciarCierreCaja();
+
 }

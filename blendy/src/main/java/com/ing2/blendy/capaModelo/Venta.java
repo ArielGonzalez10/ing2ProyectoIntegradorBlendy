@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,28 +25,29 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class VentaCabecera {
+public class Venta {
     //Atributos
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private int idVentaCabecera;
-    private LocalDate fecha;
+    private int idVenta;
+    private LocalDateTime fecha;
     private double totalVenta;
     private int estado;
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "usuario_id_usuario")
+    @JoinColumn(name = "FK_id_usuario")
     private Usuario usuario;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "envio_id_envio")
+    @JoinColumn(name = "FK_id_envio")
     private Envio envio;
 
-    @OneToMany(mappedBy = "ventaCabecera", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<VentaDetalle> listaVentaDetalle;
 
-    @ManyToOne
-    @JoinColumn(name = "cierre_turno_id_cierre")
-    private CierreTurno cierreTurno;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "FK_id_pago")
+    private Pago pago;
+
 }

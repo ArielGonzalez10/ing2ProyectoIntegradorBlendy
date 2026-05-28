@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -18,17 +19,33 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CierreTurnoNegocio implements ICierreTurnoNegocio {
-
     @Autowired
     private ICierreTurnoDatos cierreDatos;
 
     @Override
-    public void iniciarCierreCaja(CierreTurno p_cierreTurno) {
-        p_cierreTurno.setFechaHoraApertura(LocalDateTime.now());
-        p_cierreTurno.setEstado(0);
+    public CierreTurno buscarTurnoActivo() {
+        return cierreDatos.buscarTurnoActivo();
+    }
 
-        p_cierreTurno.setMontoCalculado(p_cierreTurno.getMontoInicial());
-        cierreDatos.save(p_cierreTurno);
+    @Override
+    @Transactional
+    public CierreTurno iniciarCierreCaja(CierreTurno p_cierreTurno) {
+        // Control de seguridad: Si ya hay una caja abierta, no permitimos abrir otra
+        CierreTurno existente = buscarTurnoActivo();
+        if (existente != null) {
+            throw new RuntimeException("Operación denegada: Ya existe un turno de caja abierto en el sistema.");
+        }
+
+        p_cierreTurno.setFechaHoraApertura(LocalDateTime.now());
+        p_cierreTurno.setEstado(1); // 💡 Cambiado a 1 para representar estado "Abierto"
+
+        // Inicializamos los importes de control limpios
+        p_cierreTurno.setMontoCalculado(0.0);
+        p_cierreTurno.setMontoDeclarado(0.0);
+        p_cierreTurno.setDiferencia(0.0);
+
+        // Retornamos la entidad persistida (ya incluye el idCierre incremental de la BD)
+        return cierreDatos.save(p_cierreTurno);
     }
 
     @Override

@@ -28,9 +28,9 @@ public class Domicilio {
     private String calle;
     private int altura;
     @ManyToOne
-    @JoinColumn(name = "localidad_id_localidad")
+    @JoinColumn(name = "Fk_id_localidad")
     private Localidad localidad;
     @ManyToOne
-    @JsonIgnoreProperties("domicilios")
+    @JoinColumn(name = "Fk_id_usuario")
     private Usuario usuario;
 }

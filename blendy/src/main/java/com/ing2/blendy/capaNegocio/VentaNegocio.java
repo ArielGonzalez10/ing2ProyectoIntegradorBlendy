@@ -6,10 +6,12 @@ package com.ing2.blendy.capaNegocio;
 
 import com.ing2.blendy.capaDatos.IProductoDatos;
 import com.ing2.blendy.capaModelo.Producto;
-import com.ing2.blendy.capaModelo.VentaCabecera;
-import com.ing2.blendy.capaDatos.IVentaCabeceraDatos;
+import com.ing2.blendy.capaModelo.Venta;
+import com.ing2.blendy.capaDatos.IVentaDatos;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import com.ing2.blendy.capaModelo.VentaDetalle;
@@ -23,27 +25,27 @@ import org.springframework.stereotype.Service;
  * @author Fatima
  */
 @Service
-public class VentaCabeceraNegocio implements IVentaCabeceraNegocio {
+public class VentaNegocio implements IVentaNegocio {
     
     @Autowired
-    private IVentaCabeceraDatos ventaCabeceraDatos;
+    private IVentaDatos ventaDatos;
 
     @Autowired
     private IProductoDatos productoDatos;
 
     @Override
     @Transactional
-    public VentaCabecera crearVenta(VentaCabecera p_ventaCabecera) {
+    public Venta crearVenta(Venta p_venta) {
 
-        if(p_ventaCabecera.getFecha() == null) {
-            p_ventaCabecera.setFecha(LocalDate.now());
+        if(p_venta.getFecha() == null) {
+            p_venta.setFecha(LocalDateTime.now());
         }
         double totalCalculado = 0;
 
-        if (p_ventaCabecera.getListaVentaDetalle() != null) {
-            for (VentaDetalle detalle : p_ventaCabecera.getListaVentaDetalle()) {
+        if (p_venta.getListaVentaDetalle() != null) {
+            for (VentaDetalle detalle : p_venta.getListaVentaDetalle()) {
 
-                detalle.setVentaCabecera(p_ventaCabecera);
+                detalle.setVenta(p_venta);
 
                 Producto productoReal = productoDatos.findById(detalle.getProducto().getIdProducto())
                         .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
@@ -61,29 +63,29 @@ public class VentaCabeceraNegocio implements IVentaCabeceraNegocio {
             }
         }
 
-        p_ventaCabecera.setTotalVenta(totalCalculado);
-        p_ventaCabecera.setEstado(1);
+        p_venta.setTotalVenta(totalCalculado);
+        p_venta.setEstado(1);
 
-        return ventaCabeceraDatos.save(p_ventaCabecera);
+        return ventaDatos.save(p_venta);
     }
 
     @Override
-    public VentaCabecera buscarVenta(int p_id_ventaCabecera) {
+    public Venta buscarVenta(int p_id_ventaCabecera) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
     public void eliminarVenta(int p_id_ventaCabecera) {
-        VentaCabecera venta = this.buscarVenta(p_id_ventaCabecera);
+        Venta venta = this.buscarVenta(p_id_ventaCabecera);
         if(venta != null) {
             venta.setEstado(0);
-            ventaCabeceraDatos.save(venta);
+            ventaDatos.save(venta);
         }
     }
 
     @Override
-    public List<VentaCabecera> listarVenta(String p_correoElectronico) {
-        return ventaCabeceraDatos.listarVentas(p_correoElectronico);
+    public List<Venta> listarVenta(String p_correoElectronico, Date p_fecha) {
+        return ventaDatos.listarVentas(p_correoElectronico,p_fecha);
     }
     
 }

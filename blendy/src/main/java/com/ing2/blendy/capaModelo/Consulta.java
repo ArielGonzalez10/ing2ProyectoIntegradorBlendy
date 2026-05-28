@@ -36,6 +36,6 @@ public class Consulta {
     private int estado;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id_usuario")
+    @JoinColumn(name = "FK_id_usuario")
     private Usuario usuario;
 }

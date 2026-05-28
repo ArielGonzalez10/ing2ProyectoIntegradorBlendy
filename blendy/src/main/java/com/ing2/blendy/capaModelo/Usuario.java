@@ -23,8 +23,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "rol_id_rol", discriminatorType = DiscriminatorType.INTEGER)
 public class Usuario {
     //Atributos
     @Id
@@ -41,6 +39,6 @@ public class Usuario {
     @JsonIgnoreProperties("usuario")
     private List<Domicilio> domicilios;
     @ManyToOne
-    @JoinColumn(name = "rol_id_rol", insertable = false, updatable = false)
+    @JoinColumn(name = "FK_id_rol")
     private Rol rol;
 }

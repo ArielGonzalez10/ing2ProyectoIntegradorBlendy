@@ -30,69 +30,66 @@ const Checkout = () => {
       alert("Por favor, selecciona una dirección de envío.");
       return;
     }
+    if (!metodoPago) {
+      alert("Por favor, selecciona un método de pago.");
+      return;
+    }
 
     try {
       const idUsuarioActual = direccionesGuardadas.length > 0 ? direccionesGuardadas[0]?.usuario?.idUsuario : null;
       if (!idUsuarioActual) throw new Error("No se pudo identificar al usuario.");
 
-      // --- 1. CREAR VENTA CABECERA ---
-      const resCabecera = await crearVentaCabecera({
-        fecha: new Date().toISOString().split('T')[0],
-        totalVenta: total,
-        usuario: { idUsuario: idUsuarioActual }
-      });
-      const idCabeceraGenerada = resCabecera.data.idVentaCabecera;
-
-      // --- 2. CREAR PAGO ---
-      await crearPagos({
-        montoPago: total,
-        ventaCabecera: { idVentaCabecera: idCabeceraGenerada },
-        metodoPago: { idMetodoPago: parseInt(metodoPago) }
-      });
-
-      // --- 3. CREAR VENTA DETALLE Y ACTUALIZAR STOCK ---
-      for (const item of cartItems) {
-        // A. Crear el detalle
-        await crearVentaDetalle({
-          cantidad: item.cantidad,
-          total: item.precioUnitario * item.cantidad,
-          producto: { idProducto: item.idProducto },
-          ventaCabecera: { idVentaCabecera: idCabeceraGenerada },
-        });
-
-        // B. Modificar el producto (Descontar Stock)
-        const nuevoStock = item.stock - item.cantidad;
-        await modificarProducto(item.idProducto, {
-          p_descripcion: item.descripcion,
-          p_stock: nuevoStock,
-          p_precioUnitario: item.precioUnitario,
-          p_estado: item.estado,
-        });
-      }
-
-      // Calculamos las fechas
+      // Calculamos las fechas para el envío antes de armar el payload
       const hoy = new Date();
-      const fechaDespacho = hoy.toISOString().split("T")[0]; // Fecha actual
-
+      const fechaDespacho = hoy.toISOString().split("T")[0];
       const fechaRec = new Date();
-      fechaRec.setDate(hoy.getDate() + 3); // Sumamos 3 días
+      fechaRec.setDate(hoy.getDate() + 3);
       const fechaRecepcion = fechaRec.toISOString().split("T")[0];
 
-      // --- 4. CREAR ENVÍO ---
-      await crearEnvios({
-        fechaDespacho: fechaDespacho,
-        fechaRecepcion: fechaRecepcion,
+      // --- UNIFICAMOS TODO EN UN SOLO JSON ---
+      const ventaPayload = {
         usuario: { idUsuario: idUsuarioActual },
-        domicilio: { idDomicilio: parseInt(direccionSeleccionada) },
+        listaVentaDetalle: cartItems.map(item => ({
+          cantidad: item.cantidad,
+          producto: { idProducto: item.idProducto }
+        })),
+        // Agregamos el pago (Con el monto y método seleccionados)
+        pago: {
+          montoPago: total,
+          fechaPago: fechaDespacho,
+          metodoPago: { idMetodoPago: parseInt(metodoPago) }
+        },
+        // Agregamos el envío (Con el estado inicial, las fechas y el domicilio)
+        envio: {
+          estado: "Pendiente",
+          fechaDespacho: fechaDespacho,
+          fechaRecepcion: fechaRecepcion,
+          usuario: { idUsuario: idUsuarioActual },
+          domicilio: { idDomicilio: parseInt(direccionSeleccionada) }
+        }
+      };
+
+      // Enviamos TODO en una sola transacción a tu VentaController
+      const response = await fetch("http://localhost:8080/ventas/crear", { 
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(ventaPayload)
       });
 
-      alert("¡Compra realizada con éxito!");
+      if (!response.ok) {
+        const msgError = await response.text();
+        throw new Error(msgError || "Error en el servidor al procesar la venta.");
+      }
+
+      alert("¡Compra realizada con éxito con Pago y Envío vinculados!");
       if (clearCart) clearCart();
       navigate("/MisPedidos");
 
     } catch (error) {
       console.error("Error en la secuencia de transacciones:", error);
-      alert("No se pudo procesar la compra.");
+      alert(error.message || "No se pudo procesar la compra.");
     }
   };
 

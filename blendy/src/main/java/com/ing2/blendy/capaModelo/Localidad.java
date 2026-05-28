@@ -29,6 +29,6 @@ public class Localidad {
     private int codigoPostal;
     private int estado;
     @ManyToOne
-    @JoinColumn(name = "provincia_id_provincia")
+    @JoinColumn(name = "FK_id_provincia")
     private Provincia provincia;
 }

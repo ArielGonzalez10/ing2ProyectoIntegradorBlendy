@@ -31,7 +31,7 @@ INSERT INTO provincia (nombre, estado) VALUES
 ('Tierra del Fuego', 1),
 ('Tucumán', 1);
 
-INSERT INTO localidad (nombre, codigo_postal, estado, provincia_id_provincia) VALUES
+INSERT INTO localidad (nombre, codigo_postal, estado, fk_id_provincia) VALUES
 -- Buenos Aires (ID 1)
 ('La Plata', 1900, 1, 1), ('Mar del Plata', 7600, 1, 1), ('Bahía Blanca', 8000, 1, 1),
 -- CABA (ID 2)
@@ -93,11 +93,11 @@ INSERT INTO rol (descripcion,estado) VALUES ('Vendedor',1);
 
 
 UPDATE USUARIO 
-SET rol_id_rol = 1 -- administrador
+SET fk_id_rol = 3 -- administrador
 WHERE correo_electronico = 'fatimabret@gmail.com';
 
 UPDATE USUARIO 
-SET rol_id_rol = 3  -- vendedor
+SET fk_id_rol = 1  -- vendedor
 WHERE correo_electronico = 'arielgonzalezr9@gmail.com';
 
 UPDATE producto 
@@ -112,8 +112,6 @@ UPDATE producto
 SET stock_min = 0 -- administrador
 WHERE stock_min = 1;
 
-
-
 SELECT * FROM localidad;
 SELECT * FROM provincia;
 SELECT * FROM rol;
@@ -121,27 +119,12 @@ SELECT * FROM imagen;
 SELECT * FROM categoria;
 SELECT * FROM domicilio;
 SELECT * FROM usuario;
-SELECT * FROM venta_cabecera;
+SELECT * FROM venta;
 SELECT * FROM venta_detalle;
-SELECT * FROM producto;
 SELECT * FROM pago;
 SELECT * from envio;
 SELECT * FROM metodo_pago;
-SELECT * FROM consulta;
-
-ALTER TABLE consulta DROP CONSTRAINT FK_Consulta_Usuario;
-ALTER TABLE consulta DROP COLUMN id_usuario;
-ALTER TABLE consulta DROP COLUMN nombre;
-ALTER TABLE consulta DROP COLUMN correo_electronico;
-
-ALTER TABLE venta_cabecera ADD estado INT NOT NULL DEFAULT 1;
-ALTER TABLE venta_detalle ADD precio_historico FLOAT NOT NULL DEFAULT 0;
-
-
-ALTER TABLE Consulta
-ADD id_usuario INT NULL;
-ALTER TABLE Consulta
-ADD CONSTRAINT FK_Consulta_Usuario FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario);
+SELECT * FROM cierre_turno;
 
 CREATE PROCEDURE sp_crear_usuario
     @p_apellido VARCHAR(255),
@@ -162,7 +145,7 @@ BEGIN
         estado, 
         nombre, 
         telefono, 
-        rol_id_rol
+        fk_id_rol
     )
     VALUES (
         @p_apellido, 
@@ -196,8 +179,8 @@ BEGIN
         codigo_postal, 
         estado, 
         nombre, 
-        provincia_id_provincia 
+        fk_id_provincia 
     FROM localidad 
-    WHERE provincia_id_provincia = @p_id_provincia;
+    WHERE fk_id_provincia = @p_id_provincia;
 END
 GO

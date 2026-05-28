@@ -7,6 +7,8 @@ package com.ing2.blendy.capaModelo;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +28,6 @@ public class CierreTurno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idCierre;
-
     private LocalDateTime fechaHoraApertura;
     private LocalDateTime fechaHoraCierre;
     private double montoInicial;
@@ -35,7 +36,7 @@ public class CierreTurno {
     private double diferencia;
     private int estado;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id_usuario")
-    private Usuario usuario;
+    @OneToMany
+    @JoinColumn(name = "FK_id_cierre_turno")
+    private List<Venta> ventas;
 }

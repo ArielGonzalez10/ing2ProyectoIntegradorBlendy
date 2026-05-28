@@ -30,9 +30,6 @@ public class Envio {
     private LocalDate fechaDespacho;
     private LocalDate fechaRecepcion;
     private String estado;
-    @ManyToOne
-    @JoinColumn(name = "domicilio_id_domicilio")
-    private Domicilio domicilio;
     @OneToOne(mappedBy = "envio")
-    private VentaCabecera venta;
+    private Venta venta;
 }

@@ -13,8 +13,9 @@ import java.util.List;
  * @author Fatima
  */
 public interface ICierreTurnoNegocio {
-    void iniciarCierreCaja(CierreTurno p_cierreTurno);
+    CierreTurno iniciarCierreCaja(CierreTurno p_cierreTurno);
     void auditarCierre(int p_id_cierre, double p_montoDeclarado);
+    CierreTurno buscarTurnoActivo();
     CierreTurno buscarCierre(int p_id_cierre);
     List<CierreTurno> visualizarCierresGlobales();
 }

@@ -51,24 +51,28 @@ public class EnvioNegocio implements IEnvioNegocio {
     public void modificarEnvio(int p_id_envio, LocalDate p_fecha_despacho, LocalDate p_fecha_recepcion) {
         Envio envio_actual = envioDatos.findById(p_id_envio)
                 .orElseThrow(() -> new RuntimeException("Envío no encontrado"));
+        IEnvioState estadoActual = obtenerEstado(envio_actual.getEstado());
 
-        if (p_fecha_despacho == null && p_fecha_recepcion != null) {
-            throw new RuntimeException("Error: No se puede entregar un paquete sin haberlo despachado.");
-        }
-        if (p_fecha_despacho != null && p_fecha_recepcion != null) {
-            if (p_fecha_recepcion.isBefore(p_fecha_despacho)) {
-                throw new RuntimeException("Error: La fecha de recepción debe ser mayor o igual a la de despacho.");
-            }
+        // Si llegó fecha de despacho y antes no tenía, se activa el comportamiento del estado actual
+        if (p_fecha_despacho != null && envio_actual.getFechaDespacho() == null) {
+            estadoActual.enviar(envio_actual);
         }
 
-        envio_actual.setFechaDespacho(p_fecha_despacho);
-        envio_actual.setFechaRecepcion(p_fecha_recepcion);
-        if (p_fecha_recepcion != null) {
-            envio_actual.setEstado("Entregado");
-        } else if (p_fecha_despacho != null) {
-            envio_actual.setEstado("Despachado");
+        // Si llegó fecha de recepción y antes no tenía, se activa el comportamiento del estado actual
+        if (p_fecha_recepcion != null && envio_actual.getFechaRecepcion() == null) {
+            estadoActual.entregar(envio_actual);
         }
         envioDatos.save(envio_actual);
     }
-    
+
+    private IEnvioState obtenerEstado(String p_estado){
+        if(p_estado == null){
+            return new EstadoPendiente();
+        }
+        switch (p_estado){
+            case "En camino": return new EstadoEnCamino();
+            case  "Entregado": return new EstadoEntregado();
+            default: return new EstadoPendiente();
+        }
+    }
 }

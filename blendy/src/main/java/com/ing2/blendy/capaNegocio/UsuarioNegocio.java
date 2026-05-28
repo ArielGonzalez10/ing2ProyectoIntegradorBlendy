@@ -4,6 +4,7 @@
  */
 package com.ing2.blendy.capaNegocio;
 
+import com.ing2.blendy.capaModelo.CierreTurno;
 import com.ing2.blendy.capaModelo.Domicilio;
 import com.ing2.blendy.capaModelo.Usuario;
 import com.ing2.blendy.capaDatos.IUsuarioDatos;
@@ -44,6 +45,21 @@ public class UsuarioNegocio implements IUsuarioNegocio {
         } else {
             throw new RuntimeException("Usuario no encontrado");
         }
+    }
+
+    @Override
+    public void auditarCierre() {
+
+    }
+
+    @Override
+    public double calcularDiferenciaCaja(double p_montoIncial, double p_montoCalculado) {
+        return 0;
+    }
+
+    @Override
+    public void iniciarCierreCaja() {
+
     }
 
     @Override

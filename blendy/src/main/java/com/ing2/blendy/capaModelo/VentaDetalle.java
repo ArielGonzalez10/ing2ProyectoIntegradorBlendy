@@ -5,7 +5,6 @@
 package com.ing2.blendy.capaModelo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,9 +30,10 @@ public class VentaDetalle {
     private double total;
     private double precioHistorico;
     @ManyToOne
-    @JoinColumn(name = "venta_cabecera_id_venta_cabecera")
+    @JoinColumn(name = "FK_id_venta")
     @JsonBackReference
-    private VentaCabecera ventaCabecera;
+    private Venta venta;
     @ManyToOne
+    @JoinColumn(name="FK_id_producto")
     private Producto producto;
 }

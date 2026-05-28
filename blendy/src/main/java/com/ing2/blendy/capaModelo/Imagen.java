@@ -20,7 +20,7 @@ public class Imagen {
     private String descripcion;
     private int estado;
     @ManyToOne
-    @JoinColumn(name = "producto_id_producto")
+    @JoinColumn(name = "id_producto")
     @JsonIgnore
     private Producto producto;
 }

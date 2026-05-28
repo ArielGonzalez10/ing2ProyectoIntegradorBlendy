@@ -4,13 +4,13 @@
  */
 package com.ing2.blendy.capaControlador;
 
-import com.ing2.blendy.capaModelo.Envio;
-import com.ing2.blendy.capaModelo.VentaCabecera;
-import com.ing2.blendy.capaNegocio.IVentaCabeceraNegocio;
+import com.ing2.blendy.capaModelo.Venta;
+import com.ing2.blendy.capaNegocio.IVentaNegocio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,14 +21,14 @@ import java.util.List;
 @RequestMapping("/ventas")
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-public class VentaCabeceraController {
+public class VentaController {
     @Autowired
-    private IVentaCabeceraNegocio ventaNegocio;
+    private IVentaNegocio ventaNegocio;
 
     @PostMapping("/crear")
-    public ResponseEntity<?> crearVenta(@RequestBody VentaCabecera venta) {
+    public ResponseEntity<?> crearVenta(@RequestBody Venta venta) {
         try {
-            VentaCabecera nuevaVenta = ventaNegocio.crearVenta(venta);
+            Venta nuevaVenta = ventaNegocio.crearVenta(venta);
             return ResponseEntity.ok(nuevaVenta);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -37,8 +37,8 @@ public class VentaCabeceraController {
 
     @GetMapping("/listar")
     @ResponseBody
-    public List<VentaCabecera> listarVentaCabeceras(@RequestParam String p_correoElectronico){
-        return ventaNegocio.listarVenta(p_correoElectronico);
+    public List<Venta> listarVentas(@RequestParam String p_correoElectronico,@RequestParam Date p_fecha){
+        return ventaNegocio.listarVenta(p_correoElectronico,p_fecha);
     }
 
 }
