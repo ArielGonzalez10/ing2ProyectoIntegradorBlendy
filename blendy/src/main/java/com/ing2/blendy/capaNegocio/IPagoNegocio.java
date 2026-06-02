@@ -18,4 +18,5 @@ public interface IPagoNegocio {
     void eliminarPago(int p_id_pago);
     void modificarPago(int p_id_pago, Pago p_pago_modificado);
     List<Pago> listarPagos();
+    List<String> listarMetodosPagos();
 }

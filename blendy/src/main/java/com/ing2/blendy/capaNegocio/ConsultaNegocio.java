@@ -23,7 +23,7 @@ public class ConsultaNegocio implements IConsultaNegocio {
     
     @Override
     public void crearConsulta(Consulta p_consulta) {
-        p_consulta.setEstado(0);
+        p_consulta.setEstado("Pendiente");
         consultaDatos.save(p_consulta);
     }
 
@@ -48,7 +48,7 @@ public class ConsultaNegocio implements IConsultaNegocio {
 
         if(consultaBuscada != null) {
             consultaBuscada.setRespuesta(p_respuesta);
-            consultaBuscada.setEstado(1);
+            consultaBuscada.setEstado("Respondida");
             consultaDatos.save(consultaBuscada);
         } else {
             throw new RuntimeException("Error: La consulta que intenta responder no existe.");

@@ -6,7 +6,10 @@ package com.ing2.blendy.capaDatos;
 
 import com.ing2.blendy.capaModelo.Pago;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  *
@@ -14,5 +17,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface IPagoDatos extends JpaRepository<Pago,Integer>{
-    
+    @Query(value = "SELECT descripcion FROM Metodo_pago",nativeQuery = true)
+    List<String> listarMetodosPagos();
 }

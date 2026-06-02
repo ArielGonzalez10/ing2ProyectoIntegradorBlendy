@@ -5,5 +5,5 @@ export function crearPagos(data){
 }
 
 export function listarMetodosPagos(){
-    return api.get("/metodoPagos/listar");
+    return api.get("pagos/metodoPagos/listar");
 }

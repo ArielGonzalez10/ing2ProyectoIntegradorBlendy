@@ -9,7 +9,7 @@ const Register = () => {
         correoElectronico: '',
         contrasenia: '',
         telefono: '',
-        estado: 1
+        estado: "Activo"
     });
     
     const [confirmarContrasenia, setConfirmarContrasenia] = useState('');
@@ -86,11 +86,8 @@ const Register = () => {
         const data = {
             idUsuario: 0, 
             ...usuario,            
-            rol: { 
-                idRol: 2,          
-                nombreRol: "Cliente", 
-                estado: 1          
-            }
+            idRol: 2,          
+            rol: "Cliente"
         };
 
         try {

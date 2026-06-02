@@ -44,5 +44,23 @@ public interface IProductoDatos extends JpaRepository<Producto,Integer>{
     @Modifying
     @Transactional
     @Query("UPDATE Producto p SET p.estado = :p_nuevoEstado WHERE p.idProducto = :p_id_producto")
-    void cambiarEstadoProducto(@Param("p_id_producto") int p_id_producto, @Param("p_nuevoEstado") int p_nuevoEstado);
+    void cambiarEstadoProducto(@Param("p_id_producto") int p_id_producto, @Param("p_nuevoEstado") String p_nuevoEstado);
+
+    @Query(value = "SELECT descripcion FROM Categoria WHERE estado ='Activo'",nativeQuery = true)
+    List<String> listarCategorias();
+
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO Imagen (descripcion, estado, fk_id_producto) VALUES (:descripcion, :estado, :fk_id_producto)", nativeQuery = true)
+    void crearImagen(
+            @Param("descripcion") String descripcion,
+            @Param("estado") String estado,
+            @Param("fk_id_producto") int fkIdProducto
+    );
+
+    @Query(value = "SELECT descripcion FROM Categoria WHERE id_categoria = :idCategoria", nativeQuery = true)
+    String buscarCategoria(@Param("idCategoria") int idCategoria);
+
+    @Query(value = "SELECT descripcion FROM Imagen WHERE fk_id_producto = :idProducto AND estado = 'Activo'", nativeQuery = true)
+    List<String> buscarImagenesProducto(@Param("idProducto") int idProducto);
 }

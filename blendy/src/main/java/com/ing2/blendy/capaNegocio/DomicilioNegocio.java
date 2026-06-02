@@ -20,19 +20,44 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DomicilioNegocio implements IDomicilioNegocio {
-    
     @Autowired
     private IDomicilioDatos domicilioDatos;
     @Autowired
     private IUsuarioDatos usuarioDatos;
 
     @Override
-    public void crearDomicilio(Domicilio p_id_domicilio) {
-        Usuario usuarioBusc = usuarioDatos.buscarPorCorreo(p_id_domicilio.getUsuario().getCorreoElectronico());
-        if (usuarioBusc != null){
-            p_id_domicilio.setUsuario(usuarioBusc);
+    public List<String> listarProvincias() {
+        return domicilioDatos.listarProvincias();
+    }
+
+    @Override
+    public List<String> listarLocalidades(String p_provincia) {
+        return domicilioDatos.listarLocalidades(p_provincia);
+    }
+
+    @Override
+    public List<Integer> listarCP(String p_localidad) {
+        return domicilioDatos.listarCP(p_localidad);
+    }
+
+    @Override
+    public void crearDomicilio(Domicilio p_domicilio) {
+        Usuario usuarioBusc = usuarioDatos.buscarPorCorreo(p_domicilio.getUsuario().getCorreoElectronico());
+        if (usuarioBusc == null) {
+            throw new IllegalArgumentException("El usuario con el correo provisto no existe.");
         }
-        domicilioDatos.save(p_id_domicilio);
+
+        // 2. Seteamos el estado por defecto si viene vacío
+        String estadoInicial = (p_domicilio.getEstado() != null) ? p_domicilio.getEstado() : "Activo";
+
+        // 3. Delegamos el registro completo al Procedimiento Almacenado
+        domicilioDatos.crearDomicilioSP(
+                p_domicilio.getCalle(),
+                p_domicilio.getAltura(),
+                estadoInicial,
+                p_domicilio.getLocalidad(),
+                usuarioBusc.getIdUsuario()
+        );
     }
 
     @Override

@@ -27,9 +27,16 @@ public class Pago {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idPago;
-    private double montoPago;
+
+    @Column(name="monto_pago")
+    private float montoPago;
+
+    @Column(name="fecha_pago")
     private LocalDate fechaPago;
-    @ManyToOne
-    @JoinColumn(name = "FK_id_metodo_pago")
-    private MetodoPago metodoPago;
+
+    @Transient
+    private String metodoPago;
+
+    @Column(name="fk_id_metodo_pago")
+    private int idMetodoPago;
 }

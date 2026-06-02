@@ -16,6 +16,5 @@ import java.util.List;
 public interface IVentaNegocio {
     Venta crearVenta(Venta p_venta);
     Venta buscarVenta(int p_id_venta);
-    void eliminarVenta(int p_id_venta);
     List<Venta> listarVenta(String p_correoElectronico, Date p_fecha);
 }

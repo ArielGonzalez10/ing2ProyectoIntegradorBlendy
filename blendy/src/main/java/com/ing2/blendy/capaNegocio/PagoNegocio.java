@@ -25,6 +25,11 @@ public class PagoNegocio implements IPagoNegocio {
     private IPagoDatos pagoDatos;
 
     @Override
+    public List<String> listarMetodosPagos() {
+        return pagoDatos.listarMetodosPagos();
+    }
+
+    @Override
     public void crearPago(Pago p_pago) {
         if (p_pago.getFechaPago() == null) {
             p_pago.setFechaPago(LocalDate.now());

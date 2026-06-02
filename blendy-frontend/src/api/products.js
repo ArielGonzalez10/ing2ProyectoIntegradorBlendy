@@ -4,12 +4,12 @@ export function listarProductos(){
     return api.get("/productos/listar");
 }
 
-export function eliminarProducto(id, nuevoEstado) {
-    return api.delete(`/productos/eliminar/${id}/${nuevoEstado}`);
+export function eliminarProducto(id) {
+    return api.delete(`/productos/eliminar/${id}`);
 }
 
-export function altaProducto(id, nuevoEstado) {
-    return api.put(`/productos/alta/${id}/${nuevoEstado}`);
+export function altaProducto(id) {
+    return api.put(`/productos/alta/${id}`);
 }
 
 export function crearProducto(data){
@@ -17,7 +17,7 @@ export function crearProducto(data){
 }
 
 export function cargarCategorias(){
-    return api.get("/categorias/listar");
+    return api.get("/productos/categorias");
 }
 
 // En api/products.js

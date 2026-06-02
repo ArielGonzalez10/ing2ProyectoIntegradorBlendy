@@ -12,5 +12,5 @@ import lombok.Setter;
 public class TokenResponse {
     private String token;
     private String correoElectronico;
-    private int rol;
+    private String rol;
 }

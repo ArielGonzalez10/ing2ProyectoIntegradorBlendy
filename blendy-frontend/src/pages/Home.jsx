@@ -16,9 +16,9 @@ const Home = () => {
 
     // LÓGICA DE COMPRA POR ROLES
     const handleComprar = (producto) => {
-        if (rol === "2" || rol === "3") {
+        if (rol === "Cliente" || rol === "Vendedor") {
             addToCart(producto);
-        } else if (rol === "1") {
+        } else if (rol === "Administrador") {
             navigate('/panel/productos');
         } else {
             navigate('/login');
@@ -77,11 +77,11 @@ const Home = () => {
                     <h1>Tu botillería,<br />unida y<br />simplificada</h1>
                     <div className="hero-botones">
                         
-                        {rol === "3" ? (
+                        {rol === "Vendedor" ? (
                             <Link to="/panel/nueva-venta" className="btn-blendy btn-secundario btn-pill">
                                 Nueva Venta
                             </Link>
-                        ) : rol === "1" ? (
+                        ) : rol === "Administrador" ? (
                             <Link to="/panel/auditoria-cajas" className="btn-blendy btn-secundario btn-pill">
                                 Auditoría de Cajas
                             </Link>
@@ -92,15 +92,15 @@ const Home = () => {
                         )}
 
                         
-                        {rol === "1" ? (
+                        {rol === "Administrador" ? (
                             <Link to="/panel/productos" className="btn-blendy btn-secundario btn-pill">
                                 Panel de Control
                             </Link>
-                        ) : rol === "3" ? (
+                        ) : rol === "Vendedor" ? (
                             <Link to="/panel/cierre-caja" className="btn-blendy btn-secundario btn-pill">
                                 Cierre de Caja
                             </Link>
-                        ) : rol === "2" ? (
+                        ) : rol === "Cliente" ? (
                             <Link to="/pedidos" className="btn-blendy btn-secundario btn-pill">
                                 Ver mis compras
                             </Link>

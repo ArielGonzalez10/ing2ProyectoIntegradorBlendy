@@ -28,17 +28,31 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idUsuario;
+
+    @Column(name="nombre")
     private String nombre;
+
+    @Column(name="apellido")
     private String apellido;
+
+    @Column(name="correo_electronico")
     private String correoElectronico;
+
+    @Column(name="contrasenia")
     private String contrasenia;
-    private int estado;
+
+    @Column(name="estado")
+    private String estado;
+
     private String telefono;
     //Mapped by indica que la relación ya fue mapeado por domicilios y cascade crea el domicilio
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("usuario")
     private List<Domicilio> domicilios;
-    @ManyToOne
-    @JoinColumn(name = "FK_id_rol")
-    private Rol rol;
+
+    @Transient
+    private String rol;
+
+    @Column(name="fk_id_rol")
+    private int idRol;
 }

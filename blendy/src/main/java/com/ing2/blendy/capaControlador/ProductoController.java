@@ -4,7 +4,6 @@
  */
 package com.ing2.blendy.capaControlador;
 
-import com.ing2.blendy.capaModelo.Categoria;
 import com.ing2.blendy.capaModelo.Producto;
 import com.ing2.blendy.capaNegocio.IProductoNegocio;
 import java.util.List;
@@ -35,12 +34,12 @@ public class ProductoController {
 
     @DeleteMapping("/eliminar/{p_id_producto}")
     public void eliminarProducto(@PathVariable int p_id_producto){
-        productoNego.eliminarProducto(p_id_producto, 0);
+        productoNego.eliminarProducto(p_id_producto, "Inactivo");
     }
 
     @PutMapping("/alta/{p_id_producto}")
     public void altaProducto(@PathVariable int p_id_producto){
-        productoNego.altaProducto(p_id_producto, 1);
+        productoNego.altaProducto(p_id_producto, "Activo");
     }
 
     @PutMapping("/modificar/{p_id_producto}")
@@ -69,4 +68,10 @@ public class ProductoController {
     @GetMapping("/listar/precio/desc")
     @ResponseBody
     public List<Producto> ordenarPorPrecioDesc(){return productoNego.ordenarPorPrecioDesc();}
+
+    @GetMapping("/categorias")
+    @ResponseBody
+    public List<String> listarCategorias(){
+        return productoNego.listarCategorias();
+    }
 }

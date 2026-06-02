@@ -4,8 +4,6 @@
  */
 package com.ing2.blendy.capaNegocio;
 
-import com.ing2.blendy.capaModelo.Categoria;
-import com.ing2.blendy.capaModelo.Imagen;
 import com.ing2.blendy.capaModelo.Producto;
 import com.ing2.blendy.capaDatos.IProductoDatos;
 import java.util.List;
@@ -19,9 +17,13 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ProductoNegocio implements IProductoNegocio {
-
     @Autowired
     private IProductoDatos productoDatos;
+
+    @Override
+    public List<String> listarCategorias() {
+        return productoDatos.listarCategorias();
+    }
 
     @Override
     public List<Producto> ordenarAlfabeticamenteAsc() {
@@ -45,12 +47,17 @@ public class ProductoNegocio implements IProductoNegocio {
 
     @Override
     public void crearProducto(Producto p_producto) {
-        if(p_producto.getImagenes() != null){
-            for(Imagen img: p_producto.getImagenes()){
-                img.setProducto(p_producto);
+        // 1. Guardamos el producto en la BD mediante JPA de forma normal
+        Producto productoGuardado = productoDatos.save(p_producto);
+
+        // 2. Si el frontend mandó strings de imágenes en la lista @Transient
+        if (p_producto.getImagenes() != null && !p_producto.getImagenes().isEmpty()) {
+
+            for (String imagen : p_producto.getImagenes()) {
+                // 3. Invocamos el método de la capa de datos para cada imagen
+                productoDatos.crearImagen(imagen, "Activo", productoGuardado.getIdProducto());
             }
         }
-        productoDatos.save(p_producto);
     }
 
     @Override
@@ -64,12 +71,12 @@ public class ProductoNegocio implements IProductoNegocio {
     }
 
     @Override
-    public void eliminarProducto(int p_id_producto, int p_nuevoEstado) {
+    public void eliminarProducto(int p_id_producto, String p_nuevoEstado) {
         productoDatos.cambiarEstadoProducto(p_id_producto,p_nuevoEstado);
     }
 
     @Override
-    public void altaProducto(int p_id_producto, int p_nuevoEstado) {
+    public void altaProducto(int p_id_producto, String p_nuevoEstado) {
         productoDatos.cambiarEstadoProducto(p_id_producto,p_nuevoEstado);
     }
 
@@ -92,8 +99,11 @@ public class ProductoNegocio implements IProductoNegocio {
 
     @Override
     public List<Producto> listarProductos() {
-        return productoDatos.findAll();
+        List<Producto> listaProductos =productoDatos.findAll();
+        for(Producto p: listaProductos){
+            p.setCategoria(productoDatos.buscarCategoria(p.getIdCategoria()));
+            p.setImagenes(productoDatos.buscarImagenesProducto(p.getIdProducto()));
+        }
+        return listaProductos;
     }
-
-    
 }

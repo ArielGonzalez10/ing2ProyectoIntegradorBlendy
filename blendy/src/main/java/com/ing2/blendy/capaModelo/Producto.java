@@ -26,15 +26,27 @@ public class Producto {
     //Atributos
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name="id_producto")
     private int idProducto;
+
     private String descripcion;
+
     private int stock;
+
+    private String estado;
+
+    @Column(name="stock_min")
     private int stockMin;
-    private double precioUnitario;
-    private int estado;
-    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Imagen> imagenes = new ArrayList<>();
-    @ManyToOne
-    private Categoria categoria;
+
+    @Column(name="precio_unitario")
+    private float precioUnitario;
+
+    @Transient
+    private List<String> imagenes = new ArrayList<>();
+    @Transient
+    private String categoria;
+
+    @Column(name="fk_id_categoria")
+    private int idCategoria;
 
 }

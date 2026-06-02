@@ -30,12 +30,15 @@ public class Consulta {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idConsulta;
 
-    private String descripcion;
+    private String mensaje;
+
     private String asunto;
+
     private String respuesta;
-    private int estado;
+
+    private String estado;
 
     @ManyToOne
-    @JoinColumn(name = "FK_id_usuario")
+    @JoinColumn(name = "fK_id_usuario")
     private Usuario usuario;
 }

@@ -4,7 +4,6 @@
  */
 package com.ing2.blendy.capaNegocio;
 
-import com.ing2.blendy.capaModelo.Categoria;
 import com.ing2.blendy.capaModelo.Producto;
 import java.util.List;
 
@@ -17,9 +16,10 @@ public interface IProductoNegocio {
     void crearProducto(Producto p_producto);
     Producto buscarProducto(String p_descripcion);
     Producto buscarProductoPorId(int p_id_producto);
-    void eliminarProducto(int p_id_producto,int p_nuevoEstado);
-    void altaProducto(int p_id_producto,int p_nuevoEstado);
+    void eliminarProducto(int p_id_producto,String p_nuevoEstado);
+    void altaProducto(int p_id_producto,String p_nuevoEstado);
     void modificarProducto(int p_id_producto, Producto p_producto_modificado);
+    List<String> listarCategorias();
     List<Producto> listarProductos();
     List<Producto> ordenarAlfabeticamenteAsc();
     List<Producto> ordenarAlfabeticamenteDesc();

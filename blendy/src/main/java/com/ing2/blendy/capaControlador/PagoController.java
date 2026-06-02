@@ -49,4 +49,9 @@ public class PagoController {
     public Pago buscarPago(@PathVariable int p_id_pago){
         return pagoNego.buscarPago(p_id_pago);
     }
+
+    @GetMapping("/metodoPagos/listar")
+    public List<String> listarMetodosPagos(){
+        return pagoNego.listarMetodosPagos();
+    }
 }

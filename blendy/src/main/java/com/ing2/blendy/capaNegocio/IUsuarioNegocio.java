@@ -4,7 +4,6 @@
  */
 package com.ing2.blendy.capaNegocio;
 
-import com.ing2.blendy.capaModelo.CierreTurno;
 import com.ing2.blendy.capaModelo.Usuario;
 import com.ing2.blendy.dto.TokenResponse;
 import com.ing2.blendy.dto.UsuarioDTO;

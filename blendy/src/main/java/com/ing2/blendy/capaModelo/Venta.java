@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,24 +31,25 @@ public class Venta {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idVenta;
-    private LocalDateTime fecha;
-    private double totalVenta;
-    private int estado;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "FK_id_usuario")
+    private LocalDateTime fecha;
+
+    @Column(name="total_venta")
+    private double totalVenta;
+
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "fK_id_usuario", insertable = true, updatable = false)
     private Usuario usuario;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_id_envio")
+    @JoinColumn(name = "fK_id_envio")
     private Envio envio;
 
-    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<VentaDetalle> listaVentaDetalle;
+    @Transient
+    private List<Producto> productos = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "FK_id_pago")
+    @JoinColumn(name = "fK_id_pago")
     private Pago pago;
 
 }

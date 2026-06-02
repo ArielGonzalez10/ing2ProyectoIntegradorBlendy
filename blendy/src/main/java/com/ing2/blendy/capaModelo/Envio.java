@@ -27,9 +27,13 @@ public class Envio {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idEnvio;
+
     private LocalDate fechaDespacho;
+
     private LocalDate fechaRecepcion;
+
     private String estado;
+
     @OneToOne(mappedBy = "envio")
     private Venta venta;
 }

@@ -31,11 +31,11 @@ const Login = () => {
         const { token, rol, correoElectronico } = response.data; 
         
         localStorage.setItem('token', token);
-        localStorage.setItem('userRole', String(rol)); // Guardamos como string para evitar líos
+        localStorage.setItem('userRole', rol);
         localStorage.setItem('userEmail', correoElectronico);
         
         // Redirección por rol (1: Admin, 2: Cliente)
-        if (String(rol) === "1") {
+        if (rol === "Administrador") {
             navigate('/panel/productos');
         } else {
             navigate('/');

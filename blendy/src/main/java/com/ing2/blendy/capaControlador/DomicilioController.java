@@ -49,4 +49,19 @@ public class DomicilioController {
     public void eliminarDomicilio(@PathVariable int p_id_domicilio){
         domicilioNego.eliminarDomicilio(p_id_domicilio);
     }
+
+    @GetMapping("/provincias/listar")
+    public List<String> listarProvincias(){
+        return domicilioNego.listarProvincias();
+    }
+
+    @GetMapping("/localidades/listar/{p_provincia}")
+    public List<String> listarLocalidades(@PathVariable String p_provincia){
+        return domicilioNego.listarLocalidades(p_provincia);
+    }
+
+    @GetMapping("/cp/listar/{p_localidad}")
+    public List<Integer> listarCP(@PathVariable String p_localidad){
+        return domicilioNego.listarCP(p_localidad);
+    }
 }

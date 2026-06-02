@@ -27,12 +27,12 @@ const Navbar = () => {
             <ul className="navbar-links mb-0 p-0">
                 <li><Link to="/">Inicio</Link></li>
                 {/* Ocultamos Tienda para el vendedor, mostramos Nueva Venta */}
-                {(!token || rol === "2") && (
+                {(!token || rol === "Cliente") && (
                     <li><Link to="/tienda">Tienda</Link></li>
                 )}
 
                 {/* Vendedor */}
-                {rol === "3" && (
+                {rol === "Vendedor" && (
                     <li>
                         <Link to="/panel/nueva-venta" style={{ color: 'var(--color-celeste)', fontWeight: 'bold' }}>
                             Nueva Venta
@@ -41,9 +41,9 @@ const Navbar = () => {
                 )}
                 
                 {/* Enlace destacado para roles de gestión */}
-                {(rol === "1" || rol === "3") && (
+                {(rol === "Administrador" || rol === "Vendedor") && (
                     <li>
-                        {rol === "1" ? (
+                        {rol === "Administrador" ? (
                             <Link to="/panel/auditoria-cajas" className="nav-link-destacado">
                                 Auditoría de Cajas
                             </Link>
@@ -73,18 +73,18 @@ const Navbar = () => {
                                 <Link to="/perfil" onClick={() => setMenuAbierto(false)}>Mis Datos</Link>
 
                                 {/* LÓGICA POR ROL EN EL DROPDOWN */}
-                                {rol === "1" && (
+                                {rol === "Administrador" && (
                                     <>
                                         <Link to="/panel/productos" onClick={() => setMenuAbierto(false)}>Gestión de Productos</Link>
                                         <Link to="/panel/auditoria-cajas" onClick={() => setMenuAbierto(false)}>Auditoría de Cajas</Link>
                                     </>
                                 )}
 
-                                {rol === "2" && (
+                                {rol === "Cliente" && (
                                     <Link to="/pedidos" onClick={() => setMenuAbierto(false)}>Mis Pedidos</Link>
                                 )}
 
-                                {rol === "3" && (
+                                {rol === "Vendedor" && (
                                     <>
                                         <Link to="/pedidos" onClick={() => setMenuAbierto(false)}>Historial de Pedidos</Link>
                                         <Link to="/panel/cierre-caja" onClick={() => setMenuAbierto(false)}>Cierre de Caja</Link>

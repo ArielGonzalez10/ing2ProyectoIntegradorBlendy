@@ -25,12 +25,26 @@ public class Domicilio {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idDomicilio;
+
+    @Column(name="calle")
     private String calle;
+
+    @Column(name="altura")
     private int altura;
+
+    @Column(name="estado")
+    private String estado;
+
+    @Transient
+    private String provincia;
+
+    @Transient
+    private String localidad;
+
     @ManyToOne
-    @JoinColumn(name = "Fk_id_localidad")
-    private Localidad localidad;
-    @ManyToOne
-    @JoinColumn(name = "Fk_id_usuario")
+    @JoinColumn(name = "fk_id_usuario")
     private Usuario usuario;
+
+    @Column(name="fk_id_localidad")
+    private int idLocalidad;
 }

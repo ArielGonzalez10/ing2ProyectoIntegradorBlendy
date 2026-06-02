@@ -4,7 +4,6 @@
  */
 package com.ing2.blendy.capaNegocio;
 
-import com.ing2.blendy.capaModelo.CierreTurno;
 import com.ing2.blendy.capaModelo.Domicilio;
 import com.ing2.blendy.capaModelo.Usuario;
 import com.ing2.blendy.capaDatos.IUsuarioDatos;
@@ -12,7 +11,6 @@ import java.util.List;
 
 import com.ing2.blendy.dto.TokenResponse;
 import com.ing2.blendy.dto.UsuarioDTO;
-import org.hibernate.annotations.Array;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -70,12 +68,19 @@ public class UsuarioNegocio implements IUsuarioNegocio {
             throw new RuntimeException("Email o contraseña incorrectos");
         }
 
-        if(usuarioBusc.getEstado() == 0){
+        if(usuarioBusc.getEstado().matches("Inactivo")){
             throw new RuntimeException("Cuenta dada de baja!. Contactese con el administrador");
         }
 
         String token = jwtService.generarToken(usuarioBusc);
-        return new TokenResponse(token, usuarioBusc.getCorreoElectronico(), usuarioBusc.getRol().getIdRol());
+        if(usuarioBusc.getIdRol() == 1){
+            usuarioBusc.setRol("Administrador");
+        }else if(usuarioBusc.getIdRol() == 2){
+            usuarioBusc.setRol("Cliente");
+        }else{
+            usuarioBusc.setRol("Vendedor");
+        }
+        return new TokenResponse(token, usuarioBusc.getCorreoElectronico(), usuarioBusc.getRol());
     }
 
 
@@ -100,7 +105,7 @@ public class UsuarioNegocio implements IUsuarioNegocio {
                 p_usuario.getContrasenia(),
                 p_usuario.getTelefono(),
                 p_usuario.getEstado(),
-                p_usuario.getRol().getIdRol()
+                p_usuario.getIdRol()
         );
     }
 
@@ -131,6 +136,4 @@ public class UsuarioNegocio implements IUsuarioNegocio {
     public List<Usuario> listarUsuarios() {
         return usuarioDatos.listarUsuarios();
     }
-
-    
 }

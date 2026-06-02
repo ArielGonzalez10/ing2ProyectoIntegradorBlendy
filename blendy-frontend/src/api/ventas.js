@@ -1,15 +1,18 @@
 import api from "./axios.js";
 
-export function crearVentaDetalle(data){
-    return api.post("/detalles/crear",data);
+/**
+ * Envía la cabecera de la venta, pago, envío y la lista transitoria de productos
+ * para que el backend procese todo en una sola transacción unificada.
+ */
+export function crearVenta(data) {
+    return api.post("/ventas/crear", data);
 }
 
-export function crearVentaCabecera(data){
-    return api.post("/ventas/crear",data);
-}
-
-export function listarVentaCabecera(p_correoElectronico){
+/**
+ * Recupera el historial de compras filtrado por el correo del usuario actual.
+ */
+export function listarVentaCabecera(p_correoElectronico) {
     return api.get("/ventas/listar", {
-        params: { p_correoElectronico } // Clave coincide con @RequestParam en Java
+        params: { p_correoElectronico }
     });
 }

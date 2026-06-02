@@ -28,10 +28,10 @@ public interface IUsuarioDatos extends JpaRepository<Usuario,Integer>{
 
     @Modifying
     @Transactional // Importante: Los updates requieren una transacción activa
-    @Query("UPDATE Usuario u SET u.estado = 0 WHERE u.idUsuario = :p_id_usuario")
+    @Query("UPDATE Usuario u SET u.estado = 'Inactivo' WHERE u.idUsuario = :p_id_usuario")
     void eliminarUsuario(@Param("p_id_usuario" )int p_id_usuario);
 
-    @Query("SELECT u FROM Usuario u WHERE u.estado = 1")
+    @Query("SELECT u FROM Usuario u WHERE u.estado = 'Activo'")
     List<Usuario> listarUsuarios();
 
     @Modifying
@@ -43,7 +43,7 @@ public interface IUsuarioDatos extends JpaRepository<Usuario,Integer>{
             @Param("correoElectronico") String correoElectronico,
             @Param("contrasenia") String contrasenia,
             @Param("telefono") String telefono,
-            @Param("estado") int estado,
+            @Param("estado") String estado,
             @Param("rolId") int rolId
     );
 

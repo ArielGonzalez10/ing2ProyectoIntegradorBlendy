@@ -27,7 +27,7 @@ const PanelProductos = () => {
     
     const productosFiltrados = productos.filter(producto => 
         producto.descripcion.toLowerCase().includes(busqueda.toLowerCase()) ||
-        (producto.categoria?.descripcion || "").toLowerCase().includes(busqueda.toLowerCase())
+        (producto.categoria || "").toLowerCase().includes(busqueda.toLowerCase())
     );
 
     // Funciones simuladas para los botones de acción
@@ -37,8 +37,8 @@ const PanelProductos = () => {
 
     const handleToggleEstado = async (id, estadoActual) => {
         // Definimos el nuevo estado: si es 1 pasa a 0, si es 0 pasa a 1
-        const nuevoEstado = estadoActual === 1 ? 0 : 1;
-        const esAlta = nuevoEstado === 1;
+        const nuevoEstado = estadoActual === 'Activo' ? 'Inactivo' : 'Activo';
+        const esAlta = nuevoEstado === 'Activo';
     
         const mensaje = esAlta 
             ? "¿Seguro que deseas dar de ALTA este producto?" 
@@ -48,11 +48,11 @@ const PanelProductos = () => {
             try {
                 // Bifurcación en el Front según el nuevo estado
                 if (esAlta) {
-                    // Llama al @PutMapping /alta/{id}/{1}
-                    await altaProducto(id, nuevoEstado);
+                    // Llama al @PutMapping /alta/{id}
+                    await altaProducto(id);
                 } else {
-                    // Llama al @DeleteMapping /eliminar/{id}/{0}
-                    await eliminarProducto(id, nuevoEstado);
+                    // Llama al @DeleteMapping /eliminar/{id}
+                    await eliminarProducto(id);
                 }
             
                 // Recargamos la lista desde el servidor para actualizar la tabla
@@ -116,14 +116,14 @@ const PanelProductos = () => {
                                     <tr key={prod.idProducto}>
                                         <td>#{prod.idProducto}</td>
                                         <td className="td-nombre">{prod.descripcion}</td>
-                                        <td>{prod.categoria?.descripcion || "Sin categoría"}</td>
+                                        <td>{prod.categoria || "Sin categoría"}</td>
                                         <td className="td-precio">${prod.precioUnitario ? prod.precioUnitario.toLocaleString('es-AR') : '0'}</td>
                                         <td style={{ color: prod.stock === 0 ? '#dc3545' : 'inherit' }}>
                                             {prod.stock} un.
                                         </td>
                                         <td>
-                                            <span className={`badge-estado ${prod.estado === 1 ? 'badge-activo' : 'badge-inactivo'}`}>
-                                                {prod.estado === 1 ? 'Activo' : 'Inactivo'}
+                                            <span className={`badge-estado ${prod.estado ==='Activo' ? 'badge-activo' : 'badge-inactivo'}`}>
+                                                {prod.estado === 'Activo' ? 'Activo' : 'Inactivo'}
                                             </span>
                                         </td>
                                         <td>
