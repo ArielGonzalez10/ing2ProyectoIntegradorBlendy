@@ -56,7 +56,7 @@ const Home = () => {
     useEffect(() => {
         const obtenerProductos = async () => {
             try {
-                const response = await api.get('/productos');
+                const response = await api.get('/productos/listar');
                 setProductos(response.data);
                 setCargando(false);
             } catch (error) {

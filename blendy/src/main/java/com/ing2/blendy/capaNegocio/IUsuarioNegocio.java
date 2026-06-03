@@ -24,6 +24,7 @@ public interface IUsuarioNegocio {
     void modificarUsuario(UsuarioDTO p_usuario);
     void auditarCierre();
     double calcularDiferenciaCaja(double p_montoIncial, double p_montoCalculado);
-    void iniciarCierreCaja();
+    void crearCierreTurno(String p_correo,float p_montoInicial);
+    int buscarCierreCaja(String p_correo);
 
 }

@@ -76,4 +76,15 @@ public class UsuarioController {
             return new ResponseEntity<>("No se pudo actualizar los datos!",HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/cierreTurno/{p_correo}")
+    public void crearCierreTurno(@PathVariable String p_correo, @RequestParam("p_montoInicial") float p_montoInicial){
+        usuarioNego.crearCierreTurno(p_correo,p_montoInicial);
+    }
+
+    @GetMapping("/cierreTurno/estado/{p_correo}")
+    public ResponseEntity<Integer> obtenerStatusCaja(@PathVariable String p_correo) {
+        int cantidadActivas = usuarioNego.buscarCierreCaja(p_correo);
+        return ResponseEntity.ok(cantidadActivas);
+    }
 }

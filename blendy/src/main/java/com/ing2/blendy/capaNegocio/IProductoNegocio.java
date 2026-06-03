@@ -19,6 +19,7 @@ public interface IProductoNegocio {
     void eliminarProducto(int p_id_producto,String p_nuevoEstado);
     void altaProducto(int p_id_producto,String p_nuevoEstado);
     void modificarProducto(int p_id_producto, Producto p_producto_modificado);
+    Producto modificarStock(Producto p_producto);
     List<String> listarCategorias();
     List<Producto> listarProductos();
     List<Producto> ordenarAlfabeticamenteAsc();

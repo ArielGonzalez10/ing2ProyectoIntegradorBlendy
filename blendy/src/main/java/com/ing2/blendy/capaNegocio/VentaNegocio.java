@@ -1,10 +1,10 @@
 package com.ing2.blendy.capaNegocio;
 
-import com.ing2.blendy.capaDatos.IProductoDatos;
 import com.ing2.blendy.capaModelo.Producto;
 import com.ing2.blendy.capaModelo.Venta;
 import com.ing2.blendy.capaDatos.IVentaDatos;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +20,7 @@ public class VentaNegocio implements IVentaNegocio {
     private IVentaDatos ventaDatos;
 
     @Autowired
-    private IProductoDatos productoDatos;
+    private IProductoNegocio productoNego;
 
     @Override
     @Transactional // Si falla la inserción de un detalle de producto, el rollback limpia las tablas automáticamente
@@ -31,13 +31,23 @@ public class VentaNegocio implements IVentaNegocio {
             p_venta.getPago().setFechaPago(p_venta.getFecha().toLocalDate());
         }
 
-        // 2. Invocar al Stored Procedure pasándole el idMetodoPago correcto
+        LocalDate fechaDespacho = null;
+        LocalDate fechaRecepcion = null;
+        String estadoEnvio = null;
+
+        if (p_venta.getEnvio() != null) {
+            fechaDespacho = p_venta.getEnvio().getFechaDespacho();
+            fechaRecepcion = p_venta.getEnvio().getFechaRecepcion();
+            estadoEnvio = p_venta.getEnvio().getEstado();
+        }
+
+        // 2. Invocar al Stored Procedure pasándole las variables (que pueden ser null)
         int idVenta = ventaDatos.crearVenta(
                 p_venta.getFecha(),
                 p_venta.getUsuario().getIdUsuario(),
-                p_venta.getEnvio().getFechaDespacho(),
-                p_venta.getEnvio().getFechaRecepcion(),
-                p_venta.getEnvio().getEstado(),
+                fechaDespacho,
+                fechaRecepcion,
+                estadoEnvio,
                 p_venta.getPago().getIdMetodoPago(),
                 p_venta.getPago().getFechaPago()
         );
@@ -59,7 +69,8 @@ public class VentaNegocio implements IVentaNegocio {
         return p_venta;
     }
 
-    private void registrarFechaVenta(Venta p_venta) {
+    @Override
+    public void registrarFechaVenta(Venta p_venta) {
         if (p_venta.getFecha() == null) {
             p_venta.setFecha(LocalDateTime.now());
         }
@@ -72,7 +83,7 @@ public class VentaNegocio implements IVentaNegocio {
         }
 
         for (Producto producto : productos) {
-            Producto productoReal = modificarStock(producto);
+            Producto productoReal = productoNego.modificarStock(producto);
 
             int cantidadPedida = producto.getStock();
             double precioHistorico = productoReal.getPrecioUnitario();
@@ -91,21 +102,8 @@ public class VentaNegocio implements IVentaNegocio {
         return acumuladorSubtotales;
     }
 
-    private Producto modificarStock(Producto p_producto) {
-        Producto productoReal = productoDatos.findById(p_producto.getIdProducto())
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado ID: " + p_producto.getIdProducto()));
-
-        int cantidadPedida = p_producto.getStock();
-        if (productoReal.getStock() < cantidadPedida) {
-            throw new RuntimeException("Stock insuficiente para: " + productoReal.getDescripcion());
-        }
-
-        productoReal.setStock(productoReal.getStock() - cantidadPedida);
-        return productoDatos.save(productoReal);
-    }
-
     private void registrarTotalVenta(Venta venta, double totalSubtotales) {
-        double costoEnvio = 2500;
+        double costoEnvio = (venta.getEnvio() != null) ? 2500 : 0;
         double totalFinal = totalSubtotales + costoEnvio;
 
         venta.setTotalVenta(totalFinal);

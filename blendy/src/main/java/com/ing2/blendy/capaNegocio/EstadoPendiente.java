@@ -4,7 +4,7 @@ import com.ing2.blendy.capaModelo.Envio;
 
 import java.time.LocalDate;
 
-public class EstadoPendiente implements IEnvioState{
+public class EstadoPendiente implements IEnvioEstado {
     @Override
     public void enviar(Envio p_envio) {
         p_envio.setFechaDespacho(LocalDate.now());
@@ -15,7 +15,6 @@ public class EstadoPendiente implements IEnvioState{
     @Override
     public void entregar(Envio p_envio) {
         throw new RuntimeException("No se puede entregar, ya que todavia no se despachó");
-
     }
 
     @Override

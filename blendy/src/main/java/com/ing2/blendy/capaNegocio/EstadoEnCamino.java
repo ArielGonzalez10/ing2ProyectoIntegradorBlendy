@@ -4,7 +4,7 @@ import com.ing2.blendy.capaModelo.Envio;
 
 import java.time.LocalDate;
 
-public class EstadoEnCamino implements IEnvioState{
+public class EstadoEnCamino implements IEnvioEstado {
     @Override
     public void enviar(Envio p_envio) {
         throw new RuntimeException("No se puede enviar, El paquete ya se encuentra en camino");

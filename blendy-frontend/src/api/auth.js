@@ -18,3 +18,11 @@ export function modificarUsuario(data){
     return api.put("/usuarios/modificar", data);
 }
 
+// En tu archivo products.js:
+export function verificarTurnoActivo(correo) {
+    return api.get(`/usuarios/cierreTurno/estado/${correo}`);
+}
+
+export function abrirTurnoCaja(correo, p_montoInicial) {
+    return api.post(`/usuarios/cierreTurno/${correo}?p_montoInicial=${p_montoInicial}`);
+}

@@ -98,6 +98,20 @@ public class ProductoNegocio implements IProductoNegocio {
     }
 
     @Override
+    public Producto modificarStock(Producto p_producto) {
+        Producto productoReal = productoDatos.findById(p_producto.getIdProducto())
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado ID: " + p_producto.getIdProducto()));
+
+        int cantidadPedida = p_producto.getStock();
+        if (productoReal.getStock() < cantidadPedida) {
+            throw new RuntimeException("Stock insuficiente para: " + productoReal.getDescripcion());
+        }
+
+        productoReal.setStock(productoReal.getStock() - cantidadPedida);
+        return productoDatos.save(productoReal);
+    }
+
+    @Override
     public List<Producto> listarProductos() {
         List<Producto> listaProductos =productoDatos.findAll();
         for(Producto p: listaProductos){

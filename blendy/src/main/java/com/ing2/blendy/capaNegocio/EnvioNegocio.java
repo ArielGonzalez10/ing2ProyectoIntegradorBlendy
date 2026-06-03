@@ -10,10 +10,8 @@ import com.ing2.blendy.capaDatos.IEnvioDatos;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Date;
+
 import java.time.LocalDate;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -51,7 +49,7 @@ public class EnvioNegocio implements IEnvioNegocio {
     public void modificarEnvio(int p_id_envio, LocalDate p_fecha_despacho, LocalDate p_fecha_recepcion) {
         Envio envio_actual = envioDatos.findById(p_id_envio)
                 .orElseThrow(() -> new RuntimeException("Envío no encontrado"));
-        IEnvioState estadoActual = obtenerEstado(envio_actual.getEstado());
+        IEnvioEstado estadoActual = obtenerEstado(envio_actual.getEstado());
 
         // Si llegó fecha de despacho y antes no tenía, se activa el comportamiento del estado actual
         if (p_fecha_despacho != null && envio_actual.getFechaDespacho() == null) {
@@ -65,7 +63,7 @@ public class EnvioNegocio implements IEnvioNegocio {
         envioDatos.save(envio_actual);
     }
 
-    private IEnvioState obtenerEstado(String p_estado){
+    private IEnvioEstado obtenerEstado(String p_estado){
         if(p_estado == null){
             return new EstadoPendiente();
         }

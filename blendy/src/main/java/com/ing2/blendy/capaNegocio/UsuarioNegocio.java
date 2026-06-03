@@ -7,6 +7,8 @@ package com.ing2.blendy.capaNegocio;
 import com.ing2.blendy.capaModelo.Domicilio;
 import com.ing2.blendy.capaModelo.Usuario;
 import com.ing2.blendy.capaDatos.IUsuarioDatos;
+
+import java.time.LocalDate;
 import java.util.List;
 
 import com.ing2.blendy.dto.TokenResponse;
@@ -56,8 +58,29 @@ public class UsuarioNegocio implements IUsuarioNegocio {
     }
 
     @Override
-    public void iniciarCierreCaja() {
+    public void crearCierreTurno(String p_correo, float p_montoInicial) {
+        Usuario usuario = usuarioDatos.buscarPorCorreo(p_correo);
+        if(usuario.getIdRol() == 3){
+            String estado = "Activo";
+            LocalDate fecha = LocalDate.now();
+            float totalVenta = 0;
+            float montoCalculado = 0;
+            float diferencia = 0;
+            float montoDeclarado = 0;
+            System.out.println(p_montoInicial);
+            usuarioDatos.crearCierreTurno(estado,fecha,totalVenta,montoCalculado,diferencia,montoDeclarado,p_montoInicial,usuario.getIdUsuario());
+        }else{
+            throw new RuntimeException("Ya existe una caja abierta");
+        }
+    }
 
+    @Override
+    public int buscarCierreCaja(String p_correo) {
+        Usuario usuario = usuarioDatos.buscarPorCorreo(p_correo);
+        if (usuario == null) {
+            return 0;
+        }
+        return usuarioDatos.buscarCierreCaja(usuario.getIdUsuario());
     }
 
     @Override

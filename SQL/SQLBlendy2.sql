@@ -3,11 +3,12 @@ USE blendy;
 /*SELECTS*/
 SELECT * FROM localidad;
 SELECT * FROM provincia;
-SELECT * FROM producto;
+
 SELECT * FROM categoria;
 SELECT * FROM rol;
 SELECT * FROM domicilio;
 SELECT * FROM usuario;
+SELECT * FROM producto;
 SELECT * FROM venta;
 SELECT * FROM venta_detalle;
 SELECT * FROM pago;
@@ -90,11 +91,11 @@ CREATE TABLE Envio
 CREATE TABLE Venta
 (
   id_venta INT NOT NULL IDENTITY,
-  fecha DATE NOT NULL,
+  fecha DATETIME2 NOT NULL,
   total_venta FLOAT NOT NULL,
   fk_id_usuario INT NOT NULL,
   fk_id_pago INT NOT NULL,
-  fk_id_envio INT NOT NULL,
+  fk_id_envio INT NULL,
   PRIMARY KEY (id_venta),
   FOREIGN KEY (fk_id_usuario) REFERENCES Usuario(id_usuario),
   FOREIGN KEY (fk_id_pago) REFERENCES Pago(id_pago),
@@ -171,7 +172,7 @@ CREATE TABLE Imagen
 CREATE TABLE Cierre_turno
 (
   id_cierre_turno INT NOT NULL IDENTITY,
-  estado INT NOT NULL,
+  estado VARCHAR(20) NOT NULL,
   fecha DATE NOT NULL,
   total_venta FLOAT NOT NULL,
   monto_calculado INT NOT NULL,
@@ -376,24 +377,32 @@ AS
 BEGIN
     SET NOCOUNT ON;
     
-    DECLARE @generated_id_envio INT;
+    -- Arranca en NULL. Si es mostrador, se queda así y se inserta directo en la Venta.
+    DECLARE @generated_id_envio INT = NULL; 
     DECLARE @generated_id_pago INT;
 
     BEGIN TRANSACTION;
     BEGIN TRY
-        -- 1. Insertamos el Envío para obtener su ID
-        INSERT INTO Envio (fecha_despacho, fecha_recepcion, estado)
-        VALUES (@fecha_despacho, @fecha_recepcion, @estado_envio);
         
-        SET @generated_id_envio = SCOPE_IDENTITY();
+        
+        IF (@estado_envio IS NOT NULL AND @estado_envio <> '')
+        BEGIN
+            INSERT INTO Envio (fecha_despacho, fecha_recepcion, estado)
+            VALUES (@fecha_despacho, @fecha_recepcion, @estado_envio);
+            
+            -- Guardamos el ID real generado
+            SET @generated_id_envio = SCOPE_IDENTITY();
+        END
+        -- Si no entra al IF (Venta Mostrador), @generated_id_envio sigue valiendo NULL.
 
-        -- 2. Insertamos el Pago con un monto inicial provisorio (0.0) para obtener su ID
+        -- 2. Insertamos el Pago con un monto inicial provisorio (0.0)
         INSERT INTO Pago (monto_pago, fecha_pago, fk_id_metodo_pago)
         VALUES (0.0, @fecha_pago, @fk_id_metodo_pago);
         
         SET @generated_id_pago = SCOPE_IDENTITY();
 
-        -- 3. Insertamos la Venta usando los IDs recién generados y respetando tus columnas NOT NULL
+        -- 3. Insertamos la Venta
+        -- Si es mostrador, fk_id_envio se guardará como NULL de forma impecable.
         INSERT INTO Venta (fecha, total_venta, fk_id_usuario, fk_id_pago, fk_id_envio)
         VALUES (@fecha, 0.0, @fk_id_usuario, @generated_id_pago, @generated_id_envio);
 
@@ -407,6 +416,7 @@ BEGIN
         THROW;
     END CATCH
 END;
+GO
 
 /*UPDATES*/
 UPDATE USUARIO 
@@ -416,3 +426,7 @@ WHERE correo_electronico = 'fatimabret@gmail.com';
 UPDATE USUARIO 
 SET fk_id_rol = 1  -- Administrador
 WHERE correo_electronico = 'arielgonzalezr9@gmail.com';
+
+UPDATE cierre_turno 
+SET estado = 'Inactivo'  -- Administrador
+WHERE estado = 'Activo';
