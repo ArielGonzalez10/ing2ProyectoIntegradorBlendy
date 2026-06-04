@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -39,9 +40,7 @@ public class VentaController {
 
     @GetMapping("/listar")
     public ResponseEntity<?> listarVentas(
-            @RequestParam("p_correoElectronico") String correo,
-            @RequestParam("p_fecha") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fecha
-    ) {
+            @RequestParam("p_correoElectronico") String correo, @RequestParam("p_fecha") LocalDate fecha) {
         // Ya te llega como LocalDateTime de diez para pasárselo a tu capa de negocio
         return ResponseEntity.ok(ventaNegocio.listarVenta(correo, fecha));
     }

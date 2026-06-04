@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { cerrarTurno } from "../api/auth"; // <-- Tu función limpia de auth.js
-import { listarVentas } from "../api/ventas"; // <-- Tu función limpia de ventas.js
+import { cerrarTurno } from "../api/auth"; 
+import { listarVentas } from "../api/ventas"; 
 import "../styles/cierre.css";
 
 const CierreCaja = () => {
@@ -21,15 +21,11 @@ const CierreCaja = () => {
           navigate("/login");
           return;
         }
-
+        
         const soloFecha = new Date().toLocaleDateString("en-CA");
 
-        
-        const fechaActual = `${soloFecha}T00:00:00`; 
-
-        
-        const response = await listarVentas(userEmail, fechaActual);
-
+        const response = await listarVentas(userEmail, soloFecha);
+        console.log("Ventas recibidas del Backend:", response.data);
         if (response.data) {
           setVentasSucursal(response.data.ventas || response.data);
         }
@@ -44,9 +40,10 @@ const CierreCaja = () => {
     fetchCierreCaja();
   }, [navigate, userEmail]);
 
-  // 2. Separación de dinero por métodos de pago (idPago === 4 es Efectivo)
+  // 2. Separación de dinero por métodos de pago (1 es Efectivo)
   const totalesPorMetodo = ventasSucursal.reduce((acc, curr) => {
-    const metodoDesc = curr.pago?.idPago === 4 ? "Efectivo" : "Digital";
+    const idMetodo = curr.pago?.idMetodoPago || curr.pago?.fk_id_metodo_pago || curr.pago?.idPago;
+    const metodoDesc = parseInt(idMetodo) === 1 ? "Efectivo" : "Digital";
     acc[metodoDesc] = (acc[metodoDesc] || 0) + curr.totalVenta;
     return acc;
   }, {});
@@ -54,7 +51,10 @@ const CierreCaja = () => {
   const totalEfectivo = totalesPorMetodo["Efectivo"] || 0;
 
   const totalDigitales = ventasSucursal
-    .filter((v) => v.pago?.idPago !== 4)
+    .filter((v) => {
+      const idMetodo = v.pago?.idMetodoPago || v.pago?.fk_id_metodo_pago || v.pago?.idPago;
+      return parseInt(idMetodo) !== 1;
+    })
     .reduce((acc, curr) => acc + curr.totalVenta, 0);
 
   const totalGeneral = totalEfectivo + totalDigitales;
@@ -63,7 +63,7 @@ const CierreCaja = () => {
     window.print();
   };
 
-  // 3. Confirmación llamando a tu servicio limpio 'cerrarTurno' de api/auth
+  // 3. Confirmación del Cierre
   const handleConfirmarCierre = async () => {
     const declaradoNum = parseFloat(montoDeclarado);
 
@@ -79,13 +79,15 @@ const CierreCaja = () => {
       )
     ) {
       try {
-        // Corregido: Invocamos tu función limpia importada desde ../api/auth
         await cerrarTurno(userEmail, declaradoNum);
 
         alert("¡Turno cerrado y asentado en la base de datos con éxito!");
 
+        // Ejecuta la impresión del ticket corregido por CSS
         handleImprimirTicket();
-        navigate("/dashboard");
+        
+        // 🛠️ CORREGIDO: Redirección a la raíz para evitar errores de rutas inexistentes
+        navigate("/"); 
       } catch (error) {
         console.error("Error al impactar el cierre en el Backend:", error);
         alert(
@@ -186,19 +188,22 @@ const CierreCaja = () => {
               </tr>
             </thead>
             <tbody>
-              {ventasSucursal.map((v) => (
-                <tr key={v.idVenta}>
-                  <td>#{v.idVenta}</td>
-                  <td>
-                    <span className="cierre-metodo-tag">
-                      {v.pago?.idPago === 4 ? "Efectivo" : "Digital"}
-                    </span>
-                  </td>
-                  <td className="cierre-text-right cierre-fw-bold">
-                    ${v.totalVenta.toLocaleString("es-AR")}
-                  </td>
-                </tr>
-              ))}
+              {ventasSucursal.map((v) => {
+                const idMetodo = v.pago?.idMetodoPago || v.pago?.fk_id_metodo_pago || v.pago?.idPago;
+                return (
+                  <tr key={v.idVenta}>
+                    <td>#{v.idVenta}</td>
+                    <td>
+                      <span className="cierre-metodo-tag">
+                        {parseInt(idMetodo) === 1 ? "Efectivo" : "Digital"}
+                      </span>
+                    </td>
+                    <td className="cierre-text-right cierre-fw-bold">
+                      ${v.totalVenta.toLocaleString("es-AR")}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

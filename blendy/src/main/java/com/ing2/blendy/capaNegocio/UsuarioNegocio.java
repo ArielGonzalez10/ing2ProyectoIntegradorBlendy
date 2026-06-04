@@ -41,18 +41,27 @@ public class UsuarioNegocio implements IUsuarioNegocio {
     public void cerrarTurno(String p_correo, float p_montoDeclarado) {
         float totalEfectivo = 0;
         float totalDigital = 0;
-        for(Venta venta : ventaNego.listarVenta(p_correo, LocalDateTime.now())){
-            if(venta.getPago().getIdPago() == 4){
+        for(Venta venta : ventaNego.listarVenta(p_correo, LocalDate.now())){
+            if(venta.getPago().getIdMetodoPago() == 1){
                 totalEfectivo += venta.getTotalVenta();
             }else{
                 totalDigital += venta.getTotalVenta();
             }
-
         }
+        System.out.println(totalDigital);
+        System.out.println(totalEfectivo);
         float totalCalculado = totalEfectivo +usuarioDatos.obtenerMontoInicialCaja();
-        float diferenciaCaja = p_montoDeclarado - totalCalculado;
+        float diferenciaCaja = totalCalculado - p_montoDeclarado;
         float totalReal = totalEfectivo + totalDigital;
-        usuarioDatos.cerrarTurno(this.buscarUsuario(p_correo).getIdUsuario(),totalCalculado,diferenciaCaja,totalReal,p_montoDeclarado,"Inactivo");
+        // En tu UsuarioNegocio.java reemplazá la línea de cierre por esta:
+        usuarioDatos.cerrarTurno(
+                totalCalculado,
+                diferenciaCaja,
+                totalReal,
+                p_montoDeclarado,
+                "Inactivo",
+                this.buscarUsuario(p_correo).getIdUsuario()
+        );
     }
 
     @Override
@@ -83,7 +92,6 @@ public class UsuarioNegocio implements IUsuarioNegocio {
             float montoCalculado = 0;
             float diferencia = 0;
             float montoDeclarado = 0;
-            System.out.println(p_montoInicial);
             usuarioDatos.crearCierreTurno(estado,fecha,totalVenta,montoCalculado,diferencia,montoDeclarado,p_montoInicial,this.buscarUsuario(p_correo).getIdUsuario());
         }else{
             throw new RuntimeException("Ya existe una caja abierta");
@@ -118,7 +126,7 @@ public class UsuarioNegocio implements IUsuarioNegocio {
         }else{
             usuarioBusc.setRol("Vendedor");
         }
-        return new TokenResponse(token, usuarioBusc.getCorreoElectronico(), usuarioBusc.getRol());
+        return new TokenResponse(token,usuarioBusc.getIdUsuario(), usuarioBusc.getCorreoElectronico(), usuarioBusc.getRol());
     }
 
 

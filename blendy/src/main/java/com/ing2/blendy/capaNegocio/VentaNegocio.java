@@ -28,7 +28,7 @@ public class VentaNegocio implements IVentaNegocio {
         // Inicializar la fecha y el estado del pago
         registrarFechaVenta(p_venta);
         if (p_venta.getPago() != null) {
-            p_venta.getPago().setFechaPago(p_venta.getFecha().toLocalDate());
+            p_venta.getPago().setFechaPago(p_venta.getFecha());
         }
         //En el Caso de que se venta de mostrador, no hay envio por lo tanto envio se setea a null
         LocalDate fechaDespacho = null;
@@ -71,7 +71,7 @@ public class VentaNegocio implements IVentaNegocio {
     @Override
     public void registrarFechaVenta(Venta p_venta) {
         if (p_venta.getFecha() == null) {
-            p_venta.setFecha(LocalDateTime.now());
+            p_venta.setFecha(LocalDate.now());
         }
     }
 
@@ -118,7 +118,7 @@ public class VentaNegocio implements IVentaNegocio {
         if (venta.getPago() != null) {
             //Se guarda el monto del pago y la fecha del pago
             venta.getPago().setMontoPago((float) totalFinal);
-            venta.getPago().setFechaPago(venta.getFecha().toLocalDate());
+            venta.getPago().setFechaPago(venta.getFecha());
         }
     }
 
@@ -129,7 +129,7 @@ public class VentaNegocio implements IVentaNegocio {
 
     //Retorna las ventas por usuario y por fecha
     @Override
-    public List<Venta> listarVenta(String p_correoElectronico, LocalDateTime p_fecha) {
+    public List<Venta> listarVenta(String p_correoElectronico, LocalDate p_fecha) {
         return ventaDatos.listarVentas(p_correoElectronico, p_fecha);
     }
 }

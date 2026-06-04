@@ -190,7 +190,7 @@ const NuevaVentaLocal = () => {
         "Operación retenida: Falta vincular un turno de caja activo."
       );
 
-    const idUsuarioActual = localStorage.getItem("userId") || 2;
+    const idUsuarioActual = localStorage.getItem("idUsuario");
 
     // 🛠️ REESTRUCTURACIÓN DE PAYLOAD EN NUEVAVENTALOCAL.JSX
     const ventaPresencialPayload = {

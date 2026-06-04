@@ -20,7 +20,7 @@ import java.util.List;
 public interface IVentaDatos extends JpaRepository<Venta, Integer> {
 
     @Query("SELECT e FROM Venta e INNER JOIN e.usuario u WHERE u.correoElectronico = :p_correoElectronico AND e.fecha = :p_fecha")
-    List<Venta> listarVentas(@Param("p_correoElectronico") String p_correoElectronico, @Param("p_fecha") LocalDateTime p_fecha);
+    List<Venta> listarVentas(@Param("p_correoElectronico") String p_correoElectronico, @Param("p_fecha") LocalDate p_fecha);
 
     @Modifying
     @Query(value = "INSERT INTO Venta_detalle (cantidad, precio_historico, subtotal, fk_id_producto, fk_id_venta) " +
@@ -33,7 +33,7 @@ public interface IVentaDatos extends JpaRepository<Venta, Integer> {
 
     @Procedure(procedureName = "sp_crear_venta")
     int crearVenta(
-            @Param("fecha") LocalDateTime fecha,
+            @Param("fecha") LocalDate fecha,
             @Param("fk_id_usuario") int fkIdUsuario,
             @Param("fecha_despacho") LocalDate fechaDespacho,
             @Param("fecha_recepcion") LocalDate fechaRecepcion,

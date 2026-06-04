@@ -3,17 +3,17 @@ USE blendy;
 /*SELECTS*/
 SELECT * FROM localidad;
 SELECT * FROM provincia;
-
 SELECT * FROM categoria;
 SELECT * FROM rol;
 SELECT * FROM domicilio;
-SELECT * FROM usuario;
+SELECT * from envio;
 SELECT * FROM producto;
-SELECT * FROM venta;
 SELECT * FROM venta_detalle;
 SELECT * FROM pago;
-SELECT * from envio;
 SELECT * FROM metodo_pago;
+SELECT * FROM venta;
+SELECT * FROM usuario;
+
 SELECT * FROM cierre_turno;
 
 
@@ -91,7 +91,7 @@ CREATE TABLE Envio
 CREATE TABLE Venta
 (
   id_venta INT NOT NULL IDENTITY,
-  fecha DATETIME2 NOT NULL,
+  fecha DATE NOT NULL,
   total_venta FLOAT NOT NULL,
   fk_id_usuario INT NOT NULL,
   fk_id_pago INT NOT NULL,
@@ -364,9 +364,10 @@ BEGIN
         RAISERROR('Error: La localidad especificada no existe en la base de datos.', 16, 1);
     END
 END;
+GO
 
 CREATE PROCEDURE sp_crear_venta
-    @fecha DATETIME2,
+    @fecha DATE,
     @fk_id_usuario INT,
     @fecha_despacho DATE,
     @fecha_recepcion DATE,
@@ -428,6 +429,6 @@ UPDATE USUARIO
 SET fk_id_rol = 1  -- Administrador
 WHERE correo_electronico = 'arielgonzalezr9@gmail.com';
 
-UPDATE cierre_turno 
+UPDATE cierre_turno  
 SET estado = 'Inactivo'  -- Administrador
 WHERE estado = 'Activo';

@@ -133,25 +133,40 @@
 }
 
 @media print {
-    body * {
-        visibility: hidden;
-    }
-    
-    #ticket-cierre, #ticket-cierre * {
-        visibility: visible;
-    }
-    
-    #ticket-cierre {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        box-shadow: none;
-        border: none;
-        padding: 0;
-    }
+  /* 1. Ocultamos absolutamente TODO lo que esté dentro del body */
+  body * {
+    visibility: hidden !important;
+  }
 
-    .no-print {
-        display: none !important;
-    }
+  /* 2. Hacemos que el contenedor del ticket y todo lo que esté adentro SÍ sea visible */
+  #ticket-cierre, #ticket-cierre * {
+    visibility: visible !important;
+  }
+
+  /* 3. Posicionamos el ticket arriba de todo a la izquierda para que no deje hojas vacías */
+  #ticket-cierre {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 10px !important;
+    box-shadow: none !important;
+    background: white !important;
+  }
+
+  /* 4. Forzamos a los contenedores raíz a no romper la altura */
+  html, body, #root, .cierre-page {
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+  }
+
+  /* 5. Volamos por completo la botonera y el cuadro de input de arqueo */
+  .no-print, .cierre-footer, button, input {
+    display: none !important;
+    visibility: hidden !important;
+  }
 }

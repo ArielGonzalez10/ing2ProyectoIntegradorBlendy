@@ -28,9 +28,10 @@ const Login = () => {
         const response = await login(credenciales);
         
         // Si el login es exitoso, desestructuramos los datos de TokenResponse
-        const { token, rol, correoElectronico } = response.data; 
+        const { token,idUsuario, rol, correoElectronico } = response.data; 
         
         localStorage.setItem('token', token);
+        localStorage.setItem('idUsuario', idUsuario);
         localStorage.setItem('userRole', rol);
         localStorage.setItem('userEmail', correoElectronico);
         

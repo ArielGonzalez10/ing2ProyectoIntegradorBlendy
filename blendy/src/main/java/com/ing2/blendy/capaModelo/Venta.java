@@ -32,7 +32,7 @@ public class Venta {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idVenta;
 
-    private LocalDateTime fecha;
+    private LocalDate fecha;
 
     @Column(name="total_venta")
     private double totalVenta;

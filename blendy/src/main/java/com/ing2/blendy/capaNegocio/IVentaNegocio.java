@@ -6,6 +6,7 @@ package com.ing2.blendy.capaNegocio;
 
 import com.ing2.blendy.capaModelo.Venta;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,6 @@ import java.util.List;
 public interface IVentaNegocio {
     Venta crearVenta(Venta p_venta);
     Venta buscarVenta(int p_id_venta);
-    List<Venta> listarVenta(String p_correoElectronico, LocalDateTime p_fecha);
+    List<Venta> listarVenta(String p_correoElectronico, LocalDate p_fecha);
     void registrarFechaVenta(Venta p_venta);
 }
