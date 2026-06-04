@@ -23,14 +23,14 @@ public class VentaNegocio implements IVentaNegocio {
     private IProductoNegocio productoNego;
 
     @Override
-    @Transactional // Si falla la inserción de un detalle de producto, el rollback limpia las tablas automáticamente
+    @Transactional
     public Venta crearVenta(Venta p_venta) {
-        // 1. Inicializar la fecha y el estado del pago en memoria
+        // Inicializar la fecha y el estado del pago
         registrarFechaVenta(p_venta);
         if (p_venta.getPago() != null) {
             p_venta.getPago().setFechaPago(p_venta.getFecha().toLocalDate());
         }
-
+        //En el Caso de que se venta de mostrador, no hay envio por lo tanto envio se setea a null
         LocalDate fechaDespacho = null;
         LocalDate fechaRecepcion = null;
         String estadoEnvio = null;
@@ -41,7 +41,7 @@ public class VentaNegocio implements IVentaNegocio {
             estadoEnvio = p_venta.getEnvio().getEstado();
         }
 
-        // 2. Invocar al Stored Procedure pasándole las variables (que pueden ser null)
+        //Se crea la venta
         int idVenta = ventaDatos.crearVenta(
                 p_venta.getFecha(),
                 p_venta.getUsuario().getIdUsuario(),
@@ -51,21 +51,20 @@ public class VentaNegocio implements IVentaNegocio {
                 p_venta.getPago().getIdMetodoPago(),
                 p_venta.getPago().getFechaPago()
         );
-
-        // Asignamos el ID autoincremental capturado a nuestra entidad en memoria
+        //Se obtiene el id de la venta
         p_venta.setIdVenta(idVenta);
 
-        // 3. Procesar los productos transient (descontar stock e insertar físicamente en Venta_detalle)
+        //Se hace el calculo de el total de la venta
         double totalSubtotales = procesarDetalleVenta(p_venta.getProductos(), idVenta);
 
-        // 4. Calcular el total final (subtotales + costo de envío)
+        //Se registra el total de la venta
         registrarTotalVenta(p_venta, totalSubtotales);
 
-        // 5. 🔥 IMPACTO DIRECTO: Consolidamos los montos definitivos saltando el motor de Hibernate
+        //Se actualizan los datos en la bd
         ventaDatos.actualizarTotalVenta(p_venta.getTotalVenta(), idVenta);
         ventaDatos.actualizarMontoPago((float) p_venta.getTotalVenta(), idVenta);
 
-        // Retornamos el objeto listo para que viaje al Front
+
         return p_venta;
     }
 
@@ -77,20 +76,26 @@ public class VentaNegocio implements IVentaNegocio {
     }
 
     private double procesarDetalleVenta(List<Producto> productos, int idVenta) {
+        //Se inicializa en 0 los subtotales
         double acumuladorSubtotales = 0;
         if (productos == null) {
             return acumuladorSubtotales;
         }
 
+        //Se recorre la lista de productos que solicito el cliente
         for (Producto producto : productos) {
+            //Se obtiene el producto de la bd
             Producto productoReal = productoNego.modificarStock(producto);
 
+            //La cantidad del producto solicitado por el cliente
             int cantidadPedida = producto.getStock();
+            //El precio del producto en ese momento
             double precioHistorico = productoReal.getPrecioUnitario();
+            //El costo del producto por la cantidad solicitada
             double subtotalItem = cantidadPedida * precioHistorico;
-
+            //se acumula los valores
             acumuladorSubtotales += subtotalItem;
-
+            //se crea el detalle venta
             ventaDatos.registrarDetalleVenta(
                     cantidadPedida,
                     precioHistorico,
@@ -99,25 +104,30 @@ public class VentaNegocio implements IVentaNegocio {
                     idVenta
             );
         }
+        //se retorna la sumatoria de la venta
         return acumuladorSubtotales;
     }
 
     private void registrarTotalVenta(Venta venta, double totalSubtotales) {
+        //Si no hay envio, no se suma el costo del envio
         double costoEnvio = (venta.getEnvio() != null) ? 2500 : 0;
         double totalFinal = totalSubtotales + costoEnvio;
 
+        //Se guarda el total de la venta
         venta.setTotalVenta(totalFinal);
         if (venta.getPago() != null) {
+            //Se guarda el monto del pago y la fecha del pago
             venta.getPago().setMontoPago((float) totalFinal);
             venta.getPago().setFechaPago(venta.getFecha().toLocalDate());
         }
     }
 
     @Override
-    public Venta buscarVenta(int p_id_ventaCabecera) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Venta buscarVenta(int p_id_venta) {
+        return ventaDatos.findById(p_id_venta).orElse(null);
     }
 
+    //Retorna las ventas por usuario y por fecha
     @Override
     public List<Venta> listarVenta(String p_correoElectronico, LocalDateTime p_fecha) {
         return ventaDatos.listarVentas(p_correoElectronico, p_fecha);
