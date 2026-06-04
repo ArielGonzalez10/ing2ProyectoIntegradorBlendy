@@ -42,7 +42,7 @@ public class UsuarioController {
 
     @GetMapping("/buscar")
     @ResponseBody
-    public UsuarioDTO buscarUsuario(@RequestParam String p_correoElectronico){
+    public Usuario buscarUsuario(@RequestParam String p_correoElectronico){
         return usuarioNego.buscarUsuario(p_correoElectronico);
     }
     
@@ -86,5 +86,10 @@ public class UsuarioController {
     public ResponseEntity<Integer> obtenerStatusCaja(@PathVariable String p_correo) {
         int cantidadActivas = usuarioNego.buscarCierreCaja(p_correo);
         return ResponseEntity.ok(cantidadActivas);
+    }
+
+    @PutMapping("/cerrarTurno/{p_correo}")
+    public void cerrarTurno(@PathVariable String p_correo,@RequestParam float p_montoDeclarado){
+        usuarioNego.cerrarTurno(p_correo,p_montoDeclarado);
     }
 }

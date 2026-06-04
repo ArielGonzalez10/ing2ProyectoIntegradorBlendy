@@ -7,9 +7,11 @@ package com.ing2.blendy.capaControlador;
 import com.ing2.blendy.capaModelo.Venta;
 import com.ing2.blendy.capaNegocio.IVentaNegocio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -36,9 +38,12 @@ public class VentaController {
     }
 
     @GetMapping("/listar")
-    @ResponseBody
-    public List<Venta> listarVentas(@RequestParam String p_correoElectronico,@RequestParam Date p_fecha){
-        return ventaNegocio.listarVenta(p_correoElectronico,p_fecha);
+    public ResponseEntity<?> listarVentas(
+            @RequestParam("p_correoElectronico") String correo,
+            @RequestParam("p_fecha") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fecha
+    ) {
+        // Ya te llega como LocalDateTime de diez para pasárselo a tu capa de negocio
+        return ResponseEntity.ok(ventaNegocio.listarVenta(correo, fecha));
     }
 
 }

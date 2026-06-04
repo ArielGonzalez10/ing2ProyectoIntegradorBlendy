@@ -9,8 +9,10 @@ import com.ing2.blendy.capaModelo.Usuario;
 import com.ing2.blendy.capaDatos.IUsuarioDatos;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import com.ing2.blendy.capaModelo.Venta;
 import com.ing2.blendy.dto.TokenResponse;
 import com.ing2.blendy.dto.UsuarioDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +26,38 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UsuarioNegocio implements IUsuarioNegocio {
-
     @Autowired
     private IUsuarioDatos usuarioDatos;
-
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private IVentaNegocio ventaNego;
 
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Override
+    public void cerrarTurno(String p_correo, float p_montoDeclarado) {
+        float totalEfectivo = 0;
+        float totalDigital = 0;
+        for(Venta venta : ventaNego.listarVenta(p_correo, LocalDateTime.now())){
+            if(venta.getPago().getIdPago() == 4){
+                totalEfectivo += venta.getTotalVenta();
+            }else{
+                totalDigital += venta.getTotalVenta();
+            }
+
+        }
+        float totalCalculado = totalEfectivo +usuarioDatos.obtenerMontoInicialCaja();
+        float diferenciaCaja = p_montoDeclarado - totalCalculado;
+        float totalReal = totalEfectivo + totalDigital;
+        usuarioDatos.cerrarTurno(this.buscarUsuario(p_correo).getIdUsuario(),totalCalculado,diferenciaCaja,totalReal,p_montoDeclarado,"Inactivo");
+    }
+
     @Override
     public void modificarUsuario(UsuarioDTO p_usuario) {
-        Usuario usuarioBusc = usuarioDatos.buscarPorCorreo(p_usuario.getCorreoElectronico());
+        Usuario usuarioBusc = this.buscarUsuario(p_usuario.getCorreoElectronico());
         if (usuarioBusc != null){
             usuarioBusc.setTelefono(p_usuario.getTelefono());
             usuarioBusc.setApellido(p_usuario.getApellido());
@@ -53,14 +74,9 @@ public class UsuarioNegocio implements IUsuarioNegocio {
     }
 
     @Override
-    public double calcularDiferenciaCaja(double p_montoIncial, double p_montoCalculado) {
-        return 0;
-    }
-
-    @Override
     public void crearCierreTurno(String p_correo, float p_montoInicial) {
-        Usuario usuario = usuarioDatos.buscarPorCorreo(p_correo);
-        if(usuario.getIdRol() == 3){
+
+        if(this.buscarUsuario(p_correo).getIdRol() == 3){
             String estado = "Activo";
             LocalDate fecha = LocalDate.now();
             float totalVenta = 0;
@@ -68,7 +84,7 @@ public class UsuarioNegocio implements IUsuarioNegocio {
             float diferencia = 0;
             float montoDeclarado = 0;
             System.out.println(p_montoInicial);
-            usuarioDatos.crearCierreTurno(estado,fecha,totalVenta,montoCalculado,diferencia,montoDeclarado,p_montoInicial,usuario.getIdUsuario());
+            usuarioDatos.crearCierreTurno(estado,fecha,totalVenta,montoCalculado,diferencia,montoDeclarado,p_montoInicial,this.buscarUsuario(p_correo).getIdUsuario());
         }else{
             throw new RuntimeException("Ya existe una caja abierta");
         }
@@ -76,16 +92,15 @@ public class UsuarioNegocio implements IUsuarioNegocio {
 
     @Override
     public int buscarCierreCaja(String p_correo) {
-        Usuario usuario = usuarioDatos.buscarPorCorreo(p_correo);
-        if (usuario == null) {
+        if (this.buscarUsuario(p_correo) == null) {
             return 0;
         }
-        return usuarioDatos.buscarCierreCaja(usuario.getIdUsuario());
+        return usuarioDatos.buscarCierreCaja(this.buscarUsuario(p_correo).getIdUsuario());
     }
 
     @Override
     public TokenResponse iniciarSesion(String p_correoElectronico, String p_contrasenia) {
-        Usuario usuarioBusc = usuarioDatos.buscarPorCorreo(p_correoElectronico);
+        Usuario usuarioBusc = this.buscarUsuario(p_correoElectronico);
 
         if(!passwordEncoder.matches(p_contrasenia, usuarioBusc.getContrasenia())){
             throw new RuntimeException("Email o contraseña incorrectos");
@@ -133,21 +148,8 @@ public class UsuarioNegocio implements IUsuarioNegocio {
     }
 
     @Override
-    public UsuarioDTO buscarUsuario(String p_correoElectronico) {
-        Usuario usuBusc =usuarioDatos.buscarPorCorreo(p_correoElectronico);
-        if(usuBusc == null){
-            return null;
-        }
-        UsuarioDTO usuDTO = new UsuarioDTO();
-        usuDTO.setApellido(usuBusc.getApellido());
-        usuDTO.setNombre(usuBusc.getNombre());
-        usuDTO.setCorreoElectronico(usuBusc.getCorreoElectronico());
-        usuDTO.setTelefono(usuBusc.getTelefono());
-
-        if(!usuBusc.getDomicilios().isEmpty()){
-            usuDTO.setDomicilio(usuBusc.getDomicilios().getFirst().getCalle());
-        }
-        return usuDTO;
+    public Usuario buscarUsuario(String p_correoElectronico) {
+        return usuarioDatos.buscarPorCorreo(p_correoElectronico);
     }
 
     @Override

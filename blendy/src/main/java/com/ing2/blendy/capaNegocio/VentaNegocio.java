@@ -119,7 +119,7 @@ public class VentaNegocio implements IVentaNegocio {
     }
 
     @Override
-    public List<Venta> listarVenta(String p_correoElectronico, Date p_fecha) {
+    public List<Venta> listarVenta(String p_correoElectronico, LocalDateTime p_fecha) {
         return ventaDatos.listarVentas(p_correoElectronico, p_fecha);
     }
 }

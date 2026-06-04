@@ -224,7 +224,11 @@ const NuevaVentaLocal = () => {
             ? "Tarjeta de Débito"
             : metodoPago === "2"
             ? "Tarjeta de Crédito"
-            : "Transferencia",
+            : metodoPago === "3"
+            ? "Transferencia"
+            : metodoPago === "4"
+            ? "Efectivo"
+            :"otro",
         detalles: ticketItems,
       });
 
@@ -475,6 +479,7 @@ const NuevaVentaLocal = () => {
             <option value="1">Tarjeta de Débito</option>
             <option value="2">Tarjeta de Crédito</option>
             <option value="3">Transferencia / QR</option>
+            <option value="4">Efectivo</option>
           </select>
 
           <div className="pos-total-final">

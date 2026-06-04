@@ -70,4 +70,27 @@ public interface IUsuarioDatos extends JpaRepository<Usuario,Integer>{
     @Query(value = "SELECT COUNT(*) FROM cierre_turno WHERE id_usuario = :p_id_usuario AND estado = 'Activo' ",nativeQuery = true)
     int buscarCierreCaja(@Param("p_id_usuario") int p_id_usuario);
 
+    @Query(value = "SELECT monto_inicial FROM cierre_turno WHERE estado = 'Activo' ",nativeQuery = true)
+    float obtenerMontoInicialCaja();
+
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE cierre_turno " +
+            "SET monto_calculado = :p_totalCalculado, " +
+            "    diferencia = :p_diferencia, " +
+            "    total_venta = :p_totalReal, " +
+            "    monto_declarado = :p_montoDeclarado, " +
+            "    estado = :p_estado " +
+            "WHERE id_usuario = :p_id_usuario AND estado = 'Activo'",
+            nativeQuery = true)
+    void cerrarTurno(
+            @Param("p_id_usuario") int p_id_usuario,
+            @Param("p_totalCalculado") float p_totalCalculado,
+            @Param("p_diferencia") float p_diferencia,
+            @Param("p_totalReal") float p_totalReal,
+            @Param("p_montoDeclarado") float p_montoDeclarado,
+            @Param("p_estado") String p_estado
+    );
+
 }

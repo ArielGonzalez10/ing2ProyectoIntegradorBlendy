@@ -26,3 +26,9 @@ export function verificarTurnoActivo(correo) {
 export function abrirTurnoCaja(correo, p_montoInicial) {
     return api.post(`/usuarios/cierreTurno/${correo}?p_montoInicial=${p_montoInicial}`);
 }
+
+export function cerrarTurno(p_correo, p_montoDeclarado) {
+    return api.put(`/usuarios/cerrarTurno/${p_correo}`, null, {
+        params: { p_montoDeclarado }
+    });
+}

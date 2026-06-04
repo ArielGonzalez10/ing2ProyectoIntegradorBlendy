@@ -185,6 +185,7 @@ CREATE TABLE Cierre_turno
 );
 
 /*INSERTS*/
+INSERT INTO metodo_pago(descripcion,estado) VALUES ('Efectivo','Activo');
 INSERT INTO metodo_pago(descripcion,estado) VALUES ('Tarjeta de Debito','Activo');
 INSERT INTO metodo_pago(descripcion,estado) VALUES ('Tarjeta de Credito','Activo');
 INSERT INTO metodo_pago(descripcion,estado) VALUES ('Transferencia','Activo');

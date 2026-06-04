@@ -17,13 +17,13 @@ import java.util.List;
 
 public interface IUsuarioNegocio {
     void crearUsuario(Usuario p_usuario);
-    UsuarioDTO buscarUsuario(String p_correoElectronico);
+    Usuario buscarUsuario(String p_correoElectronico);
     void eliminarUsuario(int p_id_usuario);
     List<Usuario> listarUsuarios();
     TokenResponse iniciarSesion(String p_correoElectronico, String p_contrasenia);
     void modificarUsuario(UsuarioDTO p_usuario);
     void auditarCierre();
-    double calcularDiferenciaCaja(double p_montoIncial, double p_montoCalculado);
+    void cerrarTurno(String p_correo, float p_montoDeclarado);
     void crearCierreTurno(String p_correo,float p_montoInicial);
     int buscarCierreCaja(String p_correo);
 

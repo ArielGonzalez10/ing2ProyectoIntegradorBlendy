@@ -9,10 +9,13 @@ export function crearVenta(data) {
 }
 
 /**
- * Recupera el historial de compras filtrado por el correo del usuario actual.
+ * Recupera el historial de compras filtrado por el correo del usuario actual y la fecha.
  */
-export function listarVentaCabecera(p_correoElectronico) {
+export function listarVentas(p_correoElectronico, p_fecha) {
     return api.get("/ventas/listar", {
-        params: { p_correoElectronico }
+        params: { 
+            p_correoElectronico, 
+            p_fecha              
+        }
     });
 }
