@@ -79,9 +79,9 @@ const NuevaVentaLocal = () => {
         setIdCierreTurno("Activo");
         localStorage.setItem("idCajaActual", String(idReal));
         setMostrarModalApertura(false);
-        alert(`¡Turno de caja iniciado exitosamente con $${montoAEnviar}!`);
+        alert(`¡Caja abierta!`);
       } else {
-        throw new Error("El servidor creó la caja pero no devolvió un ID activo válido.");
+        throw new Error("No se pudo abrir la caja");
       }
 
       // 3. Traemos el catálogo de productos actualizado

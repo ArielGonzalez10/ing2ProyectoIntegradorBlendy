@@ -79,12 +79,12 @@ const CierreCaja = () => {
       return alert("Error: No se detectó un ID de caja activa en el sistema. Asegúrese de haberla abierto en el mostrador.");
     }
 
-    if (window.confirm(`¿Estás seguro de cerrar la caja N° ${idCajaActual}? Esta acción registrará el balance final y cerrará tu turno.`)) {
+    if (window.confirm(`¿Estás seguro de cerrar la caja? `)) {
       try {
         // 3. SOLUCIÓN: Pasamos el idCajaActual como tercer parámetro a tu API de axios
         await cerrarCaja(userEmail, declaradoNum, idCajaActual);
 
-        alert("¡Turno cerrado y asentado en la base de datos con éxito!");
+        alert("¡Caja cerrada");
         
         // 4. LIMPIEZA: Removemos el ID del localStorage para que no quede obsoleto para el próximo turno
         localStorage.removeItem("idCajaActual");
