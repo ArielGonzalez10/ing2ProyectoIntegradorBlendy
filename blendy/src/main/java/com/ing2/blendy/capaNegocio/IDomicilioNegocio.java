@@ -13,12 +13,10 @@ import java.util.List;
  * @author Fatima
  */
 public interface IDomicilioNegocio {
-    void crearDomicilio(Domicilio p_id_domicilio);
+    void crearDomicilio(Domicilio p_domicilio);
     Domicilio buscarDomicilio(int p_id_domicilio);
-
     void eliminarDomicilio(int p_id_domicilio);
     List<Domicilio> listarDomicilios(String p_correoElectronico);
-
     List<String> listarProvincias();
     List<String> listarLocalidades(String p_provincia);
     List<Integer> listarCP(String p_localidad);

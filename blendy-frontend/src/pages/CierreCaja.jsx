@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { cerrarTurno } from "../api/auth"; 
+import { cerrarCaja } from "../api/caja"; 
 import { listarVentas } from "../api/ventas"; 
 import "../styles/cierre.css";
 
@@ -79,7 +79,7 @@ const CierreCaja = () => {
       )
     ) {
       try {
-        await cerrarTurno(userEmail, declaradoNum);
+        await cerrarCaja(userEmail, declaradoNum);
 
         alert("¡Turno cerrado y asentado en la base de datos con éxito!");
 

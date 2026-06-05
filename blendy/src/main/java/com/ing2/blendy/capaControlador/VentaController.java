@@ -31,7 +31,7 @@ public class VentaController {
     @PostMapping("/crear")
     public ResponseEntity<?> crearVenta(@RequestBody Venta venta) {
         try {
-            Venta nuevaVenta = ventaNegocio.crearVenta(venta);
+            Venta nuevaVenta = ventaNegocio.procesarVenta(venta);
             return ResponseEntity.ok(nuevaVenta);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

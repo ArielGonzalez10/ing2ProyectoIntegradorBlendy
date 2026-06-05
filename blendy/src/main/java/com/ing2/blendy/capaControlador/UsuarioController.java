@@ -6,11 +6,7 @@ package com.ing2.blendy.capaControlador;
 
 import com.ing2.blendy.capaModelo.Usuario;
 import com.ing2.blendy.capaNegocio.IUsuarioNegocio;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import com.ing2.blendy.dto.SesionDTO;
 import com.ing2.blendy.dto.TokenResponse;
 import com.ing2.blendy.dto.UsuarioDTO;
@@ -35,7 +31,6 @@ public class UsuarioController {
             TokenResponse token = usuarioNego.iniciarSesion(p_sesion.getCorreoElectronico(), p_sesion.getContrasenia());
             return ResponseEntity.ok(token);
         } catch (RuntimeException e) {
-            // IMPORTANTE: Si no devuelves un ResponseEntity, el navegador bloquea el mensaje
             return ResponseEntity.status(401).body(e.getMessage());
         }
     }
@@ -77,19 +72,4 @@ public class UsuarioController {
         }
     }
 
-    @PostMapping("/cierreTurno/{p_correo}")
-    public void crearCierreTurno(@PathVariable String p_correo, @RequestParam("p_montoInicial") float p_montoInicial){
-        usuarioNego.crearCierreTurno(p_correo,p_montoInicial);
-    }
-
-    @GetMapping("/cierreTurno/estado/{p_correo}")
-    public ResponseEntity<Integer> obtenerStatusCaja(@PathVariable String p_correo) {
-        int cantidadActivas = usuarioNego.buscarCierreCaja(p_correo);
-        return ResponseEntity.ok(cantidadActivas);
-    }
-
-    @PutMapping("/cerrarTurno/{p_correo}")
-    public void cerrarTurno(@PathVariable String p_correo,@RequestParam float p_montoDeclarado){
-        usuarioNego.cerrarTurno(p_correo,p_montoDeclarado);
-    }
 }

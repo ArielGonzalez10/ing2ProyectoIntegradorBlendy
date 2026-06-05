@@ -19,6 +19,6 @@ public interface IEnvioNegocio {
     Envio buscarEnvio(int p_id_envio);
     void eliminarEnvio(int p_id_envio);
     List<Envio> listarEnvios(String p_correoElectronico);
-    void modificarEnvio(int pIdEnvio, LocalDate pFechaDespacho, LocalDate pFechaRecepcion);
+    void modificarEnvio(int p_id_envio, LocalDate p_fecha_despacho, LocalDate p_fecha_recepcion);
 
 }

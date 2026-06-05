@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { listarProductos } from '../api/products.js'; 
-import { verificarTurnoActivo, abrirTurnoCaja } from '../api/auth.js'; 
+import { verificarCajaActiva, abrirCaja } from '../api/caja.js'; 
 
 import api from '../api/axios.js'; 
 import '../styles/punto-venta.css';
@@ -29,7 +29,7 @@ const NuevaVentaLocal = () => {
 
       try {
         // A) Verificamos si ya hay una caja activa usando Axios
-        const resTurno = await verificarTurnoActivo(correoUsuario);
+        const resTurno = await verificarCajaActiva(correoUsuario);
         const cantidadActivas = resTurno.data;
 
         if (cantidadActivas > 0) {
@@ -97,7 +97,7 @@ const NuevaVentaLocal = () => {
 
     try {
       // 2. Le pasamos el monto numérico limpio a la función del API
-      await abrirTurnoCaja(correoUsuario, montoAEnviar);
+      await abrirCaja(correoUsuario, montoAEnviar);
 
       setMostrarModalApertura(false);
       setIdCierreTurno("Activo");

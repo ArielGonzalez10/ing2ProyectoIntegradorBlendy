@@ -4,11 +4,10 @@
  */
 package com.ing2.blendy.capaModelo;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -32,24 +31,28 @@ public class Venta {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int idVenta;
 
+    @Column(name="fecha")
     private LocalDate fecha;
 
     @Column(name="total_venta")
-    private double totalVenta;
+    private float totalVenta;
 
     @ManyToOne(cascade = CascadeType.DETACH)
-    @JoinColumn(name = "fK_id_usuario", insertable = true, updatable = false)
+    @JoinColumn(name = "fk_id_usuario", insertable = true, updatable = false)
     private Usuario usuario;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fK_id_envio")
+    @JoinColumn(name = "fk_id_envio")
     private Envio envio;
 
     @Transient
     private List<Producto> productos = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fK_id_pago")
+    @JoinColumn(name = "fk_id_pago")
     private Pago pago;
 
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "fk_id_caja")
+    private Caja caja;
 }

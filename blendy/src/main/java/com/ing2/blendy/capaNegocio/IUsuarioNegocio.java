@@ -22,9 +22,4 @@ public interface IUsuarioNegocio {
     List<Usuario> listarUsuarios();
     TokenResponse iniciarSesion(String p_correoElectronico, String p_contrasenia);
     void modificarUsuario(UsuarioDTO p_usuario);
-    void auditarCierre();
-    void cerrarTurno(String p_correo, float p_montoDeclarado);
-    void crearCierreTurno(String p_correo,float p_montoInicial);
-    int buscarCierreCaja(String p_correo);
-
 }

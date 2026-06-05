@@ -13,8 +13,7 @@ SELECT * FROM pago;
 SELECT * FROM metodo_pago;
 SELECT * FROM venta;
 SELECT * FROM usuario;
-
-SELECT * FROM cierre_turno;
+SELECT * FROM caja;
 
 
 /*CREACIÓN DE TABLAS*/
@@ -87,6 +86,20 @@ CREATE TABLE Envio
   estado VARCHAR(20) NOT NULL,
   PRIMARY KEY (id_envio)
 );
+CREATE TABLE Caja
+(
+  id_caja INT NOT NULL IDENTITY,
+  estado VARCHAR(20) NOT NULL,
+  fecha DATE NOT NULL,
+  total_venta FLOAT NOT NULL,
+  monto_calculado FLOAT NOT NULL,
+  diferencia FLOAT NOT NULL,
+  monto_declarado FLOAT NOT NULL,
+  monto_inicial FLOAT NOT NULL,
+  fk_id_usuario INT NOT NULL,
+  PRIMARY KEY (id_caja),
+  FOREIGN KEY (fk_id_usuario) REFERENCES Usuario(id_usuario)
+);
 
 CREATE TABLE Venta
 (
@@ -96,9 +109,11 @@ CREATE TABLE Venta
   fk_id_usuario INT NOT NULL,
   fk_id_pago INT NOT NULL,
   fk_id_envio INT NULL,
+  fk_id_caja INT NULL,
   PRIMARY KEY (id_venta),
   FOREIGN KEY (fk_id_usuario) REFERENCES Usuario(id_usuario),
   FOREIGN KEY (fk_id_pago) REFERENCES Pago(id_pago),
+  FOREIGN KEY (fk_id_caja) REFERENCES Caja(id_caja),
   FOREIGN KEY (fk_id_envio) REFERENCES Envio(id_envio)
 );
 
@@ -167,21 +182,6 @@ CREATE TABLE Imagen
   fk_id_producto INT NOT NULL,
   PRIMARY KEY (id_imagen),
   FOREIGN KEY (fk_id_producto) REFERENCES Producto(id_producto)
-);
-
-CREATE TABLE Cierre_turno
-(
-  id_cierre_turno INT NOT NULL IDENTITY,
-  estado VARCHAR(20) NOT NULL,
-  fecha DATE NOT NULL,
-  total_venta FLOAT NOT NULL,
-  monto_calculado INT NOT NULL,
-  diferencia INT NOT NULL,
-  monto_declarado INT NOT NULL,
-  monto_inicial INT NOT NULL,
-  id_usuario INT NOT NULL,
-  PRIMARY KEY (id_cierre_turno),
-  FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
 );
 
 /*INSERTS*/
@@ -420,15 +420,12 @@ BEGIN
 END;
 GO
 
-/*UPDATES*/
-UPDATE USUARIO 
-SET fk_id_rol = 3 -- Vendedor
-WHERE correo_electronico = 'fatimabret@gmail.com';
 
-UPDATE USUARIO 
-SET fk_id_rol = 1  -- Administrador
+UPDATE Usuario
+SET fk_id_rol = 1
 WHERE correo_electronico = 'arielgonzalezr9@gmail.com';
 
-UPDATE cierre_turno  
-SET estado = 'Inactivo'  -- Administrador
-WHERE estado = 'Activo';
+
+UPDATE Usuario
+SET fk_id_rol = 3
+WHERE correo_electronico = 'fatimabret@gmail.com';

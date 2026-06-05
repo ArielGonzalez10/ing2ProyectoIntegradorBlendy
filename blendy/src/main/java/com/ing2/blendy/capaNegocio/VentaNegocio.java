@@ -24,12 +24,29 @@ public class VentaNegocio implements IVentaNegocio {
 
     @Override
     @Transactional
-    public Venta crearVenta(Venta p_venta) {
+    public Venta procesarVenta(Venta p_venta) {
         // Inicializar la fecha y el estado del pago
         registrarFechaVenta(p_venta);
-        if (p_venta.getPago() != null) {
-            p_venta.getPago().setFechaPago(p_venta.getFecha());
-        }
+
+        int idVenta = this.crearVenta(p_venta);
+        //Se obtiene el id de la venta
+        p_venta.setIdVenta(idVenta);
+
+        //Se hace el calculo de el total de la venta
+        float totalSubtotales = procesarDetalleVenta(p_venta.getProductos(), idVenta);
+
+        //Se registra el total de la venta
+        registrarTotalVenta(p_venta, totalSubtotales);
+
+        //Se actualizan los datos en la bd
+        ventaDatos.actualizarTotalVenta(p_venta.getTotalVenta(), idVenta);
+        ventaDatos.actualizarMontoPago((float) p_venta.getTotalVenta(), idVenta);
+
+        return p_venta;
+    }
+
+    @Override
+    public int crearVenta(Venta p_venta) {
         //En el Caso de que se venta de mostrador, no hay envio por lo tanto envio se setea a null
         LocalDate fechaDespacho = null;
         LocalDate fechaRecepcion = null;
@@ -42,7 +59,7 @@ public class VentaNegocio implements IVentaNegocio {
         }
 
         //Se crea la venta
-        int idVenta = ventaDatos.crearVenta(
+        return ventaDatos.crearVenta(
                 p_venta.getFecha(),
                 p_venta.getUsuario().getIdUsuario(),
                 fechaDespacho,
@@ -51,21 +68,6 @@ public class VentaNegocio implements IVentaNegocio {
                 p_venta.getPago().getIdMetodoPago(),
                 p_venta.getPago().getFechaPago()
         );
-        //Se obtiene el id de la venta
-        p_venta.setIdVenta(idVenta);
-
-        //Se hace el calculo de el total de la venta
-        double totalSubtotales = procesarDetalleVenta(p_venta.getProductos(), idVenta);
-
-        //Se registra el total de la venta
-        registrarTotalVenta(p_venta, totalSubtotales);
-
-        //Se actualizan los datos en la bd
-        ventaDatos.actualizarTotalVenta(p_venta.getTotalVenta(), idVenta);
-        ventaDatos.actualizarMontoPago((float) p_venta.getTotalVenta(), idVenta);
-
-
-        return p_venta;
     }
 
     @Override
@@ -73,17 +75,22 @@ public class VentaNegocio implements IVentaNegocio {
         if (p_venta.getFecha() == null) {
             p_venta.setFecha(LocalDate.now());
         }
+
+        if (p_venta.getPago() != null) {
+            p_venta.getPago().setFechaPago(p_venta.getFecha());
+        }
     }
 
-    private double procesarDetalleVenta(List<Producto> productos, int idVenta) {
+    @Override
+    public float procesarDetalleVenta(List<Producto> p_productos, int p_id_venta) {
         //Se inicializa en 0 los subtotales
-        double acumuladorSubtotales = 0;
-        if (productos == null) {
+        float acumuladorSubtotales = 0;
+        if (p_productos == null) {
             return acumuladorSubtotales;
         }
 
         //Se recorre la lista de productos que solicito el cliente
-        for (Producto producto : productos) {
+        for (Producto producto : p_productos) {
             //Se obtiene el producto de la bd
             Producto productoReal = productoNego.modificarStock(producto);
 
@@ -101,24 +108,25 @@ public class VentaNegocio implements IVentaNegocio {
                     precioHistorico,
                     subtotalItem,
                     productoReal.getIdProducto(),
-                    idVenta
+                    p_id_venta
             );
         }
         //se retorna la sumatoria de la venta
         return acumuladorSubtotales;
     }
 
-    private void registrarTotalVenta(Venta venta, double totalSubtotales) {
+    @Override
+    public void registrarTotalVenta(Venta p_venta, float p_subtotales) {
         //Si no hay envio, no se suma el costo del envio
-        double costoEnvio = (venta.getEnvio() != null) ? 2500 : 0;
-        double totalFinal = totalSubtotales + costoEnvio;
+        float costoEnvio = (p_venta.getEnvio() != null) ? 2500 : 0;
+        float totalFinal = p_subtotales + costoEnvio;
 
         //Se guarda el total de la venta
-        venta.setTotalVenta(totalFinal);
-        if (venta.getPago() != null) {
+        p_venta.setTotalVenta(totalFinal);
+        if (p_venta.getPago() != null) {
             //Se guarda el monto del pago y la fecha del pago
-            venta.getPago().setMontoPago((float) totalFinal);
-            venta.getPago().setFechaPago(venta.getFecha());
+            p_venta.getPago().setMontoPago((float) totalFinal);
+            p_venta.getPago().setFechaPago(p_venta.getFecha());
         }
     }
 

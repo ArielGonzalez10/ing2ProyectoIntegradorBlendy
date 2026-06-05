@@ -54,41 +54,5 @@ public interface IUsuarioDatos extends JpaRepository<Usuario,Integer>{
     @Query("UPDATE Usuario u SET u.nombre = :p_nombre, u.apellido = :p_apellido, u.telefono = :p_telefono WHERE u.correoElectronico = :p_correo")
     void modificarUsuario(@Param("p_nombre" )String p_nombre, @Param("p_apellido" )String p_apellido,@Param("p_telefono" )String p_telefono,@Param("p_correo" )String p_correo);
 
-    @Modifying
-    @Transactional
-    @Query(value = "INSERT INTO cierre_turno (estado, fecha, total_venta, monto_calculado, diferencia, monto_declarado, monto_inicial, id_usuario) " +
-            "VALUES (:estado, :fecha, :totalVenta, :montoCalculado, :diferencia, :montoDeclarado, :montoInicial, :p_id_usuario)",nativeQuery = true)
-    void crearCierreTurno(@Param("estado") String estado,
-                               @Param("fecha") LocalDate fecha,
-                               @Param("totalVenta") float totalVenta,
-                               @Param("montoCalculado") float montoCalculado,
-                               @Param("diferencia") float diferencia,
-                               @Param("montoDeclarado") float montoDeclarado,
-                               @Param("montoInicial") float montoInicial,
-                               @Param("p_id_usuario") int p_id_usuario);
 
-    @Query(value = "SELECT COUNT(*) FROM cierre_turno WHERE id_usuario = :p_id_usuario AND estado = 'Activo' ",nativeQuery = true)
-    int buscarCierreCaja(@Param("p_id_usuario") int p_id_usuario);
-
-    @Query(value = "SELECT monto_inicial FROM cierre_turno WHERE estado = 'Activo' ",nativeQuery = true)
-    float obtenerMontoInicialCaja();
-
-    @Modifying
-    @Transactional
-    @Query(value = "UPDATE cierre_turno " +
-            "SET monto_calculado = :p_totalCalculado, " +
-            "    diferencia = :p_diferencia, " +
-            "    total_venta = :p_totalReal, " +
-            "    monto_declarado = :p_montoDeclarado, " +
-            "    estado = :p_estado " +
-            "WHERE id_usuario = :p_id_usuario AND estado = 'Activo'",
-            nativeQuery = true)
-    void cerrarTurno(
-            @Param("p_totalCalculado") float p_totalCalculado, // 1° en el SET
-            @Param("p_diferencia") float p_diferencia,         // 2° en el SET
-            @Param("p_totalReal") float p_totalReal,           // 3° en el SET
-            @Param("p_montoDeclarado") float p_montoDeclarado, // 4° en el SET
-            @Param("p_estado") String p_estado,               // 5° en el SET
-            @Param("p_id_usuario") int p_id_usuario            // 6° en el WHERE
-    );
 }

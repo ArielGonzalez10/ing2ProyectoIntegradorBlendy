@@ -28,41 +28,12 @@ import org.springframework.stereotype.Service;
 public class UsuarioNegocio implements IUsuarioNegocio {
     @Autowired
     private IUsuarioDatos usuarioDatos;
-    @Autowired
-    private IVentaNegocio ventaNego;
 
     @Autowired
     private JwtService jwtService;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
-
-    @Override
-    public void cerrarTurno(String p_correo, float p_montoDeclarado) {
-        float totalEfectivo = 0;
-        float totalDigital = 0;
-        for(Venta venta : ventaNego.listarVenta(p_correo, LocalDate.now())){
-            if(venta.getPago().getIdMetodoPago() == 1){
-                totalEfectivo += venta.getTotalVenta();
-            }else{
-                totalDigital += venta.getTotalVenta();
-            }
-        }
-        System.out.println(totalDigital);
-        System.out.println(totalEfectivo);
-        float totalCalculado = totalEfectivo +usuarioDatos.obtenerMontoInicialCaja();
-        float diferenciaCaja = totalCalculado - p_montoDeclarado;
-        float totalReal = totalEfectivo + totalDigital;
-        // En tu UsuarioNegocio.java reemplazá la línea de cierre por esta:
-        usuarioDatos.cerrarTurno(
-                totalCalculado,
-                diferenciaCaja,
-                totalReal,
-                p_montoDeclarado,
-                "Inactivo",
-                this.buscarUsuario(p_correo).getIdUsuario()
-        );
-    }
 
     @Override
     public void modificarUsuario(UsuarioDTO p_usuario) {
@@ -77,34 +48,7 @@ public class UsuarioNegocio implements IUsuarioNegocio {
         }
     }
 
-    @Override
-    public void auditarCierre() {
 
-    }
-
-    @Override
-    public void crearCierreTurno(String p_correo, float p_montoInicial) {
-
-        if(this.buscarUsuario(p_correo).getIdRol() == 3){
-            String estado = "Activo";
-            LocalDate fecha = LocalDate.now();
-            float totalVenta = 0;
-            float montoCalculado = 0;
-            float diferencia = 0;
-            float montoDeclarado = 0;
-            usuarioDatos.crearCierreTurno(estado,fecha,totalVenta,montoCalculado,diferencia,montoDeclarado,p_montoInicial,this.buscarUsuario(p_correo).getIdUsuario());
-        }else{
-            throw new RuntimeException("Ya existe una caja abierta");
-        }
-    }
-
-    @Override
-    public int buscarCierreCaja(String p_correo) {
-        if (this.buscarUsuario(p_correo) == null) {
-            return 0;
-        }
-        return usuarioDatos.buscarCierreCaja(this.buscarUsuario(p_correo).getIdUsuario());
-    }
 
     @Override
     public TokenResponse iniciarSesion(String p_correoElectronico, String p_contrasenia) {
