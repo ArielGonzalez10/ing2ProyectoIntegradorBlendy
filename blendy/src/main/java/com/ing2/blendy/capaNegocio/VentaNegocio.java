@@ -47,7 +47,6 @@ public class VentaNegocio implements IVentaNegocio {
 
     @Override
     public int crearVenta(Venta p_venta) {
-        //En el Caso de que se venta de mostrador, no hay envio por lo tanto envio se setea a null
         LocalDate fechaDespacho = null;
         LocalDate fechaRecepcion = null;
         String estadoEnvio = null;
@@ -58,7 +57,10 @@ public class VentaNegocio implements IVentaNegocio {
             estadoEnvio = p_venta.getEnvio().getEstado();
         }
 
-        //Se crea la venta
+        Integer idCaja = (p_venta.getEnvio() != null) ? null :
+                (p_venta.getCaja() != null ? p_venta.getCaja().getIdCaja() : null);
+
+        // Invoca la nueva query nativa de forma posicional/nominal segura
         return ventaDatos.crearVenta(
                 p_venta.getFecha(),
                 p_venta.getUsuario().getIdUsuario(),
@@ -66,7 +68,8 @@ public class VentaNegocio implements IVentaNegocio {
                 fechaRecepcion,
                 estadoEnvio,
                 p_venta.getPago().getIdMetodoPago(),
-                p_venta.getPago().getFechaPago()
+                p_venta.getPago().getFechaPago(),
+                idCaja
         );
     }
 
@@ -102,6 +105,7 @@ public class VentaNegocio implements IVentaNegocio {
             double subtotalItem = cantidadPedida * precioHistorico;
             //se acumula los valores
             acumuladorSubtotales += subtotalItem;
+
             //se crea el detalle venta
             ventaDatos.registrarDetalleVenta(
                     cantidadPedida,

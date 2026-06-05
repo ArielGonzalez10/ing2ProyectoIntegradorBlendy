@@ -15,7 +15,6 @@ SELECT * FROM venta;
 SELECT * FROM usuario;
 SELECT * FROM caja;
 
-
 /*CREACIÓN DE TABLAS*/
 CREATE TABLE Categoria
 (
@@ -128,18 +127,6 @@ CREATE TABLE Venta_detalle
   PRIMARY KEY (id_venta_detalle),
   FOREIGN KEY (fk_id_producto) REFERENCES Producto(id_producto),
   FOREIGN KEY (fk_id_venta) REFERENCES Venta(id_venta)
-);
-
-CREATE TABLE Consulta
-(
-  id_consulta INT NOT NULL IDENTITY,
-  mensaje VARCHAR(250) NOT NULL,
-  asunto VARCHAR(100) NOT NULL,
-  respuesta VARCHAR(250) NOT NULL,
-  estado VARCHAR(20) NOT NULL,
-  fk_id_usuario INT NOT NULL,
-  PRIMARY KEY (id_consulta),
-  FOREIGN KEY (fk_id_usuario) REFERENCES Usuario(id_usuario)
 );
 
 CREATE TABLE Provincia
@@ -276,6 +263,7 @@ INSERT INTO rol (descripcion,estado) VALUES ('Vendedor','Activo');
 
 
 /*FUNCIONES ALMACENADAS*/
+GO
 CREATE PROCEDURE sp_crear_usuario
     @p_apellido VARCHAR(255),
     @p_contrasenia VARCHAR(255),
@@ -309,6 +297,7 @@ BEGIN
 END
 GO
 
+GO
 CREATE PROCEDURE sp_listar_provincias
 AS
 BEGIN
@@ -318,6 +307,7 @@ BEGIN
 END
 GO
 
+GO
 CREATE PROCEDURE sp_listar_localidades_por_provincia
     @p_id_provincia INT
 AS
@@ -335,6 +325,7 @@ BEGIN
 END
 GO
 
+GO
 CREATE PROCEDURE sp_crearDomicilio
     @calle VARCHAR(255),
     @altura INT,
@@ -366,6 +357,7 @@ BEGIN
 END;
 GO
 
+GO
 CREATE PROCEDURE sp_crear_venta
     @fecha DATE,
     @fk_id_usuario INT,
@@ -374,44 +366,41 @@ CREATE PROCEDURE sp_crear_venta
     @estado_envio VARCHAR(20),
     @fk_id_metodo_pago INT,
     @fecha_pago DATE,
-    @id_venta_generado INT OUTPUT
+    @fk_id_caja INT = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
     
-    -- Arranca en NULL. Si es mostrador, se queda así y se inserta directo en la Venta.
     DECLARE @generated_id_envio INT = NULL; 
     DECLARE @generated_id_pago INT;
+    DECLARE @id_venta_generado INT;
 
     BEGIN TRANSACTION;
     BEGIN TRY
-        
         
         IF (@estado_envio IS NOT NULL AND @estado_envio <> '')
         BEGIN
             INSERT INTO Envio (fecha_despacho, fecha_recepcion, estado)
             VALUES (@fecha_despacho, @fecha_recepcion, @estado_envio);
             
-            -- Guardamos el ID real generado
             SET @generated_id_envio = SCOPE_IDENTITY();
         END
-        -- Si no entra al IF (Venta Mostrador), @generated_id_envio sigue valiendo NULL.
 
-        -- 2. Insertamos el Pago con un monto inicial provisorio (0.0)
         INSERT INTO Pago (monto_pago, fecha_pago, fk_id_metodo_pago)
         VALUES (0.0, @fecha_pago, @fk_id_metodo_pago);
         
         SET @generated_id_pago = SCOPE_IDENTITY();
 
-        -- 3. Insertamos la Venta
-        -- Si es mostrador, fk_id_envio se guardará como NULL de forma impecable.
-        INSERT INTO Venta (fecha, total_venta, fk_id_usuario, fk_id_pago, fk_id_envio)
-        VALUES (@fecha, 0.0, @fk_id_usuario, @generated_id_pago, @generated_id_envio);
+        INSERT INTO Venta (fecha, total_venta, fk_id_usuario, fk_id_pago, fk_id_envio, fk_id_caja)
+        VALUES (@fecha, 0.0, @fk_id_usuario, @generated_id_pago, @generated_id_envio, @fk_id_caja);
 
-        -- 4. Capturamos el ID de la Venta para devolverlo a Java
         SET @id_venta_generado = SCOPE_IDENTITY();
 
         COMMIT TRANSACTION;
+
+        -- Retorna el ID generado como una consulta tradicional
+        SELECT @id_venta_generado AS id_venta;
+
     END TRY
     BEGIN CATCH
         ROLLBACK TRANSACTION;
@@ -420,6 +409,23 @@ BEGIN
 END;
 GO
 
+GO
+CREATE PROCEDURE sp_listar_ventas_por_usuario_fecha
+    @p_correoElectronico VARCHAR(100),
+    @p_fecha DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT v.*
+    FROM venta v
+    INNER JOIN usuario u ON v.fk_id_usuario = u.id_usuario
+    INNER JOIN caja c ON v.fk_id_caja = c.id_caja -- Cambiado a INNER JOIN para obligar relación
+    WHERE u.correo_electronico = @p_correoElectronico
+      AND v.fecha = @p_fecha
+      AND c.estado = 'Activo'; -- La caja sí o sí debe estar activa
+END;
+GO
 
 UPDATE Usuario
 SET fk_id_rol = 1
@@ -429,3 +435,7 @@ WHERE correo_electronico = 'arielgonzalezr9@gmail.com';
 UPDATE Usuario
 SET fk_id_rol = 3
 WHERE correo_electronico = 'fatimabret@gmail.com';
+
+UPDATE Caja
+SET estado = 'Inactivo'
+WHERE id_caja = 1;

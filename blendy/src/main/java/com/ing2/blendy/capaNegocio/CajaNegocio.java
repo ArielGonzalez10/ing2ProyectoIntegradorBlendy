@@ -56,15 +56,15 @@ public class CajaNegocio implements ICajaNegocio{
                 totalDigital += venta.getTotalVenta();
             }
         }
+        float totalVenta = totalEfectivo + totalDigital;
+        float totalCalculado = totalVenta +this.buscarMontoInicial(p_id_caja);
+        float diferenciaCaja = p_montoDeclarado - totalCalculado;
 
-        float totalCalculado = totalEfectivo +this.buscarMontoInicial(p_id_caja);
-        float diferenciaCaja = totalCalculado - p_montoDeclarado;
-        float totalReal = totalEfectivo + totalDigital;
-        // En tu UsuarioNegocio.java reemplazá la línea de cierre por esta:
         cajaDatos.cerrarTurno(
+                p_id_caja,
                 totalCalculado,
                 diferenciaCaja,
-                totalReal,
+                totalVenta,
                 p_montoDeclarado,
                 "Inactivo",
                 usuarioNego.buscarUsuario(p_correo).getIdUsuario()
@@ -72,6 +72,6 @@ public class CajaNegocio implements ICajaNegocio{
     }
 
     public float buscarMontoInicial(int p_id_caja){
-        return cajaDatos.obtenerMontoInicialCaja(p_id_caja);
+        return cajaDatos.buscarMontoInicial(p_id_caja);
     }
 }

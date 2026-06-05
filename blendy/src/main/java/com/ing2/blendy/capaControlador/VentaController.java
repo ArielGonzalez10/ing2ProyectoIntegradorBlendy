@@ -39,9 +39,7 @@ public class VentaController {
     }
 
     @GetMapping("/listar")
-    public ResponseEntity<?> listarVentas(
-            @RequestParam("p_correoElectronico") String correo, @RequestParam("p_fecha") LocalDate fecha) {
-        // Ya te llega como LocalDateTime de diez para pasárselo a tu capa de negocio
+    public ResponseEntity<?> listarVentas(@RequestParam("p_correoElectronico") String correo, @RequestParam("p_fecha") LocalDate fecha) {
         return ResponseEntity.ok(ventaNegocio.listarVenta(correo, fecha));
     }
 

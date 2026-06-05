@@ -19,8 +19,11 @@ import java.util.List;
 @Repository
 public interface IVentaDatos extends JpaRepository<Venta, Integer> {
 
-    @Query("SELECT e FROM Venta e INNER JOIN e.usuario u WHERE u.correoElectronico = :p_correoElectronico AND e.fecha = :p_fecha")
-    List<Venta> listarVentas(@Param("p_correoElectronico") String p_correoElectronico, @Param("p_fecha") LocalDate p_fecha);
+    @Query(value = "EXEC sp_listar_ventas_por_usuario_fecha :p_correoElectronico, :p_fecha", nativeQuery = true)
+    List<Venta> listarVentas(
+            @Param("p_correoElectronico") String p_correoElectronico,
+            @Param("p_fecha") LocalDate p_fecha
+    );
 
     @Modifying
     @Query(value = "INSERT INTO Venta_detalle (cantidad, precio_historico, subtotal, fk_id_producto, fk_id_venta) " +
@@ -31,7 +34,16 @@ public interface IVentaDatos extends JpaRepository<Venta, Integer> {
                                @Param("idProducto") int idProducto,
                                @Param("idVenta") int idVenta);
 
-    @Procedure(procedureName = "sp_crear_venta")
+    @Query(value = "EXEC sp_crear_venta " +
+            "@fecha = :fecha, " +
+            "@fk_id_usuario = :fk_id_usuario, " +
+            "@fecha_despacho = :fecha_despacho, " +
+            "@fecha_recepcion = :fecha_recepcion, " +
+            "@estado_envio = :estado_envio, " +
+            "@fk_id_metodo_pago = :fk_id_metodo_pago, " +
+            "@fecha_pago = :fecha_pago, " +
+            "@fk_id_caja = :fk_id_caja",
+            nativeQuery = true)
     int crearVenta(
             @Param("fecha") LocalDate fecha,
             @Param("fk_id_usuario") int fkIdUsuario,
@@ -39,7 +51,8 @@ public interface IVentaDatos extends JpaRepository<Venta, Integer> {
             @Param("fecha_recepcion") LocalDate fechaRecepcion,
             @Param("estado_envio") String estadoEnvio,
             @Param("fk_id_metodo_pago") int fkIdMetodoPago,
-            @Param("fecha_pago") LocalDate fechaPago
+            @Param("fecha_pago") LocalDate fechaPago,
+            @Param("fk_id_caja") Integer fkIdCaja
     );
 
     // 🔨 Query nativa para inyectar el total definitivo en la Venta

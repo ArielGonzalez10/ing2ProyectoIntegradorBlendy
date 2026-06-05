@@ -12,6 +12,9 @@ const CierreCaja = () => {
 
   const userEmail = localStorage.getItem("userEmail");
 
+  // 1. SOLUCIÓN: Recuperamos el ID que NuevaVentaLocal guardó en el navegador
+  const idCajaActual = localStorage.getItem("idCajaActual");
+
   useEffect(() => {
     const fetchCierreCaja = async () => {
       try {
@@ -22,7 +25,7 @@ const CierreCaja = () => {
           return;
         }
         
-        const soloFecha = new Date().toLocaleDateString("en-CA");
+        const soloFecha = new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD
 
         const response = await listarVentas(userEmail, soloFecha);
         console.log("Ventas recibidas del Backend:", response.data);
@@ -40,7 +43,7 @@ const CierreCaja = () => {
     fetchCierreCaja();
   }, [navigate, userEmail]);
 
-  // 2. Separación de dinero por métodos de pago (1 es Efectivo)
+  
   const totalesPorMetodo = ventasSucursal.reduce((acc, curr) => {
     const idMetodo = curr.pago?.idMetodoPago || curr.pago?.fk_id_metodo_pago || curr.pago?.idPago;
     const metodoDesc = parseInt(idMetodo) === 1 ? "Efectivo" : "Digital";
@@ -53,7 +56,7 @@ const CierreCaja = () => {
   const totalDigitales = ventasSucursal
     .filter((v) => {
       const idMetodo = v.pago?.idMetodoPago || v.pago?.fk_id_metodo_pago || v.pago?.idPago;
-      return parseInt(idMetodo) !== 1;
+      return parseInt(idMetodo) !== 1; // Todo lo que no sea 1 sumará como digital
     })
     .reduce((acc, curr) => acc + curr.totalVenta, 0);
 
@@ -63,112 +66,75 @@ const CierreCaja = () => {
     window.print();
   };
 
-  // 3. Confirmación del Cierre
+  // 2. MODIFICADO: Ahora el handler valida y envía el idCajaActual correspondiente
   const handleConfirmarCierre = async () => {
     const declaradoNum = parseFloat(montoDeclarado);
 
     if (isNaN(declaradoNum) || declaradoNum < 0) {
-      return alert(
-        "Por favor, ingrese el monto de dinero físico total que contó en la caja."
-      );
+      return alert("Por favor, ingrese el monto de dinero físico total que contó en la caja.");
     }
 
-    if (
-      window.confirm(
-        "¿Estás seguro de cerrar la caja? Esta acción registrará el balance final y cerrará tu turno."
-      )
-    ) {
+    // Validación de seguridad por si no hay ninguna caja abierta registrada
+    if (!idCajaActual) {
+      return alert("Error: No se detectó un ID de caja activa en el sistema. Asegúrese de haberla abierto en el mostrador.");
+    }
+
+    if (window.confirm(`¿Estás seguro de cerrar la caja N° ${idCajaActual}? Esta acción registrará el balance final y cerrará tu turno.`)) {
       try {
-        await cerrarCaja(userEmail, declaradoNum);
+        // 3. SOLUCIÓN: Pasamos el idCajaActual como tercer parámetro a tu API de axios
+        await cerrarCaja(userEmail, declaradoNum, idCajaActual);
 
         alert("¡Turno cerrado y asentado en la base de datos con éxito!");
-
-        // Ejecuta la impresión del ticket corregido por CSS
-        handleImprimirTicket();
         
-        // 🛠️ CORREGIDO: Redirección a la raíz para evitar errores de rutas inexistentes
+        // 4. LIMPIEZA: Removemos el ID del localStorage para que no quede obsoleto para el próximo turno
+        localStorage.removeItem("idCajaActual");
+
+        handleImprimirTicket();
         navigate("/"); 
       } catch (error) {
         console.error("Error al impactar el cierre en el Backend:", error);
-        alert(
-          "Hubo un error al procesar el cierre de caja: " +
-            (error.response?.data || error.message)
-        );
+        alert("Hubo un error al procesar el cierre de caja: " + (error.response?.data?.message || error.response?.data || error.message));
       }
     }
   };
 
-  if (cargando)
-    return <div className="cierre-page">Cargando datos del turno...</div>;
+  if (cargando) return <div className="cierre-page">Cargando datos del turno...</div>;
 
   return (
     <div className="cierre-page">
       <div className="cierre-container" id="ticket-cierre">
         <div className="cierre-header">
-          <h1>Cierre de Caja Diario</h1>
-          <p>
-            Usuario: <strong>{userEmail}</strong>
-          </p>
+          {/* Mostramos el N° de caja dinámicamente en el encabezado si existe */}
+          <h1>Cierre de Caja Diario {idCajaActual ? `#${idCajaActual}` : ""}</h1>
+          <p>Usuario: <strong>{userEmail}</strong></p>
           <p>Fecha: {new Date().toLocaleDateString("es-AR")}</p>
         </div>
 
-        {/* Resumen KPIs */}
         <div className="resumen-grid">
           <div className="kpi-card">
             <h4>Efectivo Sistema (Esperado)</h4>
-            <span className="monto">
-              ${totalEfectivo.toLocaleString("es-AR")}
-            </span>
+            <span className="monto">${totalEfectivo.toLocaleString("es-AR")}</span>
           </div>
           <div className="kpi-card">
             <h4>Pagos Digitales</h4>
-            <span className="monto">
-              ${totalDigitales.toLocaleString("es-AR")}
-            </span>
+            <span className="monto">${totalDigitales.toLocaleString("es-AR")}</span>
           </div>
           <div className="kpi-card kpi-total">
             <h4>Total Facturado</h4>
-            <span className="monto">
-              ${totalGeneral.toLocaleString("es-AR")}
-            </span>
+            <span className="monto">${totalGeneral.toLocaleString("es-AR")}</span>
           </div>
         </div>
 
-        {/* Caja de Arqueo Físico */}
-        <div
-          className="cierre-seccion no-print"
-          style={{
-            backgroundColor: "#f9f9f9",
-            padding: "20px",
-            borderRadius: "8px",
-            margin: "20px 0",
-            border: "1px solid #eee",
-          }}
-        >
+        <div className="cierre-seccion no-print" style={{ backgroundColor: "#f9f9f9", padding: "20px", borderRadius: "8px", margin: "20px 0", border: "1px solid #eee" }}>
           <h3>Arqueo Físico de Caja</h3>
           <label style={{ fontSize: "14px", color: "#555" }}>
-            Contá la plata total del cajón (Fondo inicial + ventas en efectivo)
-            e ingresala acá:
+            Contá la plata total del cajón (Fondo inicial + ventas en efectivo) e ingresala acá:
           </label>
           <div style={{ marginTop: "10px" }}>
-            <span
-              style={{
-                fontSize: "20px",
-                marginRight: "5px",
-                fontWeight: "bold",
-              }}
-            >
-              $
-            </span>
+            <span style={{ fontSize: "20px", marginRight: "5px", fontWeight: "bold" }}>$</span>
             <input
               type="number"
-              style={{
-                padding: "8px",
-                fontSize: "16px",
-                width: "200px",
-                borderRadius: "4px",
-                border: "1px solid #ccc",
-              }}
+              style={{ padding: "8px", fontSize: "16px", width: "200px", borderRadius: "4px", border: "1px solid #ccc" }}
               placeholder="Ej: 15200"
               value={montoDeclarado}
               onChange={(e) => setMontoDeclarado(e.target.value)}
@@ -176,7 +142,6 @@ const CierreCaja = () => {
           </div>
         </div>
 
-        {/* Transacciones */}
         <div className="cierre-seccion">
           <h2>Detalle de Operaciones</h2>
           <table className="tabla-cierre">
@@ -198,9 +163,7 @@ const CierreCaja = () => {
                         {parseInt(idMetodo) === 1 ? "Efectivo" : "Digital"}
                       </span>
                     </td>
-                    <td className="cierre-text-right cierre-fw-bold">
-                      ${v.totalVenta.toLocaleString("es-AR")}
-                    </td>
+                    <td className="cierre-text-right cierre-fw-bold">${v.totalVenta.toLocaleString("es-AR")}</td>
                   </tr>
                 );
               })}
@@ -208,14 +171,9 @@ const CierreCaja = () => {
           </table>
         </div>
 
-        {/* Botonera */}
         <div className="cierre-footer no-print">
-          <button className="cierre-btn-outline" onClick={handleImprimirTicket}>
-            Imprimir Reporte
-          </button>
-          <button className="cierre-btn-solid" onClick={handleConfirmarCierre}>
-            Finalizar Turno
-          </button>
+          <button className="cierre-btn-outline" onClick={handleImprimirTicket}>Imprimir Reporte</button>
+          <button className="cierre-btn-solid" onClick={handleConfirmarCierre}>Finalizar Turno</button>
         </div>
       </div>
     </div>
