@@ -14,7 +14,13 @@ export function buscarUsuario(data){
     })
 }
 
-export function modificarUsuario(data){
-    return api.put("/usuarios/modificar", data);
+export function modificarUsuario({ correoElectronico, nombre, apellido, telefono }){
+    return api.put("/usuarios/modificar", {}, {
+        params: {
+            p_correo: correoElectronico, // Mapeas tu estado al @RequestParam del back
+            p_nombre: nombre,
+            p_apellido: apellido,
+            p_telefono: telefono
+        }
+    });
 }
-

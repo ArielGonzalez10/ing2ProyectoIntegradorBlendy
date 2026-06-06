@@ -21,5 +21,5 @@ public interface IUsuarioNegocio {
     void eliminarUsuario(int p_id_usuario);
     List<Usuario> listarUsuarios();
     TokenResponse iniciarSesion(String p_correoElectronico, String p_contrasenia);
-    void modificarUsuario(UsuarioDTO p_usuario);
+    void modificarUsuario(String p_correo,String p_nombre,String p_apellido, String p_telefono);
 }

@@ -43,8 +43,14 @@ public class ProductoController {
     }
 
     @PutMapping("/modificar/{p_id_producto}")
-    public void modificarProducto(@PathVariable int p_id_producto, @RequestBody Producto p_producto){
-        productoNego.modificarProducto(p_id_producto, p_producto);
+    public void modificarProducto(
+            @PathVariable int p_id_producto,
+            @RequestParam String p_descripcion,
+            @RequestParam int p_stock,
+            @RequestParam float p_precioUnitario, // Ajustá a double o BigDecimal según tu entidad
+            @RequestParam String p_estado) {      // Ajustá a boolean o String según corresponda
+
+        productoNego.modificarProducto(p_id_producto, p_descripcion, p_stock, p_precioUnitario, p_estado);
     }
     
     @GetMapping("/listar")

@@ -63,9 +63,9 @@ public class UsuarioController {
     }
 
     @PutMapping("/modificar")
-    public ResponseEntity<?> modificarUsuario(@RequestBody UsuarioDTO p_usuario){
+    public ResponseEntity<?> modificarUsuario(@RequestParam String p_correo,@RequestParam String p_nombre,@RequestParam String p_apellido,@RequestParam String p_telefono){
         try{
-            usuarioNego.modificarUsuario(p_usuario);
+            usuarioNego.modificarUsuario(p_correo,p_nombre, p_apellido, p_telefono);
             return new ResponseEntity<>("¡Datos actualizados con éxito!",HttpStatus.OK);
         } catch (RuntimeException e) {
             return new ResponseEntity<>("No se pudo actualizar los datos!",HttpStatus.BAD_REQUEST);

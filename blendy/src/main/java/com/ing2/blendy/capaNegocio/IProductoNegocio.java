@@ -18,7 +18,7 @@ public interface IProductoNegocio {
     Producto buscarProductoPorId(int p_id_producto);
     void eliminarProducto(int p_id_producto,String p_nuevo_estado);
     void altaProducto(int p_id_producto,String p_nuevo_estado);
-    void modificarProducto(int p_id_producto, Producto p_producto);
+    void modificarProducto(int p_id_producto, String p_descripcion, int p_stock,float p_precioUnitario, String p_estado);
     Producto modificarStock(Producto p_producto);
     List<String> listarCategorias();
     List<Producto> listarProductos();

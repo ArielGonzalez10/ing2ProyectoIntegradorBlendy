@@ -142,15 +142,18 @@ const Perfil = () => {
     setUsuario({ ...usuario, [e.target.name]: e.target.value });
   };
 
-  const handleGuardar = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await modificarUsuario(usuario);
-      if (response.status === 200) alert("¡Datos actualizados!");
-    } catch (error) {
-      alert("Error al actualizar.");
-    }
-  };
+const handleGuardar = async (e) => {
+  e.preventDefault();
+  try {
+    
+    const response = await modificarUsuario(usuario);
+    
+    if (response.status === 200) alert("¡Datos actualizados!");
+  } catch (error) {
+    console.error(error); 
+    alert("Error al actualizar.");
+  }
+};
 
   const handleGuardarDireccion = async (e) => {
     e.preventDefault();

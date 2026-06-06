@@ -36,19 +36,14 @@ public class UsuarioNegocio implements IUsuarioNegocio {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public void modificarUsuario(UsuarioDTO p_usuario) {
-        Usuario usuarioBusc = this.buscarUsuario(p_usuario.getCorreoElectronico());
-        if (usuarioBusc != null){
-            usuarioBusc.setTelefono(p_usuario.getTelefono());
-            usuarioBusc.setApellido(p_usuario.getApellido());
-            usuarioBusc.setNombre(p_usuario.getNombre());
-            usuarioDatos.save(usuarioBusc);
-        } else {
+    public void modificarUsuario(String p_correo,String p_nombre, String p_apellido, String p_telefono) {
+
+        if(this.buscarUsuario(p_correo) != null){
+            usuarioDatos.modificarUsuario(p_nombre,p_apellido,p_telefono,p_correo);
+        }else {
             throw new RuntimeException("Usuario no encontrado");
         }
     }
-
-
 
     @Override
     public TokenResponse iniciarSesion(String p_correoElectronico, String p_contrasenia) {

@@ -72,6 +72,13 @@ public class ProductoNegocio implements IProductoNegocio {
 
     @Override
     public void eliminarProducto(int p_id_producto, String p_nuevoEstado) {
+        if(p_nuevoEstado.equals("Activo") && this.buscarProductoPorId(p_id_producto) != null){
+            throw new RuntimeException("Producto existente y activo");
+        }else if(p_nuevoEstado.equals("Inactivo") && this.buscarProductoPorId(p_id_producto) != null){
+            throw new RuntimeException("Producto ya dado de baja previamente");
+        }else if(p_nuevoEstado.isEmpty()){
+            throw new RuntimeException("Ingrese datos en los campos");
+        }
         productoDatos.cambiarEstadoProducto(p_id_producto,p_nuevoEstado);
     }
 
@@ -81,20 +88,19 @@ public class ProductoNegocio implements IProductoNegocio {
     }
 
     @Override
-    public void modificarProducto(int p_id_producto, Producto p_producto_modificado) {
-        Producto productoBusc = this.buscarProductoPorId(p_id_producto);
-
-        if(productoBusc != null){
-            productoBusc.setDescripcion(p_producto_modificado.getDescripcion());
-            productoBusc.setPrecioUnitario(p_producto_modificado.getPrecioUnitario());
-            productoBusc.setEstado(p_producto_modificado.getEstado());
-            productoBusc.setStock(p_producto_modificado.getStock());
-            productoBusc.setStockMin(p_producto_modificado.getStockMin()); // Faltaba actualizar esto
-            productoBusc.setCategoria(p_producto_modificado.getCategoria()); // Faltaba actualizar esto
-            productoDatos.save(productoBusc);
-        } else {
-            throw new RuntimeException("Error: El producto que intenta modificar no existe.");
+    public void modificarProducto(int p_id_producto, String p_descripcion, int p_stock,float p_precioUnitario, String p_estado) {
+        if(this.buscarProducto(p_descripcion) == null){
+            throw new RuntimeException("Producto no encontrado");
+        }else if(p_stock < 0){
+            throw new RuntimeException("No se puede ingresar un numero negativo");
+        }else if(p_precioUnitario < 0){
+            throw new RuntimeException("El valor del producto no puede ser menor a 0");
+        }else if(p_descripcion.matches("\\d+") || p_descripcion.isEmpty()){
+            throw new RuntimeException("Ingrese un nombre valido");
+        }else if(!p_estado.equals("Activo") && !p_estado.equals("Inactivo")){
+            throw new RuntimeException("Ingrese un estado valido");
         }
+        productoDatos.modificarProducto(p_id_producto,p_descripcion,p_stock,p_precioUnitario,p_estado);
     }
 
     @Override
