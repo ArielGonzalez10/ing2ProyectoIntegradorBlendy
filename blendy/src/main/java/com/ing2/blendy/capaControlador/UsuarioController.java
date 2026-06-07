@@ -42,9 +42,9 @@ public class UsuarioController {
     }
     
     @PostMapping("/crear")
-    public ResponseEntity<?> crearUsuario(@RequestBody Usuario p_usuario){
+    public ResponseEntity<?> crearUsuario(@RequestParam String p_correoElectronico,@RequestParam String p_contrasenia, @RequestParam String p_nombre, @RequestParam String p_apellido, @RequestParam String p_telefono,@RequestParam String p_estado,@RequestParam int p_id_rol){
         try{
-            usuarioNego.crearUsuario(p_usuario);
+            usuarioNego.crearUsuario( p_correoElectronico, p_contrasenia, p_nombre, p_apellido, p_telefono,p_estado, p_id_rol);
             return new ResponseEntity<>("Registro exitoso!", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -63,12 +63,12 @@ public class UsuarioController {
     }
 
     @PutMapping("/modificar")
-    public ResponseEntity<?> modificarUsuario(@RequestParam String p_correo,@RequestParam String p_nombre,@RequestParam String p_apellido,@RequestParam String p_telefono){
-        try{
-            usuarioNego.modificarUsuario(p_correo,p_nombre, p_apellido, p_telefono);
-            return new ResponseEntity<>("¡Datos actualizados con éxito!",HttpStatus.OK);
+    public ResponseEntity<?> modificarUsuario(@RequestParam String p_correoElectronico, @RequestParam String p_nombre, @RequestParam String p_apellido, @RequestParam String p_telefono) {
+        try {
+            usuarioNego.modificarUsuario(p_correoElectronico, p_nombre, p_apellido, p_telefono);
+            return new ResponseEntity<>("¡Datos actualizados con éxito!", HttpStatus.OK);
         } catch (RuntimeException e) {
-            return new ResponseEntity<>("No se pudo actualizar los datos!",HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("No se pudo actualizar los datos!", HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -36,10 +36,10 @@ public class UsuarioNegocio implements IUsuarioNegocio {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public void modificarUsuario(String p_correo,String p_nombre, String p_apellido, String p_telefono) {
+    public void modificarUsuario(String p_correoElectronico,String p_nombre, String p_apellido, String p_telefono) {
 
-        if(this.buscarUsuario(p_correo) != null){
-            usuarioDatos.modificarUsuario(p_nombre,p_apellido,p_telefono,p_correo);
+        if(this.buscarUsuario(p_correoElectronico) != null){
+            usuarioDatos.modificarUsuario(p_nombre,p_apellido,p_telefono,p_correoElectronico);
         }else {
             throw new RuntimeException("Usuario no encontrado");
         }
@@ -70,27 +70,22 @@ public class UsuarioNegocio implements IUsuarioNegocio {
 
 
     @Override
-    public void crearUsuario(Usuario p_usuario) {
+    public void crearUsuario(String p_correoElectronico, String p_contrasenia, String p_nombre, String p_apellido, String p_telefono, String p_estado, int p_id_rol) {
         //Verifica que no haya sido creado previamente
-        if(usuarioDatos.existeCorreo(p_usuario.getCorreoElectronico())){
+        if(usuarioDatos.existeCorreo(p_correoElectronico)){
             throw new RuntimeException("Usuario registrado previamente");
         }
-        //Setea el domicilio al usuario
-        if(p_usuario.getDomicilios() != null){
-            for(Domicilio domicilios : p_usuario.getDomicilios()){
-                domicilios.setUsuario(p_usuario);
-            }
-        }
+
         //Codifica la contraseña
-        p_usuario.setContrasenia(passwordEncoder.encode(p_usuario.getContrasenia()));
+        p_contrasenia = (passwordEncoder.encode(p_contrasenia));
         usuarioDatos.crearUsuarioSP(
-                p_usuario.getNombre(),
-                p_usuario.getApellido(),
-                p_usuario.getCorreoElectronico(),
-                p_usuario.getContrasenia(),
-                p_usuario.getTelefono(),
-                p_usuario.getEstado(),
-                p_usuario.getIdRol()
+                p_nombre,
+                p_apellido,
+                p_correoElectronico,
+                p_contrasenia,
+                p_telefono,
+                p_estado,
+                p_id_rol
         );
     }
 

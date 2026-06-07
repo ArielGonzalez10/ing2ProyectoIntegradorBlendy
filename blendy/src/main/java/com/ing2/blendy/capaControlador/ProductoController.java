@@ -25,11 +25,11 @@ public class ProductoController {
     public Producto buscarProducto(@PathVariable String p_descripcion){return productoNego.buscarProducto(p_descripcion);}
     
     @PostMapping("/crear")
-    public void crearProducto(@RequestBody Producto p_producto) {
-        if(this.buscarProducto(p_producto.getDescripcion()) != null){
+    public void crearProducto(@RequestParam String p_descripcion,@RequestParam float p_precioUnitario,@RequestParam int p_stock,@RequestParam int p_stockMin, @RequestParam String p_estado, @RequestParam int p_id_categoria, @RequestParam List<String> p_imagenes) {
+        if(this.buscarProducto(p_descripcion) != null){
             throw new RuntimeException("Producto creado previamente");
         }
-        productoNego.crearProducto(p_producto);
+        productoNego.crearProducto(p_descripcion,p_precioUnitario,p_stock,p_stockMin,p_estado,p_id_categoria,p_imagenes);
     }
 
     @DeleteMapping("/eliminar/{p_id_producto}")

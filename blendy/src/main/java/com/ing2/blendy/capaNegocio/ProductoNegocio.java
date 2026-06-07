@@ -9,6 +9,7 @@ import com.ing2.blendy.capaDatos.IProductoDatos;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -46,18 +47,23 @@ public class ProductoNegocio implements IProductoNegocio {
     }
 
     @Override
-    public void crearProducto(Producto p_producto) {
-        // 1. Guardamos el producto en la BD mediante JPA de forma normal
-        Producto productoGuardado = productoDatos.save(p_producto);
-
-        // 2. Si el frontend mandó strings de imágenes en la lista @Transient
-        if (p_producto.getImagenes() != null && !p_producto.getImagenes().isEmpty()) {
-
-            for (String imagen : p_producto.getImagenes()) {
-                // 3. Invocamos el método de la capa de datos para cada imagen
+    public void crearProducto(String p_descripcion, float p_precioUnitario, int p_stock, int p_stockMin, String p_estado, int p_id_categoria, List<String> p_imagenes) {
+        if(p_imagenes.isEmpty()){//Valida que por lo menos haya una imagen
+            throw new RuntimeException("Ingrese por lo menos 1 imagen del Producto");
+        }else {
+            if(p_descripcion.isEmpty()){//Valida que la descripcion no venga vacia
+                throw new RuntimeException("No se puede registrar un producto sin nombre");
+            }else if(p_precioUnitario <= 0 || p_stock <= 0){//Valida que el stock o el precio sea mayor a 0
+                throw new RuntimeException("El stock o el precio no pueden ser menor o igual a 0");
+            }else if(p_id_categoria <= 0){
+                throw new RuntimeException("Ingrese una categoria valida");
+            }
+            Producto productoGuardado = productoDatos.crearProducto(p_descripcion, p_precioUnitario, p_stock, p_stockMin, p_estado,p_id_categoria);
+            for (String imagen : p_imagenes) {
                 productoDatos.crearImagen(imagen, "Activo", productoGuardado.getIdProducto());
             }
         }
+
     }
 
     @Override

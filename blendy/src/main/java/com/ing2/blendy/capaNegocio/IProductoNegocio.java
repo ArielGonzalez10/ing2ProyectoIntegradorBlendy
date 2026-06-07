@@ -13,7 +13,7 @@ import java.util.List;
  * @author Fatima
  */
 public interface IProductoNegocio {
-    void crearProducto(Producto p_producto);
+    void crearProducto(String p_descripcion, float p_precioUnitario, int p_stock, int p_stockMin, String p_estado, int p_id_categoria, List<String> p_imagenes);
     Producto buscarProducto(String p_descripcion);
     Producto buscarProductoPorId(int p_id_producto);
     void eliminarProducto(int p_id_producto,String p_nuevo_estado);

@@ -113,7 +113,6 @@ const AgregarProducto = () => {
         estado: "Activo",
         categoria: nombreCategoriaSeleccionada,
         idCategoria: idNumericoCalculado,
-        // 🟢 PASAMOS DIRECTAMENTE EL ARRAY DE STRINGS
         imagenes: base64Array,
       };
 
@@ -127,11 +126,26 @@ const AgregarProducto = () => {
       alert("Producto e imágenes registrados con éxito en Blendly");
       navigate("/panel/productos");
     } catch (error) {
-      console.error(
-        "Error al enviar los datos:",
-        error.response?.data || error
-      );
-      alert("Hubo un error en el servidor. Revisá la consola de Spring Boot.");
+      console.error("Error completo recibido:", error);
+
+      // 1. Verificamos si el servidor llegó a responder algo (ej: un error 500)
+      if (error.response && error.response.data) {
+        // Spring Boot suele mandar el mensaje en error.response.data.message
+        // Si mandaste un string directo, puede estar en error.response.data
+        const mensajeServidor =
+          error.response.data.message || error.response.data;
+
+        console.error("Mensaje específico del backend:", mensajeServidor);
+        alert(`Error en el servidor: ${mensajeServidor}`);
+      } else if (error.request) {
+        // La petición se hizo pero el backend ni respondió (ej: servidor apagado)
+        alert(
+          "No se pudo conectar con el servidor. Verificá si Spring Boot está corriendo."
+        );
+      } else {
+        // Pasó otra cosa al armar la petición
+        alert(`Error local: ${error.message}`);
+      }
     }
   };
 

@@ -7,6 +7,7 @@ package com.ing2.blendy.capaNegocio;
 import com.ing2.blendy.capaModelo.Usuario;
 import com.ing2.blendy.dto.TokenResponse;
 import com.ing2.blendy.dto.UsuarioDTO;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -16,10 +17,10 @@ import java.util.List;
  */
 
 public interface IUsuarioNegocio {
-    void crearUsuario(Usuario p_usuario);
+    void crearUsuario( String p_correoElectronico, String p_contrasenia, String p_nombre, String p_apellido, String p_telefono, String p_estado, int p_id_rol);
     Usuario buscarUsuario(String p_correoElectronico);
     void eliminarUsuario(int p_id_usuario);
     List<Usuario> listarUsuarios();
     TokenResponse iniciarSesion(String p_correoElectronico, String p_contrasenia);
-    void modificarUsuario(String p_correo,String p_nombre,String p_apellido, String p_telefono);
+    void modificarUsuario(String p_correoElectronico,String p_nombre,String p_apellido, String p_telefono);
 }

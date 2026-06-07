@@ -74,4 +74,18 @@ public interface IProductoDatos extends JpaRepository<Producto,Integer>{
             @Param("p_precioUnitario") float p_precioUnitario,
             @Param("p_estado") String p_estado
     );
+
+    @Transactional
+    @Query(value = "INSERT INTO Producto (descripcion, precio_unitario, stock, stock_min, estado, fk_id_categoria) " +
+            "OUTPUT INSERTED.id_producto, INSERTED.descripcion, INSERTED.precio_unitario, INSERTED.stock, INSERTED.stock_min, INSERTED.estado, INSERTED.fk_id_categoria " +
+            "VALUES (:p_descripcion, :p_precioUnitario, :p_stock, :p_stockMin, :p_estado, :p_id_categoria)",
+            nativeQuery = true)
+    Producto crearProducto(
+            @Param("p_descripcion") String p_descripcion,
+            @Param("p_precioUnitario") float p_precioUnitario,
+            @Param("p_stock") int p_stock,
+            @Param("p_stockMin") int p_stockMin,
+            @Param("p_estado") String p_estado,
+            @Param("p_id_categoria") int p_id_categoria
+    );
 }
