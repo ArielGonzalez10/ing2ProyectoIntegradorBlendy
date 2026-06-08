@@ -17,6 +17,7 @@ import AgregarProducto from './pages/AgregarProducto';
 import PanelProductos from './pages/PanelProductos';
 import CierreCaja from './pages/CierreCaja';
 import AuditoriaCajas from './pages/AuditoriaCajas';
+import EnvioPage from './pages/EnvioPage';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
             <Route path="/panel/productos" element={<PanelProductos />} />
             <Route path="/panel/productos/nuevo" element={<AgregarProducto />} />
             <Route path="/panel/auditoria-cajas" element={<AuditoriaCajas />} />
+            <Route path="/panel/envios" element={<EnvioPage />} />
           </Routes>
           
           <Footer />

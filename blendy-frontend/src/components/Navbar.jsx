@@ -76,7 +76,7 @@ const Navbar = () => {
                                 {rol === "Administrador" && (
                                     <>
                                         <Link to="/panel/productos" onClick={() => setMenuAbierto(false)}>Gestión de Productos</Link>
-                                        <Link to="/panel/auditoria-cajas" onClick={() => setMenuAbierto(false)}>Auditoría de Cajas</Link>
+                                        <Link to="/panel/envios" onClick={() => setMenuAbierto(false)}>Gestión de Envíos</Link>
                                     </>
                                 )}
 

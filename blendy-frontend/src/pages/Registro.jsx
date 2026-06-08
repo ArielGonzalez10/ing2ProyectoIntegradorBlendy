@@ -16,8 +16,21 @@ const Register = () => {
     const [feedback, setFeedback] = useState({ texto: '', tipo: '' });//Declara la variable para manejar el response entity de el back
     const [errores, setErrores] = useState({});
     
-    const validarCampo = (name, value) => {
-        let errorMsg = '';
+    const validarCampo = (name, value, errorDeFormato = '') => {
+        let errorMsg = errorDeFormato; // Si hubo intento fallido de teclado
+
+        // Si no hay errores de tipeo, hacemos las validaciones estándar
+        if (!errorMsg) {
+            if ((name === 'nombre' || name === 'apellido') && value.trim() === '') {
+                errorMsg = 'Este campo no puede estar vacío.';
+            }
+            if (name === 'telefono' && value.length > 0 && value.length < 10) {
+                errorMsg = 'El teléfono debe tener al menos 10 caracteres.';
+            }
+        }
+
+        setErrores(prev => ({ ...prev, [name]: errorMsg }));
+
         const letrasRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
         const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         const numerosRegex = /^[0-9]+$/;
@@ -46,13 +59,33 @@ const Register = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setUsuario({
-            ...usuario,
-            [name]: value
-        });
-        validarCampo(name, value);
+        let valorValidado = value;
+        let errorDeFormato = '';
 
-        if (name === 'contrasenia' && confirmarContrasenia) {
+        if (name === "nombre" || name === "apellido") {
+            valorValidado = value.replace(/[0-9]/g, ""); // Elimina números
+            
+            // Si el valor cambió tras pasar el filtro, es porque intentó escribir un número
+            if (value !== valorValidado) {
+                errorDeFormato = 'No se permiten números en este campo.';
+            }
+        }
+
+        if (name === "telefono") {
+            // Elimina todo lo que NO sea un número (0-9), el signo + o el guión -
+            valorValidado = value.replace(/[^0-9+\-]/g, "");
+            
+            if (value !== valorValidado) {
+                errorDeFormato = 'Solo se admiten números y los símbolos + o -.';
+            }
+        }
+
+        setUsuario({ ...usuario, [name]: valorValidado });
+        
+        // Llamamos a la validación enviando el posible error detectado
+        validarCampo(name, valorValidado, errorDeFormato);
+
+        if (name === 'contrasenia' && typeof confirmarContrasenia !== 'undefined') {
             if (value !== confirmarContrasenia) {
                 setErrores(prev => ({ ...prev, confirmarContrasenia: 'Las contraseñas no coinciden.' }));
             } else {

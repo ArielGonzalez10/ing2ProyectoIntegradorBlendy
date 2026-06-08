@@ -23,8 +23,8 @@ const Perfil = () => {
   const [listaLocalidades, setListaLocalidades] = useState([]);
 
   const [nuevaDireccion, setNuevaDireccion] = useState({
-    provincia: "", // 🟢 Almacenará el nombre (String)
-    localidad: "", // 🟢 Almacenará el nombre (String)
+    provincia: "",
+    localidad: "",
     codigoPostal: "",
     calle: "",
     altura: "",
@@ -40,8 +40,9 @@ const Perfil = () => {
     domicilio: "",
   });
 
-  // --- CARGA DE DATOS ---
+  const [errores, setErrores] = useState({});
 
+  // --- CARGA DE DATOS ---
   const cargarDatosUsuario = async (email) => {
     try {
       const res = await buscarUsuario(email);
@@ -105,7 +106,7 @@ const Perfil = () => {
     cargarLocalidadesBD();
   }, [nuevaDireccion.provincia]);
 
-  // 🟢 Carga del Código Postal cuando cambia el NOMBRE de la localidad
+  // Carga del Código Postal cuando cambia el NOMBRE de la localidad
   useEffect(() => {
     const cargarCodigoPostalBD = async () => {
       if (nuevaDireccion.localidad) {
@@ -136,10 +137,48 @@ const Perfil = () => {
     cargarCodigoPostalBD();
   }, [nuevaDireccion.localidad]);
 
-  // --- HANDLERS ---
+  // --- ESTADOS DE ERROR ---
+  const validarCampo = (name, value, errorDeFormato = '') => {
+        let errorMsg = errorDeFormato; // Si hubo intento fallido de teclado
 
+        // Si no hay errores de tipeo, hacemos las validaciones estándar
+        if (!errorMsg) {
+            if ((name === 'nombre' || name === 'apellido') && value.trim() === '') {
+                errorMsg = 'Este campo no puede estar vacío.';
+            }
+            if (name === 'telefono' && value.length > 0 && value.length < 10) {
+                errorMsg = 'El teléfono debe tener al menos 10 caracteres.';
+            }
+        }
+
+        setErrores(prev => ({ ...prev, [name]: errorMsg }));
+    };
+
+  // --- HANDLERS ---
   const handleChange = (e) => {
-    setUsuario({ ...usuario, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+        let valorValidado = value;
+        let errorDeFormato = '';
+
+        if (name === "nombre" || name === "apellido") {
+            valorValidado = value.replace(/[0-9]/g, ""); // Elimina números
+            
+            // Si el valor cambió tras pasar el filtro, es porque intentó escribir un número
+            if (value !== valorValidado) {
+                errorDeFormato = 'No se permiten números en este campo.';
+            }
+        }
+
+        if (name === "telefono") {
+            // Elimina todo lo que NO sea un número (0-9), el signo + o el guión -
+            valorValidado = value.replace(/[^0-9+\-]/g, "");
+            if (value !== valorValidado) {
+                errorDeFormato = 'Solo se admiten números y los símbolos + o -.';
+            }
+        }
+
+        setUsuario({ ...usuario, [name]: valorValidado });
+        validarCampo(name, valorValidado, errorDeFormato); // Evaluamos el error en tiempo real
   };
 
 const handleGuardar = async (e) => {
@@ -237,6 +276,7 @@ const handleGuardar = async (e) => {
                         onChange={handleChange}
                         required
                       />
+                      {errores.nombre && <span style={{ color: '#666666', fontSize: '0.8rem', marginTop: '4px', display: 'block' }}>{errores.nombre}</span>}
                     </div>
                     <div className="perfil-form-group">
                       <label>Apellido</label>
@@ -247,6 +287,7 @@ const handleGuardar = async (e) => {
                         onChange={handleChange}
                         required
                       />
+                      {errores.apellido && <span style={{ color: '#666666', fontSize: '0.8rem', marginTop: '4px', display: 'block' }}>{errores.apellido}</span>}
                     </div>
                   </div>
                   <div className="perfil-form-row">
@@ -258,6 +299,7 @@ const handleGuardar = async (e) => {
                         value={usuario.telefono || ""}
                         onChange={handleChange}
                       />
+                      {errores.telefono && <span style={{ color: '#666666', fontSize: '0.8rem', marginTop: '4px', display: 'block' }}>{errores.telefono}</span>}
                     </div>
                   </div>
                 </div>

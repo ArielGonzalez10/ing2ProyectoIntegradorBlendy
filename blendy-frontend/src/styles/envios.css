@@ -1,0 +1,53 @@
+.page-container { 
+    padding: 2rem; 
+    min-height: 80vh; /* Asegura que la página tenga altura aunque no haya datos */
+    width: 90%;
+    margin: 0 auto;
+}
+
+.tabla-envios { 
+    width: 100%; 
+    border-collapse: collapse; 
+    background: #ffffff;
+    margin-top: 20px;
+    table-layout: fixed; /* Ayuda a que las columnas no se deformen */
+}
+
+/* Forzar que el texto sea visible */
+.tabla-envios th, .tabla-envios td { 
+    padding: 15px; 
+    border: 1px solid #ddd;
+    color: #333; /* Asegura que el texto no sea blanco sobre fondo blanco */
+}
+
+[class^="badge-"] {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.80rem;
+  text-transform: uppercase;
+}
+
+.select-estado {
+    background-color: #1A1A1A;
+    color: var(--color-texto);
+    border: 1px solid var(--color-gris-medio);
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.select-estado:focus {
+    border-color: var(--color-celeste);
+    outline: none;
+}
+
+.btn-accion {
+  padding: 6px 12px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-accion:disabled { background-color: #ccc; cursor: not-allowed; }
