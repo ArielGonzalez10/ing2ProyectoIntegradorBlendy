@@ -4,12 +4,19 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.ing2.blendy.capaDatos.IVentaDatos;
+import com.ing2.blendy.capaNegocio.IProductoNegocio;
 import com.ing2.blendy.capaNegocio.IVentaNegocio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import java.util.stream.Stream;
+import java.util.Collections;
+import java.util.List;
 
 import com.ing2.blendy.capaModelo.*; // Asegurate de usar tu import real de modelos
 import java.time.LocalDate;
@@ -22,6 +29,9 @@ public class VentaNegoTest {
 
     @InjectMocks
     private IVentaNegocio ventaService; // Tu lógica de negocio de ventas
+
+    @Mock
+    private IProductoNegocio productoNego;
 
     // =========================================================================
     // ESCENARIO 1: Venta que incluye ENVÍO (Caja debería ser forzada a NULL)
@@ -115,6 +125,52 @@ public class VentaNegoTest {
         assertEquals(101, idVentaGenerada);
         verify(ventaDatos, times(1)).crearVenta(
                 venta.getFecha(), 3, null, null, null, 2, pago.getFechaPago(), 8
+        );
+    }
+
+    // =========================================================================
+    // ESCENARIO 3: CASOS DE ERROR AL COMPRAR (Según Tabla 4.2.8)
+    // =========================================================================
+
+    @ParameterizedTest(name = "Comprar - Error esperado: {2}")
+    @MethodSource("proveerErroresProcesarVenta")
+    void procesarVenta_CasosInvalidos_DeberiaLanzarException(
+            Venta ventaInvalida, String descripcionCaso, String mensajeErrorEsperado) {
+
+        // Simulamos que el validador de stock lanza error si intentamos comprar más de lo que hay
+        if (ventaInvalida.getProductos() != null && !ventaInvalida.getProductos().isEmpty()) {
+            when(productoNego.modificarStock(any(Producto.class)))
+                    .thenThrow(new RuntimeException("Stock insuficiente para el producto seleccionado"));
+        }
+
+        // Act & Assert
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> {
+            // Cambiamos crearVenta por procesarVenta, que es el método real de entrada
+            ventaService.procesarVenta(ventaInvalida);
+        });
+
+        assertEquals(mensajeErrorEsperado, ex.getMessage());
+
+        // Verificamos que jamás se llegó a impactar el total de la venta en la BD
+        verify(ventaDatos, never()).actualizarTotalVenta(anyDouble(), anyInt());
+    }
+
+    private static Stream<Arguments> proveerErroresProcesarVenta() {
+        // 1. Simulamos una venta sin productos (lista vacía)
+        Venta ventaVacia = new Venta();
+        ventaVacia.setProductos(Collections.emptyList());
+
+        // 2. Simulamos una venta con un producto que pide 6 unidades
+        // (Usamos setStock(6) porque tu lógica usa getStock() como cantidad pedida)
+        Producto productoSinStock = new Producto();
+        productoSinStock.setStock(6);
+
+        Venta ventaSinStock = new Venta();
+        ventaSinStock.setProductos(List.of(productoSinStock));
+
+        return Stream.of(
+                Arguments.of(ventaVacia, "Venta sin productos", "Debe agregar al menos un producto a la venta"),
+                Arguments.of(ventaSinStock, "Falta de stock", "Stock insuficiente para el producto seleccionado")
         );
     }
 }

@@ -54,4 +54,6 @@ public interface ICajaDatos extends JpaRepository<Caja,Integer> {
             @Param("p_estado") String p_estado,
             @Param("p_id_usuario") int p_id_usuario
     );
+
+    // void cerrarCaja(String , float , int );
 }

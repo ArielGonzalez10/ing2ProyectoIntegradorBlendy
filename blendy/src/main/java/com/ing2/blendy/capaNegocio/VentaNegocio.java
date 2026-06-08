@@ -25,6 +25,10 @@ public class VentaNegocio implements IVentaNegocio {
     @Override
     @Transactional
     public Venta procesarVenta(Venta p_venta) {
+        if (p_venta.getProductos() == null || p_venta.getProductos().isEmpty()) {
+            throw new RuntimeException("Debe agregar al menos un producto a la venta");
+        }
+
         // Inicializar la fecha y el estado del pago
         registrarFechaVenta(p_venta);
 
