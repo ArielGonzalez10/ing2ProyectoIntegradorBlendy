@@ -4,8 +4,8 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.ing2.blendy.capaDatos.IVentaDatos;
-import com.ing2.blendy.capaNegocio.IProductoNegocio;
-import com.ing2.blendy.capaNegocio.IVentaNegocio;
+import com.ing2.blendy.capaNegocio.IProductoNegocio; // Asegúrate de usar la interfaz correcta
+import com.ing2.blendy.capaNegocio.VentaNegocio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,27 +18,26 @@ import java.util.stream.Stream;
 import java.util.Collections;
 import java.util.List;
 
-import com.ing2.blendy.capaModelo.*; // Asegurate de usar tu import real de modelos
+import com.ing2.blendy.capaModelo.*;
 import java.time.LocalDate;
 
 @ExtendWith(MockitoExtension.class)
 public class VentaNegoTest {
 
     @Mock
-    private IVentaDatos ventaDatos; // El repositorio que invoca la query nativa
+    private IVentaDatos ventaDatos;
 
     @InjectMocks
-    private IVentaNegocio ventaService; // Tu lógica de negocio de ventas
+    private VentaNegocio ventaNegocio;
 
     @Mock
-    private IProductoNegocio productoNego;
+    private IProductoNegocio productoNego; // Cambiado a la interfaz para que coincida con el @Autowired de tu servicio
 
     // =========================================================================
-    // ESCENARIO 1: Venta que incluye ENVÍO (Caja debería ser forzada a NULL)
+    // ESCENARIO 1: Venta que incluye ENVÍO (No hay caja abierta)
     // =========================================================================
     @Test
-    void crearVenta_ConEnvio_DeberiaMapearDatosDeEnvioYIdCajaNull() {
-        // 1. Arrange: Armamos toda la estructura del objeto Venta con Envío
+    void crearVenta_ConEnvio() {
         Usuario usuario = new Usuario();
         usuario.setIdUsuario(5);
 
@@ -52,7 +51,7 @@ public class VentaNegoTest {
         envio.setEstado("En camino");
 
         Caja caja = new Caja();
-        caja.setIdCaja(10); // Aunque tenga caja, tu lógica dice que si hay envío, idCaja es null
+        caja.setIdCaja(10);
 
         Venta venta = new Venta();
         venta.setFecha(LocalDate.of(2026, 6, 7));
@@ -61,7 +60,6 @@ public class VentaNegoTest {
         venta.setEnvio(envio);
         venta.setCaja(caja);
 
-        // Simulamos que el repositorio guarda con éxito y devuelve el ID de la venta generada (ej: 100)
         when(ventaDatos.crearVenta(
                 venta.getFecha(),
                 5,
@@ -70,13 +68,11 @@ public class VentaNegoTest {
                 "En camino",
                 1,
                 pago.getFechaPago(),
-                null // Esperamos explícitamente null acá por el operador ternario
+                null
         )).thenReturn(100);
 
-        // 2. Act
-        int idVentaGenerada = ventaService.crearVenta(venta);
+        int idVentaGenerada = ventaNegocio.crearVenta(venta);
 
-        // 3. Assert
         assertEquals(100, idVentaGenerada);
         verify(ventaDatos, times(1)).crearVenta(
                 venta.getFecha(), 5, envio.getFechaDespacho(), envio.getFechaRecepcion(), "En camino", 1, pago.getFechaPago(), null
@@ -87,8 +83,7 @@ public class VentaNegoTest {
     // ESCENARIO 2: Venta en local sin envío (Con CAJA, datos de envío en NULL)
     // =========================================================================
     @Test
-    void crearVenta_SinEnvioConCaja_DeberiaMapearIdCajaYDatosEnvioNull() {
-        // 1. Arrange: Armamos la estructura de Venta sin Envío pero con Caja
+    void crearVenta_SinEnvioConCaja() {
         Usuario usuario = new Usuario();
         usuario.setIdUsuario(3);
 
@@ -103,25 +98,22 @@ public class VentaNegoTest {
         venta.setFecha(LocalDate.of(2026, 6, 7));
         venta.setUsuario(usuario);
         venta.setPago(pago);
-        venta.setEnvio(null); // Sin envío
+        venta.setEnvio(null);
         venta.setCaja(caja);
 
-        // Simulamos que el repositorio guarda y devuelve ID 101
         when(ventaDatos.crearVenta(
                 venta.getFecha(),
                 3,
-                null, // fechaDespacho esperado null
-                null, // fechaRecepcion esperado null
-                null, // estadoEnvio esperado null
+                null,
+                null,
+                null,
                 2,
                 pago.getFechaPago(),
-                8    // idCaja esperado 8
+                8
         )).thenReturn(101);
 
-        // 2. Act
-        int idVentaGenerada = ventaService.crearVenta(venta);
+        int idVentaGenerada = ventaNegocio.crearVenta(venta);
 
-        // 3. Assert
         assertEquals(101, idVentaGenerada);
         verify(ventaDatos, times(1)).crearVenta(
                 venta.getFecha(), 3, null, null, null, 2, pago.getFechaPago(), 8
@@ -134,43 +126,64 @@ public class VentaNegoTest {
 
     @ParameterizedTest(name = "Comprar - Error esperado: {2}")
     @MethodSource("proveerErroresProcesarVenta")
-    void procesarVenta_CasosInvalidos_DeberiaLanzarException(
+    void procesarVenta_CasosInvalidos(
             Venta ventaInvalida, String descripcionCaso, String mensajeErrorEsperado) {
 
-        // Simulamos que el validador de stock lanza error si intentamos comprar más de lo que hay
+        // Si la venta tiene productos, significa que va a pasar la primera validación
+        // y llegará a intentar crear la cabecera e intentar modificar el stock
         if (ventaInvalida.getProductos() != null && !ventaInvalida.getProductos().isEmpty()) {
+
+            // Simulamos que la creación inicial de la venta en la BD funciona correctamente y devuelve ID 1
+            lenient().when(ventaDatos.crearVenta(any(), anyInt(), any(), any(), any(), anyInt(), any(), any()))
+                    .thenReturn(1);
+
+            // Forzamos la excepción en la capa que tú definiste para simular la falta de stock
             when(productoNego.modificarStock(any(Producto.class)))
-                    .thenThrow(new RuntimeException("Stock insuficiente para el producto seleccionado"));
+                    .thenThrow(new RuntimeException("Stock insuficiente"));
         }
 
         // Act & Assert
         RuntimeException ex = assertThrows(RuntimeException.class, () -> {
-            // Cambiamos crearVenta por procesarVenta, que es el método real de entrada
-            ventaService.procesarVenta(ventaInvalida);
+            ventaNegocio.procesarVenta(ventaInvalida);
         });
 
         assertEquals(mensajeErrorEsperado, ex.getMessage());
 
-        // Verificamos que jamás se llegó a impactar el total de la venta en la BD
+        // Verificamos rigurosamente que jamás se impactó el cierre económico de la venta en la base de datos
         verify(ventaDatos, never()).actualizarTotalVenta(anyDouble(), anyInt());
+        verify(ventaDatos, never()).actualizarMontoPago(anyFloat(), anyInt());
     }
 
     private static Stream<Arguments> proveerErroresProcesarVenta() {
-        // 1. Simulamos una venta sin productos (lista vacía)
+
+        Usuario usuarioSimulado = new Usuario();
+        usuarioSimulado.setIdUsuario(1);
+
+        Pago pagoSimulado = new Pago();
+        pagoSimulado.setIdMetodoPago(1);
+        pagoSimulado.setFechaPago(LocalDate.now());
+
+        // Caso A: Venta vacía (Lanza el error en la primera línea de procesarVenta)
         Venta ventaVacia = new Venta();
+        ventaVacia.setUsuario(usuarioSimulado);
+        ventaVacia.setPago(pagoSimulado);
         ventaVacia.setProductos(Collections.emptyList());
 
-        // 2. Simulamos una venta con un producto que pide 6 unidades
-        // (Usamos setStock(6) porque tu lógica usa getStock() como cantidad pedida)
+        // Caso B: Venta con un producto (Pasará a procesarDetalleVenta y lanzará el error ahí)
         Producto productoSinStock = new Producto();
+        productoSinStock.setIdProducto(123);
         productoSinStock.setStock(6);
 
         Venta ventaSinStock = new Venta();
+        ventaSinStock.setFecha(LocalDate.now());
+        ventaSinStock.setUsuario(usuarioSimulado);
+        ventaSinStock.setPago(pagoSimulado);
         ventaSinStock.setProductos(List.of(productoSinStock));
 
         return Stream.of(
-                Arguments.of(ventaVacia, "Venta sin productos", "Debe agregar al menos un producto a la venta"),
-                Arguments.of(ventaSinStock, "Falta de stock", "Stock insuficiente para el producto seleccionado")
+                Arguments.of(ventaVacia, "Venta sin productos", "Debe agregar al menos un producto"),
+                // Corregido: Se quitó el espacio en blanco al final de "Stock insuficiente"
+                Arguments.of(ventaSinStock, "Falta de stock", "Stock insuficiente")
         );
     }
 }

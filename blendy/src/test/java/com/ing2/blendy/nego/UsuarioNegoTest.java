@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.ing2.blendy.capaDatos.IUsuarioDatos;
 import com.ing2.blendy.capaModelo.Usuario;
-import com.ing2.blendy.capaNegocio.IUsuarioNegocio;
 import com.ing2.blendy.capaNegocio.JwtService;
+import com.ing2.blendy.capaNegocio.UsuarioNegocio;
 import com.ing2.blendy.dto.TokenResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder; // Asumo que usás esta de Spring Security
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.stream.Stream;
 
@@ -28,20 +28,20 @@ public class UsuarioNegoTest {
     private IUsuarioDatos usuarioDatos; // Tu repositorio de usuarios
 
     @Mock
-    private PasswordEncoder passwordEncoder; // Mockeamos el encoder para que no dependa de Spring Security real
+    private BCryptPasswordEncoder passwordEncoder; // Mockeamos el encoder para que no dependa de Spring Security real
     @Mock
     private JwtService jwtService; // Reemplazalo por el nombre exacto de tu clase de JWT si cambia
 
     @InjectMocks
     @Spy
-    private IUsuarioNegocio usuarioService; // Tu lógica de negocio de usuarios
+    private UsuarioNegocio usuarioService; // Tu lógica de negocio de usuarios
 
     // =========================================================================
     // TESTS: crearUsuario()
     // =========================================================================
 
     @Test
-    void crearUsuario_DatosValidos_DeberiaGuardarExitosamente() {
+    void crearUsuario_DatosValidos() {
         // Arrange
         String correo = "ariel@blendly.com";
         String passRaw = "password123";
@@ -69,7 +69,7 @@ public class UsuarioNegoTest {
     }
 
     @Test
-    void crearUsuario_CorreoYaRegistrado_DeberiaLanzarException() {
+    void crearUsuario_CorreoYaRegistrado() {
         // Arrange
         String correoRepetido = "existente@blendly.com";
 
@@ -93,7 +93,7 @@ public class UsuarioNegoTest {
     // =========================================================================
 
     @Test
-    void modificarUsuario_UsuarioExiste_DeberiaModificarExitosamente() {
+    void modificarUsuario_UsuarioExiste() {
         // Arrange
         String correo = "ariel@blendly.com";
         String nombre = "Ariel Modificado";
@@ -112,7 +112,7 @@ public class UsuarioNegoTest {
     }
 
     @Test
-    void modificarUsuario_UsuarioNoExiste_DeberiaLanzarException() {
+    void modificarUsuario_UsuarioNoExiste() {
         // Arrange
         String correoInexistente = "no_existe@blendly.com";
 
@@ -141,7 +141,7 @@ public class UsuarioNegoTest {
             "2, Cliente",
             "3, Vendedor"
     })
-    void iniciarSesion_DatosValidos_DeberiaMapearRolYDevolverToken(int idRol, String rolEsperado) {
+    void iniciarSesion_DatosValidos(int idRol, String rolEsperado) {
         // Arrange
         String correo = "ariel@blendly.com";
         String passRaw = "pass123";
@@ -173,7 +173,7 @@ public class UsuarioNegoTest {
     // --- 2. CAMINOS DE ERROR (PARAMETRIZADO) ---
     @ParameterizedTest(name = "Login Fallido - Error esperado: {2}")
     @MethodSource("proveerErroresLogin")
-    void iniciarSesion_CasosInvalidos_DeberianLanzarException(
+    void iniciarSesion_CasosInvalido(
             String passRaw, Usuario usuarioRetornado, String mensajeErrorEsperado, boolean contraseniaCoincide) {
 
         String correo = "test@blendly.com";

@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.ing2.blendy.capaDatos.IProductoDatos;
 import com.ing2.blendy.capaModelo.Producto;
-import com.ing2.blendy.capaNegocio.IProductoNegocio;
+import com.ing2.blendy.capaNegocio.ProductoNegocio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -27,13 +28,13 @@ public class ProductoNegoTest {
 
     @InjectMocks
     @Spy
-    private IProductoNegocio productoService; // Tu lógica de negocio bajo prueba
+    private ProductoNegocio productoService; // Tu lógica de negocio bajo prueba
 
     // =========================================================================
     // TEST: crearProducto() - CAMINO FELIZ
     // =========================================================================
     @Test
-    void crearProducto_DatosValidos_DeberiaGuardarProductoEImagenes() {
+    void crearProducto_DatosValidos() {
         // Arrange
         String desc = "Perfume Blendly Elegance";
         float precio = 4500.0f;
@@ -67,7 +68,7 @@ public class ProductoNegoTest {
     // =========================================================================
     @ParameterizedTest(name = "Crear Producto - Error esperado: {7}")
     @MethodSource("proveerErroresCrearProducto")
-    void crearProducto_DatosInvalidados_DeberiaLanzarException(
+    void crearProducto_DatosInvalidado(
             String desc, float precio, int stock, int stockMin,
             String estado, int idCategoria, List<String> imagenes, String mensajeErrorEsperado) {
 
@@ -110,34 +111,31 @@ public class ProductoNegoTest {
 
     // --- CAMINO FELIZ ---
     @Test
-    void eliminarProducto_DatosValidos_DeberiaCambiarEstado() {
+    void eliminarProducto_DatosValidos() {
         // Arrange
         int idProducto = 1;
-        String nuevoEstado = "Inactivo";
+        String nuevoEstado = "Activo"; // <-- Probamos el camino que ahora sí hace algo
 
-        // Simulamos que al buscarlo por ID, el producto SÍ existe (retorna un objeto vacío)
-        // Pero usamos una lógica que no choque con tus ifs de error
-        // Como tu primer if pide (nuevoEstado.equals("Activo") && buscar != null) -> va a dar false (porque pasamos "Inactivo")
-        // Tu segundo if pide (nuevoEstado.equals("Inactivo") && buscar != null) -> ¡Acá saltaría el error si da distinto de null!
-        // Ojo: Según tu lógica actual, si el producto EXISTE, el método SIEMPRE tira excepción.
-        // Simulamos que NO existe en la BD para que pase de largo los ifs y ejecute el cambio:
-        doReturn(null).when(productoService).buscarProductoPorId(idProducto);
+        // Ahora SÍ necesitamos que simule que el producto existe para que el IF dé TRUE
+        Producto productoSimulado = new Producto();
+        productoSimulado.setEstado("Inactivo");
+        doReturn(productoSimulado).when(productoService).buscarProductoPorId(idProducto);
+
 
         // Act
         productoService.eliminarProducto(idProducto, nuevoEstado);
 
         // Assert
+        // Ahora sí se tiene que haber ejecutado la línea dentro del primer IF
         verify(productoDatos, times(1)).cambiarEstadoProducto(idProducto, nuevoEstado);
     }
 
     // --- CASOS DE ERROR (PARAMETRIZADO) ---
     @ParameterizedTest(name = "Eliminar Producto - Error esperado: {2}")
     @MethodSource("proveerErroresEliminarProducto")
-    void eliminarProducto_DatosInvalidados_DeberiaLanzarException(
-            int idProducto, String nuevoEstado, String mensajeErrorEsperado, Producto mockRetorno) {
+    void eliminarProducto_DatosInvalidados(int idProducto, String nuevoEstado, String mensajeErrorEsperado, Producto mockRetorno) {
 
-        // Arrange dinámico para simular el método interno buscarProductoPorId
-        doReturn(mockRetorno).when(productoService).buscarProductoPorId(idProducto);
+        Mockito.lenient().doReturn(mockRetorno).when(productoService).buscarProductoPorId(idProducto);
 
         // Act & Assert
         RuntimeException ex = assertThrows(RuntimeException.class, () -> {
@@ -145,23 +143,29 @@ public class ProductoNegoTest {
         });
 
         assertEquals(mensajeErrorEsperado, ex.getMessage());
-
-        // Verificamos que jamás se llamó al repositorio para impactar el cambio
         verify(productoDatos, never()).cambiarEstadoProducto(anyInt(), anyString());
     }
 
     private static Stream<Arguments> proveerErroresEliminarProducto() {
-        Producto productoExiste = new Producto();
+        Producto productoActivo = new Producto();
+        productoActivo.setIdProducto(1);
+        productoActivo.setEstado("Activo");
+        Producto productoInactivo = new Producto();
+        productoInactivo.setIdProducto(1);
+        productoInactivo.setEstado("Inactivo");
+
 
         return Stream.of(
                 // Caso 1: Querés poner "Activo" pero el producto ya existe y está activo
-                Arguments.of(1, "Activo", "Producto existente y activo", productoExiste),
+                Arguments.of(1, "Activo", "Producto existente y activo", productoActivo),
 
-                // Caso 2: Querés poner "Inactivo" pero el producto ya fue dado de baja (ya existe como inactivo)
-                Arguments.of(1, "Inactivo", "Producto ya dado de baja previamente", productoExiste),
+                // Caso 2: Producto inactivo
+                Arguments.of(1, "Inactivo", "Producto ya dado de baja previamente", productoInactivo),
 
                 // Caso 3: Estado viene vacío
-                Arguments.of(1, "", "Ingrese datos en los campos", null)
+                Arguments.of(1, "", "Ingrese datos en los campos", null),
+                //Caso 4: El producto no existe en el sistema
+                Arguments.of(99, "Activo", "El producto no existe", null)
         );
     }
     // =========================================================================
@@ -170,7 +174,7 @@ public class ProductoNegoTest {
 
     // --- CAMINO FELIZ ---
     @Test
-    void modificarProducto_DatosValidos_DeberiaModificarExitosamente() {
+    void modificarProducto_DatosValidos() {
         // Arrange
         int id = 1;
         String desc = "Perfume Importado";
@@ -192,7 +196,7 @@ public class ProductoNegoTest {
     // --- CASOS DE ERROR (PARAMETRIZADO) ---
     @ParameterizedTest(name = "Modificar Producto - Error esperado: {4}")
     @MethodSource("proveerErroresModificarProducto")
-    void modificarProducto_DatosInvalidados_DeberiaLanzarException(
+    void modificarProducto_DatosInvalidados(
             String desc, int stock, float precio, String estado, String mensajeErrorEsperado, Producto mockRetorno) {
 
         // Arrange dinámico para el método interno buscarProducto

@@ -26,7 +26,7 @@ public class VentaNegocio implements IVentaNegocio {
     @Transactional
     public Venta procesarVenta(Venta p_venta) {
         if (p_venta.getProductos() == null || p_venta.getProductos().isEmpty()) {
-            throw new RuntimeException("Debe agregar al menos un producto a la venta");
+            throw new RuntimeException("Debe agregar al menos un producto");
         }
 
         // Inicializar la fecha y el estado del pago
@@ -60,20 +60,17 @@ public class VentaNegocio implements IVentaNegocio {
             fechaRecepcion = p_venta.getEnvio().getFechaRecepcion();
             estadoEnvio = p_venta.getEnvio().getEstado();
         }
-
-        Integer idCaja = (p_venta.getEnvio() != null) ? null :
-                (p_venta.getCaja() != null ? p_venta.getCaja().getIdCaja() : null);
-
+        //Si hay envio se setea null porque es una compra online
+        //Si no hay envio es una venta mostrador y se setea el id de la caja
+        Integer idCaja = (p_venta.getEnvio() != null) ? null : (p_venta.getCaja() != null ? p_venta.getCaja().getIdCaja() : null);
+        if((fechaRecepcion !=null || fechaDespacho != null)){
+            if(fechaDespacho.isAfter(fechaRecepcion)){
+                throw new RuntimeException("La fecha de recepcion del pedido no puede ser antes que la del despacho");
+            }
+        }
         // Invoca la nueva query nativa de forma posicional/nominal segura
-        return ventaDatos.crearVenta(
-                p_venta.getFecha(),
-                p_venta.getUsuario().getIdUsuario(),
-                fechaDespacho,
-                fechaRecepcion,
-                estadoEnvio,
-                p_venta.getPago().getIdMetodoPago(),
-                p_venta.getPago().getFechaPago(),
-                idCaja
+        return ventaDatos.crearVenta(p_venta.getFecha(), p_venta.getUsuario().getIdUsuario(), fechaDespacho, fechaRecepcion, estadoEnvio
+                , p_venta.getPago().getIdMetodoPago(), p_venta.getPago().getFechaPago(), idCaja
         );
     }
 
@@ -100,7 +97,6 @@ public class VentaNegocio implements IVentaNegocio {
         for (Producto producto : p_productos) {
             //Se obtiene el producto de la bd
             Producto productoReal = productoNego.modificarStock(producto);
-
             //La cantidad del producto solicitado por el cliente
             int cantidadPedida = producto.getStock();
             //El precio del producto en ese momento

@@ -1,19 +1,5 @@
 CREATE DATABASE blendy;
 USE blendy;
-/*SELECTS*/
-SELECT * FROM localidad;
-SELECT * FROM provincia;
-SELECT * FROM categoria;
-SELECT * FROM rol;
-SELECT * FROM domicilio;
-SELECT * from envio;
-SELECT * FROM producto;
-SELECT * FROM venta_detalle;
-SELECT * FROM pago;
-SELECT * FROM metodo_pago;
-SELECT * FROM venta;
-SELECT * FROM usuario;
-SELECT * FROM caja;
 
 /*CREACIÓN DE TABLAS*/
 CREATE TABLE Categoria
@@ -427,15 +413,15 @@ BEGIN
 END;
 GO
 
+/*Modifica el rol a Administrador*/
 UPDATE Usuario
 SET fk_id_rol = 1
-WHERE correo_electronico = 'arielgonzalezr9@gmail.com';
+WHERE correo_electronico = ' ';
 
-
+/*Modifica el rol a Vendedor*/
 UPDATE Usuario
 SET fk_id_rol = 3
-WHERE correo_electronico = 'fatimabret@gmail.com';
+WHERE correo_electronico = ' ';
 
-UPDATE Caja
-SET estado = 'Inactivo'
-WHERE id_caja = 1;
+
+SELECT * FROM producto;

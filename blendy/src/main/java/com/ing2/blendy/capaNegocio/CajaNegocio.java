@@ -47,6 +47,8 @@ public class CajaNegocio implements ICajaNegocio{
 
     @Override
     public void cerrarCaja(String p_correo, float p_montoDeclarado,int p_id_caja) {
+        this.validarDatosCierre(p_correo, p_montoDeclarado);
+
         float totalEfectivo = 0;
         float totalDigital = 0;
         for(Venta venta : ventaNego.listarVenta(p_correo, LocalDate.now())){
@@ -71,7 +73,30 @@ public class CajaNegocio implements ICajaNegocio{
         );
     }
 
+    @Override
     public float buscarMontoInicial(int p_id_caja){
         return cajaDatos.buscarMontoInicial(p_id_caja);
+    }
+
+    @Override
+    public void validarDatosCierre(String p_correo, float p_monto) {
+        // 1. Validar Monto
+        if (p_monto <= 0) {
+            throw new RuntimeException("El monto que ingresó no puede ser menor o igual a 0");
+        }
+
+        // 2. Validar Nulo o Vacío
+        if (p_correo == null || p_correo.trim().isEmpty()) {
+            throw new RuntimeException("El formato del correo ingresado es inválido o no contiene letras");
+        }
+
+        // 3. Validar Estructura y Letras en el Email
+        String regexEstructura = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        String parteUsuario = p_correo.split("@")[0];
+        boolean usuarioEsSoloNumeros = parteUsuario.matches("^[0-9]+$");
+
+        if (!p_correo.matches(regexEstructura) || usuarioEsSoloNumeros) {
+            throw new RuntimeException("El formato del correo ingresado es inválido o no contiene letras");
+        }
     }
 }

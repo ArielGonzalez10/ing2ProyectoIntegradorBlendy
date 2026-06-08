@@ -78,14 +78,24 @@ public class ProductoNegocio implements IProductoNegocio {
 
     @Override
     public void eliminarProducto(int p_id_producto, String p_nuevoEstado) {
-        if(p_nuevoEstado.equals("Activo") && this.buscarProductoPorId(p_id_producto) != null){
-            throw new RuntimeException("Producto existente y activo");
-        }else if(p_nuevoEstado.equals("Inactivo") && this.buscarProductoPorId(p_id_producto) != null){
-            throw new RuntimeException("Producto ya dado de baja previamente");
-        }else if(p_nuevoEstado.isEmpty()){
+        if(p_nuevoEstado.isEmpty()){
             throw new RuntimeException("Ingrese datos en los campos");
         }
-        productoDatos.cambiarEstadoProducto(p_id_producto,p_nuevoEstado);
+
+        Producto prod = this.buscarProductoPorId(p_id_producto);
+        if(prod == null) {
+            throw new RuntimeException("El producto no existe");
+        }
+
+        if(p_nuevoEstado.equals("Inactivo") && prod.getEstado().equals("Inactivo")){
+            throw new RuntimeException("Producto ya dado de baja previamente");
+        }
+
+        if(p_nuevoEstado.equals("Activo") && prod.getEstado().equals("Activo")){
+            throw new RuntimeException("Producto existente y activo");
+        }
+
+        productoDatos.cambiarEstadoProducto(p_id_producto, p_nuevoEstado);
     }
 
     @Override
@@ -112,11 +122,11 @@ public class ProductoNegocio implements IProductoNegocio {
     @Override
     public Producto modificarStock(Producto p_producto) {
         Producto productoReal = productoDatos.findById(p_producto.getIdProducto())
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado ID: " + p_producto.getIdProducto()));
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
         int cantidadPedida = p_producto.getStock();
         if (productoReal.getStock() < cantidadPedida) {
-            throw new RuntimeException("Stock insuficiente para: " + productoReal.getDescripcion());
+            throw new RuntimeException("Stock insuficiente");
         }
 
         productoReal.setStock(productoReal.getStock() - cantidadPedida);
