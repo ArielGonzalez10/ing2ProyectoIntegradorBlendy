@@ -1,7 +1,7 @@
 CREATE DATABASE blendy;
 USE blendy;
-
-SELECT * FROM Usuario;
+SELECT * FROM rol;
+SELECT * FROM Categoria;
 SELECT * FROM Domicilio;
 SELECT * FROM Envio;
 SELECT * FROM venta;

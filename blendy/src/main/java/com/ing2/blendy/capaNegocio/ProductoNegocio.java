@@ -51,7 +51,9 @@ public class ProductoNegocio implements IProductoNegocio {
         if(p_imagenes.isEmpty()){//Valida que por lo menos haya una imagen
             throw new RuntimeException("Ingrese por lo menos 1 imagen del Producto");
         }else {
-            if(p_descripcion.isEmpty()){//Valida que la descripcion no venga vacia
+            if(this.buscarProducto(p_descripcion) != null){
+                throw new RuntimeException("Producto creado previamente");
+            }else if(p_descripcion.isEmpty()){//Valida que la descripcion no venga vacia
                 throw new RuntimeException("No se puede registrar un producto sin nombre");
             }else if(p_precioUnitario <= 0 || p_stock <= 0){//Valida que el stock o el precio sea mayor a 0
                 throw new RuntimeException("El stock o el precio no pueden ser menor o igual a 0");
@@ -62,6 +64,7 @@ public class ProductoNegocio implements IProductoNegocio {
             for (String imagen : p_imagenes) {
                 productoDatos.crearImagen(imagen, "Activo", productoGuardado.getIdProducto());
             }
+            System.out.println("Producto agregado correctamente!");
         }
 
     }
@@ -84,7 +87,7 @@ public class ProductoNegocio implements IProductoNegocio {
 
         Producto prod = this.buscarProductoPorId(p_id_producto);
         if(prod == null) {
-            throw new RuntimeException("El producto no existe");
+            throw new RuntimeException("El producto no fue registrado antes");
         }
 
         if(p_nuevoEstado.equals("Inactivo") && prod.getEstado().equals("Inactivo")){
@@ -105,7 +108,7 @@ public class ProductoNegocio implements IProductoNegocio {
 
     @Override
     public void modificarProducto(int p_id_producto, String p_descripcion, int p_stock,float p_precioUnitario, String p_estado) {
-        if(this.buscarProducto(p_descripcion) == null){
+        if(this.buscarProductoPorId(p_id_producto) == null){
             throw new RuntimeException("Producto no encontrado");
         }else if(p_stock < 0){
             throw new RuntimeException("No se puede ingresar un numero negativo");
@@ -117,6 +120,7 @@ public class ProductoNegocio implements IProductoNegocio {
             throw new RuntimeException("Ingrese un estado valido");
         }
         productoDatos.modificarProducto(p_id_producto,p_descripcion,p_stock,p_precioUnitario,p_estado);
+        System.out.println("Producto modificado correctamente");
     }
 
     @Override

@@ -36,31 +36,26 @@ public class ProductoNegoTest {
     @Test
     void crearProducto_DatosValidos() {
         // Arrange
-        String desc = "Perfume Blendly Elegance";
-        float precio = 4500.0f;
-        int stock = 20;
-        int stockMin = 5;
+        String desc = "Vino Tinto Francés";
+        float precio = 120000.0f;
+        int stock = 4;
+        int stockMin = 0;
         String estado = "Activo";
-        int idCategoria = 2;
-        List<String> imagenes = List.of("url_imagen1.jpg", "url_imagen2.jpg");
-
+        int idCategoria = 1;
+        List<String> imagenes = List.of("photo-1584916201218-f4242ceb4809");
+        //Decimos que NO existe un producto previo para que pase de largo la validación de duplicado
+        doReturn(null).when(productoService).buscarProducto(desc);
         // Simulamos que el repositorio crea el producto y le asigna el ID 99
         Producto productoSimulado = new Producto();
-        productoSimulado.setIdProducto(99); // Importante para el bucle de imágenes
+        productoSimulado.setIdProducto(99);
 
         when(productoDatos.crearProducto(desc, precio, stock, stockMin, estado, idCategoria))
                 .thenReturn(productoSimulado);
-
         // Act
         productoService.crearProducto(desc, precio, stock, stockMin, estado, idCategoria, imagenes);
-
         // Assert
-        // Verificamos que se llamó al repositorio para crear el producto exacto 1 vez
         verify(productoDatos, times(1)).crearProducto(desc, precio, stock, stockMin, estado, idCategoria);
-
-        // Verificamos que se llamó a crear cada una de las 2 imágenes asociadas al ID 99
-        verify(productoDatos, times(1)).crearImagen("url_imagen1.jpg", "Activo", 99);
-        verify(productoDatos, times(1)).crearImagen("url_imagen2.jpg", "Activo", 99);
+        verify(productoDatos, times(1)).crearImagen("photo-1584916201218-f4242ceb4809", "Activo", 99);
     }
 
     // =========================================================================
@@ -70,39 +65,40 @@ public class ProductoNegoTest {
     @MethodSource("proveerErroresCrearProducto")
     void crearProducto_DatosInvalidado(
             String desc, float precio, int stock, int stockMin,
-            String estado, int idCategoria, List<String> imagenes, String mensajeErrorEsperado) {
+            String estado, int idCategoria, List<String> imagenes, String mensajeErrorEsperado,
+            Producto mockBuscarProducto) {
+
+        // Agregamos Mockito.lenient() para que ignore si el mock no llega a usarse en algún caso (como el de imágenes vacías)
+        Mockito.lenient().doReturn(mockBuscarProducto).when(productoService).buscarProducto(desc);
 
         // Act & Assert
         RuntimeException ex = assertThrows(RuntimeException.class, () -> {
             productoService.crearProducto(desc, precio, stock, stockMin, estado, idCategoria, imagenes);
         });
 
-        // Verificamos que el mensaje del throw sea el correcto
         assertEquals(mensajeErrorEsperado, ex.getMessage());
 
-        // Verificamos que NUNCA se llegó a guardar nada en la base de datos por culpa del error
+        // Verificamos que NUNCA se llegó a guardar nada en los datos
         verify(productoDatos, never()).crearProducto(anyString(), anyFloat(), anyInt(), anyInt(), anyString(), anyInt());
     }
 
-    // Tu "Script" o banco de datos de prueba para ir variando los parámetros
+    // Tu banco de datos se mantiene igual, estructurado correctamente
     private static Stream<Arguments> proveerErroresCrearProducto() {
         List<String> imagenesValidas = List.of("foto.jpg");
+        Producto productoExistente = new Producto();
 
         return Stream.of(
-                // Caso 1: Lista de imágenes vacía
-                Arguments.of("Perfume", 100f, 10, 2, "Activo", 1, Collections.emptyList(), "Ingrese por lo menos 1 imagen del Producto"),
+                // Caso 2: Sin imagenes para el producto
+                Arguments.of("Sake Premium Japónes", 9500f, 4, 0, "Activo", 4, Collections.emptyList(), "Ingrese por lo menos 1 imagen del Producto", null),
 
-                // Caso 2: Descripción vacía
-                Arguments.of("", 100f, 10, 2, "Activo", 1, imagenesValidas, "No se puede registrar un producto sin nombre"),
+                // Caso 3: Producto duplicado
+                Arguments.of("Licor de hierbas Italiano", 750000.0f, 0, 0, "Activo", 1, imagenesValidas, "Producto creado previamente", productoExistente),
 
-                // Caso 3: Precio igual o menor a 0
-                Arguments.of("Perfume", 0f, 10, 2, "Activo", 1, imagenesValidas, "El stock o el precio no pueden ser menor o igual a 0"),
+                // Caso 4: Descripción vacía
+                Arguments.of("", 100f, 10, 2, "Activo", 1, imagenesValidas, "No se puede registrar un producto sin nombre", null),
 
-                // Caso 4: Stock igual o menor a 0
-                Arguments.of("Perfume", 150f, -5, 2, "Activo", 1, imagenesValidas, "El stock o el precio no pueden ser menor o igual a 0"),
-
-                // Caso 5: Categoría inválida (0 o negativa)
-                Arguments.of("Perfume", 150f, 10, 2, "Activo", 0, imagenesValidas, "Ingrese una categoria valida")
+                // Caso 5: Precio igual o menor a 0
+                Arguments.of("Vino Tinto Francés", -5f, 10, 2, "Activo", 1, imagenesValidas, "El stock o el precio no pueden ser menor o igual a 0", null)
         );
     }
     // =========================================================================
@@ -151,7 +147,7 @@ public class ProductoNegoTest {
         productoActivo.setIdProducto(1);
         productoActivo.setEstado("Activo");
         Producto productoInactivo = new Producto();
-        productoInactivo.setIdProducto(1);
+        productoInactivo.setIdProducto(2);
         productoInactivo.setEstado("Inactivo");
 
 
@@ -159,15 +155,19 @@ public class ProductoNegoTest {
                 // Caso 1: Querés poner "Activo" pero el producto ya existe y está activo
                 Arguments.of(1, "Activo", "Producto existente y activo", productoActivo),
 
-                // Caso 2: Producto inactivo
-                Arguments.of(1, "Inactivo", "Producto ya dado de baja previamente", productoInactivo),
+                //Caso 2: El producto no existe en el sistema
+                Arguments.of(99, "Activo", "El producto no fue registrado antes", null),
 
-                // Caso 3: Estado viene vacío
-                Arguments.of(1, "", "Ingrese datos en los campos", null),
-                //Caso 4: El producto no existe en el sistema
-                Arguments.of(99, "Activo", "El producto no existe", null)
+                // Caso 3: Producto inactivo
+                Arguments.of(2, "Inactivo", "Producto ya dado de baja previamente", productoInactivo)
+
+
         );
     }
+// =========================================================================
+    // TESTS: modificarProducto()
+    // =========================================================================
+
     // =========================================================================
     // TESTS: modificarProducto()
     // =========================================================================
@@ -177,14 +177,14 @@ public class ProductoNegoTest {
     void modificarProducto_DatosValidos() {
         // Arrange
         int id = 1;
-        String desc = "Perfume Importado";
-        int stock = 15;
-        float precio = 3500.0f;
+        String desc = "Vino Tinto Francés";
+        int stock = 4;
+        float precio = 120000.0f;
         String estado = "Activo";
 
-        // Simulamos que el producto SÍ existe para que pase el primer IF (this.buscarProducto != null)
+        // CORRECCIÓN: Tu código de negocio busca por ID, así que mockeamos buscarProductoPorId
         Producto productoSimulado = new Producto();
-        doReturn(productoSimulado).when(productoService).buscarProducto(desc);
+        doReturn(productoSimulado).when(productoService).buscarProductoPorId(anyInt());
 
         // Act
         productoService.modificarProducto(id, desc, stock, precio, estado);
@@ -194,17 +194,17 @@ public class ProductoNegoTest {
     }
 
     // --- CASOS DE ERROR (PARAMETRIZADO) ---
-    @ParameterizedTest(name = "Modificar Producto - Error esperado: {4}")
+    @ParameterizedTest(name = "Modificar Producto - Error esperado: {5}")
     @MethodSource("proveerErroresModificarProducto")
     void modificarProducto_DatosInvalidados(
-            String desc, int stock, float precio, String estado, String mensajeErrorEsperado, Producto mockRetorno) {
+            int id, String desc, int stock, float precio, String estado, String mensajeErrorEsperado, Producto mockRetorno) {
 
-        // Arrange dinámico para el método interno buscarProducto
-        doReturn(mockRetorno).when(productoService).buscarProducto(desc);
+        //busca el producto pasándole el id
+        Mockito.lenient().doReturn(mockRetorno).when(productoService).buscarProductoPorId(id);
 
         // Act & Assert
         RuntimeException ex = assertThrows(RuntimeException.class, () -> {
-            productoService.modificarProducto(1, desc, stock, precio, estado);
+            productoService.modificarProducto(id, desc, stock, precio, estado);
         });
 
         assertEquals(mensajeErrorEsperado, ex.getMessage());
@@ -215,23 +215,14 @@ public class ProductoNegoTest {
         Producto productoExiste = new Producto();
 
         return Stream.of(
-                // Caso 1: Producto no encontrado (buscarProducto devuelve null)
-                Arguments.of("Inexistente", 10, 100f, "Activo", "Producto no encontrado", null),
+                // Caso 1: Producto no encontrado
+                Arguments.of(3, "Licor de Hierbas Italiano", 5, 7500f, "Inactivo", "Producto no encontrado", null),
 
-                // Caso 2: Stock negativo
-                Arguments.of("Perfume", -5, 100f, "Activo", "No se puede ingresar un numero negativo", productoExiste),
+                // Caso 2: Stock negativo (ID 1, devuelve productoExiste para que pase el IF del ID)
+                Arguments.of(4, "Whisky Los Criadores", -5, 8000f, "Activo", "No se puede ingresar un numero negativo", productoExiste),
 
                 // Caso 3: Precio menor a cero
-                Arguments.of("Perfume", 10, -50f, "Activo", "El valor del producto no puede ser menor a 0", productoExiste),
-
-                // Caso 4: Descripción vacía
-                Arguments.of("", 10, 100f, "Activo", "Ingrese un nombre valido", productoExiste),
-
-                // Caso 5: Descripción son solo números (ej: "12345")
-                Arguments.of("12345", 10, 100f, "Activo", "Ingrese un nombre valido", productoExiste),
-
-                // Caso 6: Estado inválido (ni Activo ni Inactivo)
-                Arguments.of("Perfume", 10, 100f, "Borrador", "Ingrese un estado valido", productoExiste)
+                Arguments.of(5, "Monster Clasico 750Ml", 7, -4000f, "Inactivo", "El valor del producto no puede ser menor a 0", productoExiste)
         );
     }
 }

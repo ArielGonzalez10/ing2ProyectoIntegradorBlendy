@@ -71,6 +71,7 @@ public class CajaNegocio implements ICajaNegocio{
                 "Inactivo",
                 usuarioNego.buscarUsuario(p_correo).getIdUsuario()
         );
+        System.out.println("Turno cerrado correctamente");
     }
 
     @Override

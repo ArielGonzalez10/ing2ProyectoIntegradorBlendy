@@ -71,12 +71,16 @@ public class UsuarioNegocio implements IUsuarioNegocio {
 
     @Override
     public void crearUsuario(String p_correoElectronico, String p_contrasenia, String p_nombre, String p_apellido, String p_telefono, String p_estado, int p_id_rol) {
-        //Verifica que no haya sido creado previamente
+        // 1. Verifica que no haya sido creado previamente
         if(usuarioDatos.existeCorreo(p_correoElectronico)){
             throw new RuntimeException("Usuario registrado previamente");
         }
+        // 2. NUEVA VALIDACIÓN: Verifica el largo de la contraseña
+        else if(p_contrasenia == null || p_contrasenia.length() < 8) {
+            throw new RuntimeException("La contraseña debe tener al menos 8 caracteres");
+        }
 
-        //Codifica la contraseña
+        // Codifica la contraseña
         p_contrasenia = (passwordEncoder.encode(p_contrasenia));
         usuarioDatos.crearUsuarioSP(
                 p_nombre,
@@ -87,6 +91,7 @@ public class UsuarioNegocio implements IUsuarioNegocio {
                 p_estado,
                 p_id_rol
         );
+        System.out.println("Usuario creado correctamente");
     }
 
     @Override
