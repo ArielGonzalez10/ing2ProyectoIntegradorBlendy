@@ -1,6 +1,12 @@
 CREATE DATABASE blendy;
 USE blendy;
 
+SELECT * FROM Usuario;
+SELECT * FROM Domicilio;
+SELECT * FROM Envio;
+SELECT * FROM venta;
+SELECT * FROM caja;
+
 /*CREACIÓN DE TABLAS*/
 CREATE TABLE Categoria
 (
@@ -66,8 +72,8 @@ CREATE TABLE Pago
 CREATE TABLE Envio
 (
   id_envio INT NOT NULL IDENTITY,
-  fecha_despacho DATE NOT NULL,
-  fecha_recepcion DATE NOT NULL,
+  fecha_despacho DATE NULL,
+  fecha_recepcion DATE NULL,
   estado VARCHAR(20) NOT NULL,
   PRIMARY KEY (id_envio)
 );
@@ -415,13 +421,12 @@ GO
 
 /*Modifica el rol a Administrador*/
 UPDATE Usuario
-SET fk_id_rol = 1
-WHERE correo_electronico = ' ';
+SET fk_id_rol = 
+WHERE correo_electronico = '';
 
 /*Modifica el rol a Vendedor*/
 UPDATE Usuario
-SET fk_id_rol = 3
-WHERE correo_electronico = ' ';
-
+SET fk_id_rol =
+WHERE correo_electronico = '';
 
 SELECT * FROM producto;

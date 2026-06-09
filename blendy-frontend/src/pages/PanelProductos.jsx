@@ -156,7 +156,7 @@ const PanelProductos = () => {
                             ) : (
                                 <tr>
                                     <td colSpan="7" style={{ textAlign: 'center', padding: '40px' }}>
-                                        No se encontraron productos con "{busqueda}"
+                                        No se encontraron productos
                                     </td>
                                 </tr>
                             )}

@@ -3,8 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.ing2.blendy.capaModelo;
-
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -41,6 +40,7 @@ public class Venta {
     @JoinColumn(name = "fk_id_usuario", insertable = true, updatable = false)
     private Usuario usuario;
 
+    @JsonBackReference
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_id_envio")
     private Envio envio;

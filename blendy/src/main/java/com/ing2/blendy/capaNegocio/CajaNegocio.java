@@ -79,9 +79,9 @@ public class CajaNegocio implements ICajaNegocio{
     }
 
     @Override
-    public void validarDatosCierre(String p_correo, float p_monto) {
+    public void validarDatosCierre(String p_correo, float p_montoInicial) {
         // 1. Validar Monto
-        if (p_monto <= 0) {
+        if (p_montoInicial <= 0) {
             throw new RuntimeException("El monto que ingresó no puede ser menor o igual a 0");
         }
 

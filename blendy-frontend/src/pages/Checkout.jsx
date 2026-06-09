@@ -38,10 +38,8 @@ const Checkout = () => {
       if (!idUsuarioActual) throw new Error("No se pudo identificar al usuario.");
 
       const hoy = new Date();
-      const fechaDespacho = hoy.toISOString().split("T")[0];
-      const fechaRec = new Date();
-      fechaRec.setDate(hoy.getDate() + 3);
-      const fechaRecepcion = fechaRec.toISOString().split("T")[0];
+      const fechaDespacho = null;
+      const fechaRecepcion = null;
 
       // Mapeamos los items del carrito convirtiendo la cantidad elegida al campo 'stock' que espera Java
       const productosTransient = cartItems.map((item) => ({

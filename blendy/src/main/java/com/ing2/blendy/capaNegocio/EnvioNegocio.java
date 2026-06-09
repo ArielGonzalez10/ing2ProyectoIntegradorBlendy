@@ -21,12 +21,15 @@ import java.time.LocalDate;
 @Service
 public class EnvioNegocio implements IEnvioNegocio {
 
+
     @Autowired
     private IEnvioDatos envioDatos;
 
     @Override
     public void crearEnvio(Envio p_envio) {
-        p_envio.setEstado("Pendiente");
+        IEnvioEstado estadoInicial = obtenerEstado(null);
+        p_envio.setEstado(estadoInicial.obtenerNombreEstado());
+
         envioDatos.save(p_envio);
     }
 
@@ -46,19 +49,22 @@ public class EnvioNegocio implements IEnvioNegocio {
     }
 
     @Override
+    public List<Envio> listarEnvios() {
+        return envioDatos.findAll();
+    }
+
+    @Override
     public void modificarEnvio(int p_id_envio, LocalDate p_fecha_despacho, LocalDate p_fecha_recepcion) {
+
         Envio envio_actual = envioDatos.findById(p_id_envio)
                 .orElseThrow(() -> new RuntimeException("Envío no encontrado"));
         IEnvioEstado estadoActual = obtenerEstado(envio_actual.getEstado());
 
-        // Si llegó fecha de despacho y antes no tenía, se activa el comportamiento del estado actual
-        if (p_fecha_despacho != null && envio_actual.getFechaDespacho() == null) {
-            estadoActual.enviar(envio_actual);
-        }
 
-        // Si llegó fecha de recepción y antes no tenía, se activa el comportamiento del estado actual
-        if (p_fecha_recepcion != null && envio_actual.getFechaRecepcion() == null) {
-            estadoActual.entregar(envio_actual);
+        if (p_fecha_despacho != null) {
+            estadoActual.enviar(envio_actual, p_fecha_despacho);
+        } else if (p_fecha_recepcion != null) {
+            estadoActual.entregar(envio_actual, p_fecha_recepcion);
         }
         envioDatos.save(envio_actual);
     }
@@ -67,7 +73,7 @@ public class EnvioNegocio implements IEnvioNegocio {
         if(p_estado == null){
             return new EstadoPendiente();
         }
-        switch (p_estado){
+        switch (p_estado.trim()){
             case "En camino": return new EstadoEnCamino();
             case  "Entregado": return new EstadoEntregado();
             default: return new EstadoPendiente();

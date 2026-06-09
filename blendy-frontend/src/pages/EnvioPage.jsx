@@ -1,40 +1,60 @@
 import { useState, useEffect } from 'react';
 import EnvioTable from './EnvioTable';
-import { MOCK_ENVIOS } from '../data/mockEnvios'; // archivo de datos de prueba
+// Importamos las dos funciones de tu API
+import { listarTodosEnvios, modificarEnvio } from '../api/envios'; 
+
 import '../styles/panel.css';
 import '../styles/envios.css';
 
 const EnvioPage = () => {
-    const [envios, setEnvios] = useState(MOCK_ENVIOS); // Inicia con los datos ficticios
-    const [loading, setLoading] = useState(false);
-  
-    // Descomenta lo de abajo y borra lo de arriba para usar la API real
-    /*                                                                                      
     const [envios, setEnvios] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetch('/api/envios')
-        .then(res => res.json())
-        .then(data => {
-            setEnvios(data);
-            setLoading(false);
-        });
-    }, []);                                             
-    */
-
-    // recibe el ID y el nuevo estado desde el StatusSelector
-    const handleCambiarEstado = (id, nuevoEstado) => {
-        console.log(`Cambiando pedido ${id} a estado: ${nuevoEstado}`);
-        
-        // Simulación en el frontend de cómo el Patrón State cambia el estado:
-        const enviosActualizados = envios.map(envio => 
-            envio.id === id ? { ...envio, estado: nuevoEstado } : envio
-        );
-        setEnvios(enviosActualizados);
+    const cargarEnvios = () => {
+        setLoading(true);
+        listarTodosEnvios()
+            .then(res => {
+                setEnvios(res.data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("No hay envios.", err);
+                setLoading(false);
+            });
     };
 
-    if (loading) return <p>Cargando envíos...</p>;
+    useEffect(() => {
+        cargarEnvios();
+    }, []);
+
+    // El método ahora usa tu función limpia del servicio de API
+    const handleCambiarEstado = (idEnvio, nuevoEstadoDesdeSelector) => {
+        console.log(`Ejecutando cambio para Envío ID: ${idEnvio} -> Estado solicitado: ${nuevoEstadoDesdeSelector}`);
+        
+        const fechaHoy = new Date().toISOString().split('T')[0]; // Genera YYYY-MM-DD
+        let fechaDespacho = null;
+        let fechaRecepcion = null;
+
+        if (nuevoEstadoDesdeSelector === 'EN_CAMINO') {
+            fechaDespacho = fechaHoy;
+        } else if (nuevoEstadoDesdeSelector === 'ENTREGADO') {
+            fechaRecepcion = fechaHoy;
+        }
+
+        // Llamamos a la función modularizada igual que hiciste con listar
+        modificarEnvio(idEnvio, fechaDespacho, fechaRecepcion)
+            .then(() => {
+                alert("¡Estado del envío actualizado con éxito !");
+                cargarEnvios(); // Refrescamos la tabla con los datos mutados por el patrón State
+            })
+            .catch(err => {
+                console.error("", err);
+                const msg = err.response?.data?.message || "Error al conectar con el servidor.";
+                alert("" + msg);
+            });
+    };
+
+    if (loading) return <p>Cargando envíos de Blendly...</p>;
 
     return (
         <div className="admin-page">

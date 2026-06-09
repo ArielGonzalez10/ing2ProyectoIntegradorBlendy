@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -47,11 +48,16 @@ public class EnvioController {
         envioNego.eliminarEnvio(p_id_envio);
     }
 
-    @PutMapping("/modificar-fechas/{p_id_envio}")
-    public void modificarEnvio(@PathVariable int p_id_envio,
+    @PutMapping("/modificar/{p_id_envio}")
+    public void modificarEnvio(@PathVariable int p_id_envio,@RequestParam(required = false) String p_nuevo_estado,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate p_fecha_despacho,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate p_fecha_recepcion) {
 
-        envioNego.modificarEnvio(p_id_envio, p_fecha_despacho, p_fecha_recepcion);
+        envioNego.modificarEnvio(p_id_envio,p_nuevo_estado, p_fecha_despacho, p_fecha_recepcion);
+    }
+
+    @GetMapping("/listar/todos")
+    public ResponseEntity<List<Envio>> obtenerTodosLosEnvios() {
+        return ResponseEntity.ok(envioNego.listarEnvios());
     }
 }

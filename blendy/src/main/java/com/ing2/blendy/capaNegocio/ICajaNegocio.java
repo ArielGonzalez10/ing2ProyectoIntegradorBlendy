@@ -7,5 +7,5 @@ public interface ICajaNegocio {
     void crearCaja(String p_correo,float p_montoInicial);
     Caja buscarCaja(String p_correo);
     float buscarMontoInicial(int p_id_caja);
-    void validarDatosCierre(String p_correo, float p_monto);
+    void validarDatosCierre(String p_correo, float p_montoInicial);
 }
