@@ -52,8 +52,7 @@ public class EnvioController {
     public void modificarEnvio(@PathVariable int p_id_envio,@RequestParam(required = false) String p_nuevo_estado,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate p_fecha_despacho,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate p_fecha_recepcion) {
-
-        envioNego.modificarEnvio(p_id_envio,p_nuevo_estado, p_fecha_despacho, p_fecha_recepcion);
+        envioNego.modificarEnvio(p_id_envio, p_fecha_despacho, p_fecha_recepcion);
     }
 
     @GetMapping("/listar/todos")
