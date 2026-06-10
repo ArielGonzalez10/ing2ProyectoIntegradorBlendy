@@ -417,8 +417,29 @@ BEGIN
       AND v.fecha = @p_fecha
       AND c.estado = 'Activo'; -- La caja sí o sí debe estar activa
 END;
-GO
+CREATE OR ALTER PROCEDURE sp_cerrar_turno
+    @p_id_caja INT,
+    @p_totalCalculado FLOAT,
+    @p_diferencia FLOAT,
+    @p_totalReal FLOAT,
+    @p_montoDeclarado FLOAT,
+    @p_estado VARCHAR(50),
+    @p_id_usuario INT
+AS
+BEGIN
+    SET NOCOUNT ON;
 
+    -- Solo realizamos la actualización, sin devolver ningún conjunto de resultados
+    UPDATE caja 
+    SET monto_calculado = @p_totalCalculado,
+        diferencia = @p_diferencia,
+        total_venta = @p_totalReal,
+        monto_declarado = @p_montoDeclarado,
+        estado = @p_estado
+    WHERE fk_id_usuario = @p_id_usuario 
+      AND estado = 'Activo' 
+      AND id_caja = @p_id_caja;
+END
 /*Modifica el rol a Administrador*/
 UPDATE Usuario
 SET fk_id_rol = 

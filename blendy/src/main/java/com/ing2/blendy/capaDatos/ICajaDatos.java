@@ -5,6 +5,7 @@ import com.ing2.blendy.capaModelo.Caja;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,17 +35,9 @@ public interface ICajaDatos extends JpaRepository<Caja,Integer> {
 
     @Query(value = "SELECT monto_inicial FROM caja WHERE estado = 'Activo' AND id_caja = :p_id_caja" ,nativeQuery = true)
     float buscarMontoInicial(@Param("p_id_caja") int p_id_caja);
-
     @Modifying
     @Transactional
-    @Query(value = "UPDATE caja " +
-            "SET monto_calculado = :p_totalCalculado, " +
-            "    diferencia = :p_diferencia, " +
-            "    total_venta = :p_totalReal, " +
-            "    monto_declarado = :p_montoDeclarado, " +
-            "    estado = :p_estado " +
-            "WHERE fk_id_usuario = :p_id_usuario AND estado = 'Activo' AND id_caja = :p_id_caja",
-            nativeQuery = true)
+    @Query(value = "EXEC sp_cerrar_turno @p_id_caja = :p_id_caja, @p_totalCalculado = :p_totalCalculado, @p_diferencia = :p_diferencia, @p_totalReal = :p_totalReal, @p_montoDeclarado = :p_montoDeclarado, @p_estado = :p_estado, @p_id_usuario = :p_id_usuario", nativeQuery = true)
     void cerrarTurno(
             @Param("p_id_caja") int p_id_caja,
             @Param("p_totalCalculado") float p_totalCalculado,
@@ -54,6 +47,5 @@ public interface ICajaDatos extends JpaRepository<Caja,Integer> {
             @Param("p_estado") String p_estado,
             @Param("p_id_usuario") int p_id_usuario
     );
-
     // void cerrarCaja(String , float , int );
 }
